@@ -81,6 +81,22 @@ select, .pill-btn, input[type="date"] { border:1px solid var(--line); background
   height: 100%;
   background: var(--line);
 }
+.url-detail-first-resize,
+.url-main-first-resize { position: relative; }
+.url-detail-first-resize .col-handle,
+.url-main-first-resize .col-handle {
+  position:absolute; top:0; right:-4px; width:8px; height:100%;
+  cursor:col-resize; z-index:6;
+}
+.url-detail-first-resize::after,
+.url-main-first-resize::after {
+  content:''; position:absolute; top:6px; right:0; width:1px; height:calc(100% - 12px);
+  background:#e6d9c8;
+}
+.url-detail-first-resize:hover::after,
+.url-main-first-resize:hover::after { background:#d0b89f; width:2px; right:-1px; top:0; height:100%; }
+#urlTable th:first-child, #urlTable td:first-child { width: 420px; min-width: 420px; max-width: 420px; white-space: normal; overflow-wrap:anywhere; word-break: break-word; }
+#urlDetailTable th:first-child, #urlDetailTable td:first-child { width: var(--url-detail-first-col, 420px); min-width: var(--url-detail-first-col, 420px); max-width: var(--url-detail-first-col, 420px); white-space: normal; overflow-wrap:anywhere; }
 .table-scroll { width:100%; min-width:0; overflow-x:scroll; overflow-y:hidden; padding-bottom:10px; margin-bottom:2px; }
 .table-scroll .table { min-width: 100%; }
 .table-scroll.compact .table { min-width: 700px; }
@@ -276,6 +292,8 @@ select, .pill-btn, input[type="date"] { border:1px solid var(--line); background
 .decision-native-root .decision-sub { color:var(--muted); font-size:12px; }
 .decision-native-root #decisionUpToDate { display:inline-flex; align-items:center; padding:3px 8px; border-radius:999px; background:#fff; border:1px solid var(--line); color:#2f271f; font-weight:700; }
 .decision-native-root #decisionAdGlobalHint { max-width: 520px; }
+.decision-native-root .decision-ad-toggle-row { margin-top:8px; }
+.decision-native-root .decision-ad-toggle-row .filter-group { width:100%; justify-content:flex-start; }
 .decision-native-root .decision-chip { display:inline-flex; align-items:center; border-radius:999px; padding:2px 8px; font-size:11px; font-weight:700; border:1px solid var(--line); background:#fbf7f1; }
 .decision-native-root .tag-scale { color:#0b8f5a; border-color:#bce5d1; background:#eefaf4; }
 .decision-native-root .tag-pause { color:#b3261e; border-color:#f2c3bf; background:#fff1ef; }
@@ -306,29 +324,37 @@ select, .pill-btn, input[type="date"] { border:1px solid var(--line); background
 .decision-native-root .decision-table.ad-table { min-width:1400px; }
 .decision-native-root .decision-table { min-width:1820px; }
 .decision-native-root .decision-table.ad-table { min-width:1780px; }
+.decision-native-root .decision-table.compact-cols { min-width: 1320px; }
+.decision-native-root .decision-table.ad-table.compact-cols { min-width: 1400px; }
 .decision-native-root .decision-table th,
 .decision-native-root .decision-table td { padding: 9px 10px; line-height: 1.35; vertical-align: middle; }
 .decision-native-root .decision-table th { white-space: nowrap; }
 .decision-native-root #decisionCampTable td:not(:first-child):not(:nth-child(4)):not(:nth-child(8)),
 .decision-native-root #decisionAdTable td:not(:first-child):not(:nth-child(4)):not(:nth-child(8)) { white-space: nowrap; }
 .decision-native-root #decisionCampTable th:nth-child(2), .decision-native-root #decisionCampTable td:nth-child(2),
-.decision-native-root #decisionAdTable th:nth-child(2), .decision-native-root #decisionAdTable td:nth-child(2) { min-width: 58px; }
+.decision-native-root #decisionAdTable th:nth-child(2), .decision-native-root #decisionAdTable td:nth-child(2) { min-width: 92px; width:92px; text-align:center; }
 .decision-native-root #decisionCampTable th:nth-child(3), .decision-native-root #decisionCampTable td:nth-child(3),
-.decision-native-root #decisionAdTable th:nth-child(3), .decision-native-root #decisionAdTable td:nth-child(3) { min-width: 72px; }
+.decision-native-root #decisionAdTable th:nth-child(3), .decision-native-root #decisionAdTable td:nth-child(3) { min-width: 112px; width:112px; text-align:center; }
 .decision-native-root #decisionCampTable th:nth-child(4), .decision-native-root #decisionCampTable td:nth-child(4),
-.decision-native-root #decisionAdTable th:nth-child(4), .decision-native-root #decisionAdTable td:nth-child(4) { min-width: 78px; max-width: 92px; }
+.decision-native-root #decisionAdTable th:nth-child(4), .decision-native-root #decisionAdTable td:nth-child(4) { min-width: 152px; width: 152px; max-width: 176px; text-align:center; }
 .decision-native-root #decisionCampTable td:nth-child(4),
 .decision-native-root #decisionAdTable td:nth-child(4) { white-space: normal; line-height:1.25; }
 .decision-native-root #decisionCampTable th:nth-child(5), .decision-native-root #decisionCampTable td:nth-child(5),
-.decision-native-root #decisionAdTable th:nth-child(5), .decision-native-root #decisionAdTable td:nth-child(5) { min-width: 66px; }
+.decision-native-root #decisionAdTable th:nth-child(5), .decision-native-root #decisionAdTable td:nth-child(5) { min-width: 104px; width:104px; text-align:center !important; }
 .decision-native-root #decisionCampTable th:nth-child(6), .decision-native-root #decisionCampTable td:nth-child(6),
-.decision-native-root #decisionAdTable th:nth-child(6), .decision-native-root #decisionAdTable td:nth-child(6) { min-width: 58px; text-align:center; }
+.decision-native-root #decisionAdTable th:nth-child(6), .decision-native-root #decisionAdTable td:nth-child(6) { min-width: 76px; width:76px; text-align:center !important; }
 .decision-native-root #decisionCampTable th:nth-child(7), .decision-native-root #decisionCampTable td:nth-child(7),
-.decision-native-root #decisionAdTable th:nth-child(7), .decision-native-root #decisionAdTable td:nth-child(7) { min-width: 84px; }
+.decision-native-root #decisionAdTable th:nth-child(7), .decision-native-root #decisionAdTable td:nth-child(7) { min-width: 124px; width:124px; text-align:center; }
 .decision-native-root #decisionCampTable th:nth-child(8), .decision-native-root #decisionCampTable td:nth-child(8),
-.decision-native-root #decisionAdTable th:nth-child(8), .decision-native-root #decisionAdTable td:nth-child(8) { min-width: 120px; width: 120px; }
+.decision-native-root #decisionAdTable th:nth-child(8), .decision-native-root #decisionAdTable td:nth-child(8) { min-width: 140px; width: 140px; text-align:left; }
+.decision-native-root #decisionCampTable.compact-cols th:nth-child(8), .decision-native-root #decisionCampTable.compact-cols td:nth-child(8),
+.decision-native-root #decisionAdTable.compact-cols th:nth-child(8), .decision-native-root #decisionAdTable.compact-cols td:nth-child(8) { min-width: 110px; width: 110px; }
+.decision-native-root #decisionCampTable.reason-open th:nth-child(8), .decision-native-root #decisionCampTable.reason-open td:nth-child(8),
+.decision-native-root #decisionAdTable.reason-open th:nth-child(8), .decision-native-root #decisionAdTable.reason-open td:nth-child(8) { min-width: 360px; width: 360px; }
+.decision-native-root #decisionCampTable.compact-cols.reason-open th:nth-child(8), .decision-native-root #decisionCampTable.compact-cols.reason-open td:nth-child(8),
+.decision-native-root #decisionAdTable.compact-cols.reason-open th:nth-child(8), .decision-native-root #decisionAdTable.compact-cols.reason-open td:nth-child(8) { min-width: 300px; width: 300px; }
 .decision-native-root #decisionCampTable th:nth-child(n+9), .decision-native-root #decisionCampTable td:nth-child(n+9),
-.decision-native-root #decisionAdTable th:nth-child(n+9), .decision-native-root #decisionAdTable td:nth-child(n+9) { min-width: 78px; }
+.decision-native-root #decisionAdTable th:nth-child(n+9), .decision-native-root #decisionAdTable td:nth-child(n+9) { min-width: 88px; }
 .decision-native-root #decisionCampTable th:first-child, .decision-native-root #decisionCampTable td:first-child,
 .decision-native-root #decisionAdTable th:first-child, .decision-native-root #decisionAdTable td:first-child { box-shadow: 1px 0 0 #eee2d2; }
 .decision-native-root .decision-table th.sortable { cursor:pointer; user-select:none; }
@@ -350,6 +376,12 @@ select, .pill-btn, input[type="date"] { border:1px solid var(--line); background
   padding: 8px 10px;
   box-shadow: 0 8px 20px rgba(0,0,0,0.15);
 }
+.decision-native-root .decision-table th.help-tip:last-child:hover::after,
+.decision-native-root .decision-table th.help-tip[data-sort="purchases"]:hover::after,
+.decision-native-root .decision-table th.help-tip[data-sort="wroas"]:hover::after {
+  left:auto;
+  right:0;
+}
 .decision-native-root .pri-chip, .decision-native-root .conf-chip { display:inline-flex; align-items:center; justify-content:center; min-width:28px; padding:2px 8px; border-radius:999px; font-size:11px; font-weight:800; border:1px solid transparent; }
 .decision-native-root .pri-highest { color:#b3261e; background:#fff1ef; border-color:#f2c3bf; }
 .decision-native-root .pri-high { color:#c76a1f; background:#fff6e8; border-color:#ecd6aa; }
@@ -359,9 +391,16 @@ select, .pill-btn, input[type="date"] { border:1px solid var(--line); background
 .decision-native-root .conf-low { color:#b3261e; background:#fff1ef; border-color:#f2c3bf; }
 .decision-native-root details.reason { max-width: none; }
 .decision-native-root details.reason summary { cursor:pointer; color:var(--muted); display:inline-flex; align-items:center; gap:4px; white-space:nowrap; font-size:12px; }
+.decision-native-root details.reason summary .when-open { display:none; }
+.decision-native-root details.reason[open] summary .when-open { display:inline; }
+.decision-native-root details.reason[open] summary .when-closed { display:none; }
 .decision-native-root details.reason summary::-webkit-details-marker { margin-right:2px; }
-.decision-native-root details.reason div { color:var(--muted); font-size:12px; margin-top:6px; line-height:1.45; white-space:normal; overflow-wrap:anywhere; }
-.decision-native-root { --decision-camp-first-col: 420px; --decision-ad-first-col: 520px; }
+.decision-native-root details.reason div { color:var(--muted); font-size:12px; margin-top:6px; line-height:1.45; white-space:normal; overflow-wrap:anywhere; max-width:620px; }
+.decision-native-root details.reason[open] { display:block; min-width:260px; }
+.decision-native-root .ad-cell-wrap { display:flex; flex-direction:column; gap:2px; }
+.decision-native-root .ad-cell-wrap .ad-main { color:#2f271f; }
+.decision-native-root .ad-cell-wrap .ad-camp { color:var(--muted); font-size:11px; line-height:1.25; white-space:normal; overflow-wrap:anywhere; }
+.decision-native-root { --decision-camp-first-col: 360px; --decision-ad-first-col: 460px; }
 .decision-native-root #decisionCampTable th:first-child,
 .decision-native-root #decisionCampTable td:first-child {
   position: sticky; left: 0; z-index: 2; background: #fff;
@@ -388,10 +427,13 @@ select, .pill-btn, input[type="date"] { border:1px solid var(--line); background
 .decision-native-root .resize-col::after { content:''; position:absolute; top:6px; right:0; width:1px; height:calc(100% - 12px); background:#e6d9c8; }
 .decision-native-root .decision-pager { display:flex; justify-content:flex-end; align-items:center; gap:8px; margin-top:8px; }
 .decision-native-root .decision-pager .small { color:var(--muted); font-size:12px; }
-.decision-native-root .decision-rules-grid { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:10px; }
-.decision-native-root .decision-rule-card { border:1px solid var(--line); border-radius:12px; background:#fcfaf6; padding:10px 12px; min-width:0; }
-.decision-native-root .decision-rule-card .rule-title { font-size:12px; font-weight:800; color:#2f271f; }
-.decision-native-root .decision-rule-card .rule-text { margin-top:4px; font-size:12px; color:var(--muted); line-height:1.4; }
+.decision-native-root .decision-rules-grid { display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap:8px; }
+.decision-native-root .decision-rule-card { border:1px solid var(--line); border-radius:10px; background:#fcfaf6; padding:8px 10px; min-width:0; }
+.decision-native-root .decision-rule-card .rule-title { font-size:11px; font-weight:800; color:#2f271f; }
+.decision-native-root .decision-rule-card .rule-text { margin-top:3px; font-size:11px; color:var(--muted); line-height:1.35; }
+.decision-native-root .decision-date-strong { color:#b3261e; font-weight:800; }
+.decision-native-root .decision-ad-controls { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:6px; }
+.decision-native-root .decision-ad-controls .small { color:var(--muted); }
 .decision-native-root .decision-todo-board { display:none; }
 .decision-native-root .decision-todo-grid { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:10px; }
 .decision-native-root .decision-todo-card { border:1px solid var(--line); background:#fcfaf6; border-radius:12px; padding:10px 12px; min-width:0; }
@@ -757,13 +799,31 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
       <div id="urlDetailPanel" class="hidden" style="margin-top:10px;">
         <div class="panel-head">
           <h3 id="urlDetailTitle">广告明细</h3>
-          <button id="urlDetailBack" class="pill-btn sm" type="button">返回上一级</button>
+          <button id="urlDetailBack" class="pill-btn sm" type="button">折叠</button>
         </div>
         <div class="table-scroll wide"><table class="table wide" id="urlDetailTable"></table></div>
         <div class="pager" id="urlDetailPager">
           <div class="filter-group" id="urlDetailPageSizeGroup">
             <span class="badge">每页</span>
             <select id="urlDetailPageSize">
+              <option value="10" selected>10</option>
+              <option value="15">15</option>
+              <option value="30">30</option>
+              <option value="all">全部</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div id="urlProductDetailPanel" class="hidden" style="margin-top:10px;">
+        <div class="panel-head">
+          <h3 id="urlProductDetailTitle">商品明细</h3>
+          <button id="urlProductDetailBack" class="pill-btn sm" type="button">折叠</button>
+        </div>
+        <div class="table-scroll wide"><table class="table wide" id="urlProductDetailTable"></table></div>
+        <div class="pager" id="urlProductDetailPager">
+          <div class="filter-group" id="urlProductDetailPageSizeGroup">
+            <span class="badge">每页</span>
+            <select id="urlProductDetailPageSize">
               <option value="10" selected>10</option>
               <option value="15">15</option>
               <option value="30">30</option>
@@ -807,34 +867,27 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
   <div class="section hidden" id="decisionSection">
     <div id="decisionNativeRoot" class="decision-native-root">
       <div class="decision-kpis" id="decisionKpis"></div>
-      <div class="decision-head" style="margin-top:10px; margin-bottom:0;">
-        <div class="filter-group">
-          <button class="pill-btn sm" type="button" id="decisionAdPanelToggle">显示 Ad 决策</button>
-          <span class="small" id="decisionAdGlobalHint">默认展示全量 Ad 决策；订单列为当天订单，点 Campaign 行可筛选到单个 Campaign。</span>
-        </div>
-      </div>
-
       <div class="panel decision-rules-panel" style="margin-top:12px;">
         <div class="decision-head">
           <h3>判定逻辑说明</h3>
-          <div class="decision-sub" id="decisionRulesSub">数据截止：-（仅基于最新有数据日期做决策）</div>
+          <div class="decision-sub" id="decisionRulesSub">数据截止：-</div>
         </div>
         <div class="decision-rules-grid">
-          <div class="decision-rule-card">
-            <div class="rule-title">Campaign 扩量</div>
-            <div class="rule-text">当天ROAS + 前3天ROAS + 前7天ROAS加权（综合ROAS）共同判断；且需满足订单样本量与趋势一致性，避免偶发出单误判扩量。</div>
-          </div>
           <div class="decision-rule-card">
             <div class="rule-title">Campaign 暂停</div>
             <div class="rule-text">更偏保守：要求较高花费 + 7/14天持续偏弱 + 订单不足，才进入暂停队列，不因单日波动直接暂停。</div>
           </div>
           <div class="decision-rule-card">
-            <div class="rule-title">Ad 决策</div>
-            <div class="rule-text">默认展示全量Ad；点击Campaign行查看该Campaign下Ad明细。Ad标签主要用于辅助排查（优先关闭 / 点击弱 / 转化弱）。</div>
+            <div class="rule-title">Campaign 扩量</div>
+            <div class="rule-text">当天ROAS + 前3天ROAS + 前7天ROAS加权（综合ROAS）共同判断；且需满足订单样本量与趋势一致性，避免偶发出单误判扩量。</div>
+          </div>
+          <div class="decision-rule-card">
+            <div class="rule-title">置信度</div>
+            <div class="rule-text">用于判断信号稳定性：结合当天花费/点击/订单与近7天表现评估。高=信号更稳定；中=可参考但需观察；低=样本不足或波动较大。</div>
           </div>
           <div class="decision-rule-card">
             <div class="rule-title">优先级分值</div>
-            <div class="rule-text">用于排序的内部分值（不是报表原始金额）。暂停类偏风险，扩量类偏放量潜力，数值越大越建议优先处理。</div>
+            <div class="rule-text">用于排序的内部分值（已压缩显示，不是报表金额）。暂停类偏风险，扩量类偏放量潜力。</div>
           </div>
         </div>
       </div>
@@ -881,6 +934,10 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
             <button class="pill-btn sm" type="button" id="decisionCampNext">下一页</button>
           </div>
         </div>
+        <div class="decision-ad-controls">
+          <button class="pill-btn sm" type="button" id="decisionAdPanelToggle">显示 Ad 决策</button>
+          <span class="small" id="decisionAdGlobalHint">默认展示全量 Ad 决策；点 Campaign 行可筛选到单个 Campaign。</span>
+        </div>
         <div class="panel decision-panel hidden" id="decisionAdPanel">
           <div class="decision-head">
             <div class="decision-title-wrap">
@@ -891,7 +948,7 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
               <span class="badge">视图</span>
               <select id="decisionAdFilter">
                 <option value="all">全部</option>
-                <option value="loss">优先关闭Ad</option>
+                <option value="loss">优先关闭</option>
                 <option value="click">点击弱</option>
                 <option value="conv">转化弱</option>
               </select>
@@ -1234,9 +1291,54 @@ function decisionConfidence(cur, prev7) {
 function decisionConfClass(v){ return v==='高'?'conf-high':(v==='中'?'conf-mid':'conf-low'); }
 function decisionPriorityChip(n){ const label = decisionPriorityLabel(n); const cls = n>=4?'pri-chip pri-highest':(n>=3?'pri-chip pri-high':'pri-chip pri-mid'); return `<span class="${cls}">${label}</span>`; }
 function decisionConfChip(v){ const cls = v==='高'?'conf-chip conf-high':(v==='中'?'conf-chip conf-mid':'conf-chip conf-low'); return `<span class="${cls}">${v}</span>`; }
+function decisionPriorityScore(raw, pri=1, conf='低') {
+  const v = Math.max(0, raw || 0);
+  const priMul = 1 + ((pri || 1) - 1) * 0.12;
+  const confMul = conf === '高' ? 1.12 : (conf === '中' ? 1.06 : 1.0);
+  const base = Math.sqrt(v) * 8;
+  return Math.max(0, Math.round(base * priMul * confMul));
+}
+function applyAdPriorityScores(rows) {
+  const confBonus = { '高': 120, '中': 60, '低': 0 };
+  const priBonus = { 4: 420, 3: 260, 2: 120, 1: 20 };
+  const byGroup = groupBy(rows, r => r.actionGroup || 'watch');
+  for (const [, group] of byGroup.entries()) {
+    if (!group.length) continue;
+    const sorted = group.slice().sort((a,b) => (a.impactRaw||0) - (b.impactRaw||0));
+    const vals = sorted.map(x => Math.max(0, x.impactRaw || 0));
+    const min = vals[0] || 0;
+    const max = vals[vals.length - 1] || 0;
+    const denom = Math.max(max - min, 1e-9);
+    sorted.forEach((r, idx) => {
+      const pct = sorted.length === 1 ? 1 : idx / (sorted.length - 1); // 0..1
+      const rawNorm = (Math.max(0, r.impactRaw || 0) - min) / denom;
+      let band = 8;
+      if (pct >= 0.98) band = 1600;
+      else if (pct >= 0.90) band = 900;
+      else if (pct >= 0.75) band = 420;
+      else if (pct >= 0.50) band = 180;
+      else if (pct >= 0.25) band = 70;
+      const spread = Math.round(rawNorm * 220);
+      r.impactValue = band + spread + (priBonus[r.pri] || 0) + (confBonus[r.conf] || 0);
+    });
+  }
+}
 function decisionReasonCell(reason){
   const safe = String(reason||'-').replace(/</g,'&lt;');
-  return `<details class="reason"><summary>查看原因</summary><div>${safe}</div></details>`;
+  const display = (safe.length > 26 ? safe.replace(/，/, '，<br>') : safe);
+  return `<details class="reason"><summary><span class="when-closed">查看原因</span><span class="when-open">收起</span></summary><div>${display}</div></details>`;
+}
+function bindDecisionReasonDetails(table) {
+  if (!table) return;
+  const sync = () => table.classList.toggle('reason-open', !!table.querySelector('details.reason[open]'));
+  table.querySelectorAll('details.reason').forEach(d => d.addEventListener('toggle', sync));
+  sync();
+}
+function applyDecisionHeaderTitles(table) {
+  if (!table) return;
+  table.querySelectorAll('th.help-tip[data-tip]').forEach(th => {
+    th.removeAttribute('title');
+  });
 }
 function attachDecisionColResize(tableId, cssVarName, minW, maxW, rootEl = decisionNativeRoot) {
   const table = document.getElementById(tableId);
@@ -1260,6 +1362,35 @@ function attachDecisionColResize(tableId, cssVarName, minW, maxW, rootEl = decis
     function onMove(ev) {
       const next = Math.max(minW, Math.min(maxW, startW + (ev.clientX - startX)));
       rootEl.style.setProperty(cssVarName, `${next}px`);
+    }
+    function onUp() {
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseup', onUp);
+    }
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+  });
+}
+function attachTableFirstColResize(tableId, cssVarName, minW, maxW, clsName) {
+  const table = document.getElementById(tableId);
+  if (!table) return;
+  const firstTh = table.querySelector('th:first-child');
+  if (!firstTh || firstTh.querySelector('.col-handle')) return;
+  firstTh.classList.add(clsName || 'resize-col');
+  const handle = document.createElement('span');
+  handle.className = 'col-handle';
+  firstTh.appendChild(handle);
+  handle.addEventListener('dblclick', (e) => {
+    e.preventDefault(); e.stopPropagation();
+    document.documentElement.style.setProperty(cssVarName, `${minW}px`);
+  });
+  handle.addEventListener('mousedown', (e) => {
+    e.preventDefault();
+    const startX = e.clientX;
+    const startW = parseInt(getComputedStyle(document.documentElement).getPropertyValue(cssVarName), 10) || minW;
+    function onMove(ev) {
+      const next = Math.max(minW, Math.min(maxW, startW + (ev.clientX - startX)));
+      document.documentElement.style.setProperty(cssVarName, `${next}px`);
     }
     function onUp() {
       window.removeEventListener('mousemove', onMove);
@@ -1343,7 +1474,8 @@ function buildDecisionState() {
     const conf = decisionConfidence(cur, prev7);
     const riskValue = cur.spend * Math.max(1 - cur.roas, 0);
     const scalePotential = (cur.conv || 0) * Math.max(cur.roas - 1, 0);
-    const impactValue = decisionActionGroup(tag)==='pause' ? riskValue : (decisionActionGroup(tag)==='scale' ? scalePotential : cur.spend*0.15);
+    const impactRaw = decisionActionGroup(tag)==='pause' ? riskValue : (decisionActionGroup(tag)==='scale' ? scalePotential : cur.spend*0.15);
+    const impactValue = decisionPriorityScore(impactRaw, pri, conf);
 
     const campAdMap = groupBy(latestCampRows, r => r.ad || '-');
     const adAggs = Array.from(campAdMap.entries()).map(([ad, rs]) => ({ ad, rows: rs, a: aggregate(rs) }));
@@ -1351,7 +1483,7 @@ function buildDecisionState() {
     const avgCvr = adAggs.length ? adAggs.reduce((s,x)=>s+(x.a.cvr||0),0)/adAggs.length : 0;
     const avgRoas = adAggs.length ? adAggs.reduce((s,x)=>s+(x.a.roas||0),0)/adAggs.length : 0;
 
-    campaigns.push({ camp, type, tag, action, pri, reason, conf, wRoas, cur, prev3, prev7, prev14, riskValue, scalePotential, impactValue, adCount: adAggs.length, actionGroup: decisionActionGroup(tag) });
+    campaigns.push({ camp, type, tag, action, pri, reason, conf, wRoas, cur, prev3, prev7, prev14, riskValue, scalePotential, impactRaw, impactValue, adCount: adAggs.length, actionGroup: decisionActionGroup(tag) });
 
     for (const item of adAggs) {
       const ad = item.ad, a = item.a;
@@ -1368,10 +1500,12 @@ function buildDecisionState() {
       const aconf = decisionConfidence(a, p7);
       const ariskValue = a.spend * Math.max(1 - a.roas, 0);
       const ascalePotential = (a.conv || 0) * Math.max(a.roas - 1, 0);
-      const aimpactValue = decisionActionGroup(atag)==='pause' ? ariskValue : (decisionActionGroup(atag)==='scale' ? ascalePotential : a.spend*0.15);
-      ads.push({ camp, ad, type, tag: atag, action: aaction, pri: apri, reason: areason, conf: aconf, wRoas: awRoas, cur: a, prev3:p3, prev7:p7, prev14:p14, riskValue: ariskValue, scalePotential: ascalePotential, impactValue: aimpactValue, actionGroup: decisionActionGroup(atag) });
+      const aimpactRaw = decisionActionGroup(atag)==='pause' ? ariskValue : (decisionActionGroup(atag)==='scale' ? ascalePotential : a.spend*0.15);
+      ads.push({ camp, ad, type, tag: atag, action: aaction, pri: apri, reason: areason, conf: aconf, wRoas: awRoas, cur: a, prev3:p3, prev7:p7, prev14:p14, riskValue: ariskValue, scalePotential: ascalePotential, impactRaw: aimpactRaw, impactValue: 0, actionGroup: decisionActionGroup(atag) });
     }
   }
+
+  applyAdPriorityScores(ads);
 
   campaigns.sort((a,b)=>b.pri-a.pri || b.cur.spend-a.cur.spend);
   ads.sort((a,b)=>b.pri-a.pri || b.cur.spend-a.cur.spend);
@@ -1405,7 +1539,8 @@ function renderDecisionKpis() {
   const s = decisionState.summary;
   const latestEl = document.getElementById('decisionLatestDate'); if (latestEl) latestEl.textContent = `最新决策日 ${decisionState.latestKey}`;
   const upEl = document.getElementById('decisionUpToDate'); if (upEl) upEl.textContent = decisionState.latestKey;
-  const rulesSub = document.getElementById('decisionRulesSub'); if (rulesSub) rulesSub.textContent = `数据截止：${decisionState.latestKey}（仅基于最新有数据日期做决策）`;
+  const rulesSub = document.getElementById('decisionRulesSub');
+  if (rulesSub) rulesSub.innerHTML = `数据截止：<span class="decision-date-strong">${decisionState.latestKey}</span>`;
   const watchCount = (decisionState.campaigns || []).filter(x=>x.actionGroup==='watch').length;
   const cards = [
     { key:'camp_pause', title:'暂停队列', value:s.campPause, hint:'长期偏弱且预算已跑开' },
@@ -1453,6 +1588,7 @@ function applyDecisionKpiFocus() {
 
 
 function renderDecisionCampaignTable() {
+  const latestKeyTip = decisionState?.latestKey || '-';
   const filter = document.getElementById('decisionCampFilter')?.value || 'all';
   const typeFilter = document.getElementById('decisionCampTypeFilter')?.value || 'all';
   let rowsC = decisionState.campaigns.filter(x =>
@@ -1486,21 +1622,21 @@ function renderDecisionCampaignTable() {
   const compact = decisionCampColumnMode === 'compact';
   const head = compact ? `<tr>
     <th>Campaign</th><th>类型</th><th>标签</th><th>动作</th>
-    <th class="sortable help-tip" data-sort="priority" data-tip="决策优先处理等级：最高/高/中/低（由规则与风险程度综合决定）">优先级<span class="sort-ind">${si('priority')}</span></th>
-    <th class="help-tip" data-tip="建议可信度：基于花费、点击、订单与近7天稳定性估算；高表示信号更稳定">置信度</th><th class="sortable help-tip" data-sort="impact" data-tip="用于排序的内部处理分值（非原始金额）；暂停类偏风险，扩量类偏潜力">优先级分值<span class="sort-ind">${si('impact')}</span></th><th>原因</th>
-    <th class="sortable" data-sort="spend">花费<span class="sort-ind">${si('spend')}</span></th>
-    <th class="sortable" data-sort="roas">当天ROAS<span class="sort-ind">${si('roas')}</span></th>
-    <th class="sortable" data-sort="wroas">综合ROAS<span class="sort-ind">${si('wroas')}</span></th>
-    <th class="sortable" data-sort="purchases">当天订单<span class="sort-ind">${si('purchases')}</span></th>
+    <th class="help-tip" data-tip="结合当天花费/点击/订单与近7天稳定性评估；高=信号更稳定，低=波动或样本不足。">置信度</th>
+    <th class="sortable help-tip" data-sort="priority" data-tip="最高/高/中/低；综合动作类型、风险程度与放量机会后的处理顺序建议。">优先级<span class="sort-ind">${si('priority')}</span></th><th class="sortable help-tip" data-sort="impact" data-tip="用于排序的内部处理分值（非金额）；基于风险/潜力原始值压缩，并叠加优先级与置信度。">优先级分值<span class="sort-ind">${si('impact')}</span></th><th>原因</th>
+    <th class="sortable help-tip" data-sort="spend" data-tip="最新决策日（${latestKeyTip}）的花费">当天花费<span class="sort-ind">${si('spend')}</span></th>
+    <th class="sortable help-tip" data-sort="roas" data-tip="最新决策日（${latestKeyTip}）的ROAS">当天ROAS<span class="sort-ind">${si('roas')}</span></th>
+    <th class="sortable help-tip" data-sort="wroas" data-tip="综合ROAS：当天/前3天/前7天加权">综合ROAS<span class="sort-ind">${si('wroas')}</span></th>
+    <th class="sortable help-tip" data-sort="purchases" data-tip="最新决策日（${latestKeyTip}）当天订单">当天订单<span class="sort-ind">${si('purchases')}</span></th>
   </tr>` : `<tr>
     <th>Campaign</th><th>类型</th><th>标签</th><th>动作</th>
-    <th class="sortable help-tip" data-sort="priority" data-tip="决策优先处理等级：最高/高/中/低（由规则与风险程度综合决定）">优先级<span class="sort-ind">${si('priority')}</span></th>
-    <th class="help-tip" data-tip="建议可信度：基于花费、点击、订单与近7天稳定性估算；高表示信号更稳定">置信度</th><th class="sortable help-tip" data-sort="impact" data-tip="用于排序的内部处理分值（非原始金额）；暂停类偏风险，扩量类偏潜力">优先级分值<span class="sort-ind">${si('impact')}</span></th><th>原因</th>
-    <th class="sortable" data-sort="spend">花费<span class="sort-ind">${si('spend')}</span></th>
+    <th class="help-tip" data-tip="结合当天花费/点击/订单与近7天稳定性评估；高=信号更稳定，低=波动或样本不足。">置信度</th>
+    <th class="sortable help-tip" data-sort="priority" data-tip="最高/高/中/低；综合动作类型、风险程度与放量机会后的处理顺序建议。">优先级<span class="sort-ind">${si('priority')}</span></th><th class="sortable help-tip" data-sort="impact" data-tip="用于排序的内部处理分值（非金额）；基于风险/潜力原始值压缩，并叠加优先级与置信度。">优先级分值<span class="sort-ind">${si('impact')}</span></th><th>原因</th>
+    <th class="sortable help-tip" data-sort="spend" data-tip="最新决策日（${latestKeyTip}）的花费">当天花费<span class="sort-ind">${si('spend')}</span></th>
     <th class="sortable" data-sort="conv">转化金额<span class="sort-ind">${si('conv')}</span></th>
-    <th class="sortable" data-sort="roas">当天ROAS<span class="sort-ind">${si('roas')}</span></th>
-    <th class="sortable" data-sort="wroas">综合ROAS<span class="sort-ind">${si('wroas')}</span></th>
-    <th class="sortable" data-sort="purchases">当天订单<span class="sort-ind">${si('purchases')}</span></th>
+    <th class="sortable help-tip" data-sort="roas" data-tip="最新决策日（${latestKeyTip}）的ROAS">当天ROAS<span class="sort-ind">${si('roas')}</span></th>
+    <th class="sortable help-tip" data-sort="wroas" data-tip="综合ROAS：当天/前3天/前7天加权">综合ROAS<span class="sort-ind">${si('wroas')}</span></th>
+    <th class="sortable help-tip" data-sort="purchases" data-tip="最新决策日（${latestKeyTip}）当天订单">当天订单<span class="sort-ind">${si('purchases')}</span></th>
     <th>客单价</th><th>CPA</th>
     <th class="sortable" data-sort="ctr">CTR<span class="sort-ind">${si('ctr')}</span></th>
     <th>CPC</th><th>CPM</th><th class="sortable" data-sort="cvr">转化率<span class="sort-ind">${si('cvr')}</span></th>
@@ -1510,16 +1646,16 @@ function renderDecisionCampaignTable() {
     const sel = decisionState.selectedCamp === r.camp ? ' style="background:#fbf4eb;"' : '';
     const rowCompact = `<tr data-camp="${String(r.camp).replace(/"/g,'&quot;')}" class="decision-camp-row"${sel}>
       <td>${r.camp}</td><td>${r.type}</td><td>${decisionTagChip(r.tag)}</td><td>${r.action}</td>
-      <td class="${r.pri>=4?'priority-highest':(r.pri>=3?'priority-high':'')}">${decisionPriorityChip(r.pri)}</td>
       <td class="${decisionConfClass(r.conf)}">${decisionConfChip(r.conf)}</td>
+      <td class="${r.pri>=4?'priority-highest':(r.pri>=3?'priority-high':'')}">${decisionPriorityChip(r.pri)}</td>
       <td>${fmt(r.impactValue,0)}</td>
       <td>${decisionReasonCell(r.reason)}</td>
       <td>${money(r.cur.spend)}</td><td>${fmt(r.cur.roas,2)}</td><td>${fmt(r.wRoas,2)}</td><td>${fmt(r.cur.purchases,0)}</td>
     </tr>`;
     const rowFull = `<tr data-camp="${String(r.camp).replace(/"/g,'&quot;')}" class="decision-camp-row"${sel}>
       <td>${r.camp}</td><td>${r.type}</td><td>${decisionTagChip(r.tag)}</td><td>${r.action}</td>
-      <td class="${r.pri>=4?'priority-highest':(r.pri>=3?'priority-high':'')}">${decisionPriorityChip(r.pri)}</td>
       <td class="${decisionConfClass(r.conf)}">${decisionConfChip(r.conf)}</td>
+      <td class="${r.pri>=4?'priority-highest':(r.pri>=3?'priority-high':'')}">${decisionPriorityChip(r.pri)}</td>
       <td>${fmt(r.impactValue,0)}</td><td>${decisionReasonCell(r.reason)}</td>
       <td>${money(r.cur.spend)}</td><td>${money(r.cur.conv)}</td><td>${fmt(r.cur.roas,2)}</td><td>${fmt(r.wRoas,2)}</td><td>${fmt(r.cur.purchases,0)}</td><td>${money(r.cur.aov)}</td><td>${money(r.cur.cpa)}</td>
       <td>${pct(r.cur.ctr)}</td><td>${money(r.cur.cpc)}</td><td>${money(r.cur.cpm)}</td><td>${pct(r.cur.cvr)}</td>
@@ -1530,7 +1666,10 @@ function renderDecisionCampaignTable() {
   }).join('');
   const tbl = document.getElementById('decisionCampTable');
   tbl.innerHTML = head + body;
+  tbl.classList.toggle('compact-cols', compact);
   attachDecisionColResize('decisionCampTable', '--decision-camp-first-col', 280, 720);
+  applyDecisionHeaderTitles(tbl);
+  bindDecisionReasonDetails(tbl);
   tbl.querySelectorAll('.decision-camp-row').forEach(tr => tr.addEventListener('click', () => {
     const nextCamp = tr.getAttribute('data-camp') || '';
     const isSame = decisionState.selectedCamp === nextCamp;
@@ -1557,6 +1696,7 @@ function renderDecisionCampaignTable() {
 }
 
 function renderDecisionAdTable() {
+  const latestKeyTip = decisionState?.latestKey || '-';
   const filter = document.getElementById('decisionAdFilter')?.value || 'all';
   const camp = decisionState.selectedCamp;
   const adPanel = document.getElementById('decisionAdPanel');
@@ -1613,45 +1753,53 @@ function renderDecisionAdTable() {
   const compact = decisionAdColumnMode === 'compact';
   const head = compact ? `<tr>
     <th>Ad</th><th>类型</th><th>标签</th><th>动作</th>
-    <th class="sortable help-tip" data-sort="priority" data-tip="决策优先处理等级：最高/高/中/低（由规则与风险程度综合决定）">优先级<span class="sort-ind">${si('priority')}</span></th>
-    <th class="help-tip" data-tip="建议可信度：基于花费、点击、订单与近7天稳定性估算；高表示信号更稳定">置信度</th><th class="sortable help-tip" data-sort="impact" data-tip="用于排序的内部处理分值（非原始金额）；暂停类偏风险，扩量类偏潜力">优先级分值<span class="sort-ind">${si('impact')}</span></th><th>原因</th>
-    <th class="sortable" data-sort="spend">花费<span class="sort-ind">${si('spend')}</span></th>
-    <th class="sortable" data-sort="roas">当天ROAS<span class="sort-ind">${si('roas')}</span></th>
-    <th class="sortable" data-sort="wroas">综合ROAS<span class="sort-ind">${si('wroas')}</span></th>
-    <th class="sortable" data-sort="purchases">当天订单<span class="sort-ind">${si('purchases')}</span></th>
+    <th class="help-tip" data-tip="结合当天花费/点击/订单与近7天稳定性评估；高=信号更稳定，低=波动或样本不足。">置信度</th>
+    <th class="sortable help-tip" data-sort="priority" data-tip="最高/高/中/低；综合动作类型、风险程度与放量机会后的处理顺序建议。">优先级<span class="sort-ind">${si('priority')}</span></th><th class="sortable help-tip" data-sort="impact" data-tip="用于排序的内部处理分值（非金额）；基于风险/潜力原始值压缩，并叠加优先级与置信度。">优先级分值<span class="sort-ind">${si('impact')}</span></th><th>原因</th>
+    <th class="sortable help-tip" data-sort="spend" data-tip="最新决策日（${latestKeyTip}）的花费">当天花费<span class="sort-ind">${si('spend')}</span></th>
+    <th class="sortable help-tip" data-sort="roas" data-tip="最新决策日（${latestKeyTip}）的ROAS">当天ROAS<span class="sort-ind">${si('roas')}</span></th>
+    <th class="sortable help-tip" data-sort="wroas" data-tip="综合ROAS：当天/前3天/前7天加权">综合ROAS<span class="sort-ind">${si('wroas')}</span></th>
+    <th class="sortable help-tip" data-sort="purchases" data-tip="最新决策日（${latestKeyTip}）当天订单">当天订单<span class="sort-ind">${si('purchases')}</span></th>
   </tr>` : `<tr>
     <th>Ad</th><th>类型</th><th>标签</th><th>动作</th>
-    <th class="sortable help-tip" data-sort="priority" data-tip="决策优先处理等级：最高/高/中/低（由规则与风险程度综合决定）">优先级<span class="sort-ind">${si('priority')}</span></th>
-    <th class="help-tip" data-tip="建议可信度：基于花费、点击、订单与近7天稳定性估算；高表示信号更稳定">置信度</th><th class="sortable help-tip" data-sort="impact" data-tip="用于排序的内部处理分值（非原始金额）；暂停类偏风险，扩量类偏潜力">优先级分值<span class="sort-ind">${si('impact')}</span></th><th>原因</th>
-    <th class="sortable" data-sort="spend">花费<span class="sort-ind">${si('spend')}</span></th>
+    <th class="help-tip" data-tip="结合当天花费/点击/订单与近7天稳定性评估；高=信号更稳定，低=波动或样本不足。">置信度</th>
+    <th class="sortable help-tip" data-sort="priority" data-tip="最高/高/中/低；综合动作类型、风险程度与放量机会后的处理顺序建议。">优先级<span class="sort-ind">${si('priority')}</span></th><th class="sortable help-tip" data-sort="impact" data-tip="用于排序的内部处理分值（非金额）；基于风险/潜力原始值压缩，并叠加优先级与置信度。">优先级分值<span class="sort-ind">${si('impact')}</span></th><th>原因</th>
+    <th class="sortable help-tip" data-sort="spend" data-tip="最新决策日（${latestKeyTip}）的花费">当天花费<span class="sort-ind">${si('spend')}</span></th>
     <th class="sortable" data-sort="conv">转化金额<span class="sort-ind">${si('conv')}</span></th>
-    <th class="sortable" data-sort="roas">当天ROAS<span class="sort-ind">${si('roas')}</span></th>
-    <th class="sortable" data-sort="wroas">综合ROAS<span class="sort-ind">${si('wroas')}</span></th>
-    <th class="sortable" data-sort="purchases">当天订单<span class="sort-ind">${si('purchases')}</span></th>
+    <th class="sortable help-tip" data-sort="roas" data-tip="最新决策日（${latestKeyTip}）的ROAS">当天ROAS<span class="sort-ind">${si('roas')}</span></th>
+    <th class="sortable help-tip" data-sort="wroas" data-tip="综合ROAS：当天/前3天/前7天加权">综合ROAS<span class="sort-ind">${si('wroas')}</span></th>
+    <th class="sortable help-tip" data-sort="purchases" data-tip="最新决策日（${latestKeyTip}）当天订单">当天订单<span class="sort-ind">${si('purchases')}</span></th>
     <th>客单价</th><th>CPA</th>
     <th class="sortable" data-sort="ctr">CTR<span class="sort-ind">${si('ctr')}</span></th>
     <th>CPC</th><th>CPM</th><th class="sortable" data-sort="cvr">转化率<span class="sort-ind">${si('cvr')}</span></th>
     <th>加购成本</th><th>结帐成本</th><th>加购率</th><th>结账率</th><th>前3天ROAS</th><th>前7天ROAS</th><th>前14天ROAS</th>
   </tr>`;
-  const body = pageRows.map(r => compact ? `<tr>
-    <td>${r.ad}</td><td>${r.type}</td><td>${decisionTagChip(r.tag)}</td><td>${r.action}</td>
-    <td class="${r.pri>=4?'priority-highest':(r.pri>=3?'priority-high':'')}">${decisionPriorityChip(r.pri)}</td>
+  const body = pageRows.map(r => {
+    const adCell = !camp
+      ? `<div class="ad-cell-wrap"><div class="ad-main">${r.ad}</div><div class="ad-camp">${r.camp}</div></div>`
+      : r.ad;
+    return compact ? `<tr>
+    <td>${adCell}</td><td>${r.type}</td><td>${decisionTagChip(r.tag)}</td><td>${r.action}</td>
     <td class="${decisionConfClass(r.conf)}">${decisionConfChip(r.conf)}</td>
+    <td class="${r.pri>=4?'priority-highest':(r.pri>=3?'priority-high':'')}">${decisionPriorityChip(r.pri)}</td>
     <td>${fmt(r.impactValue,0)}</td>
     <td>${decisionReasonCell(r.reason)}</td>
     <td>${money(r.cur.spend)}</td><td>${fmt(r.cur.roas,2)}</td><td>${fmt(r.wRoas,2)}</td><td>${fmt(r.cur.purchases,0)}</td>
   </tr>` : `<tr>
-    <td>${r.ad}</td><td>${r.type}</td><td>${decisionTagChip(r.tag)}</td><td>${r.action}</td>
-    <td class="${r.pri>=4?'priority-highest':(r.pri>=3?'priority-high':'')}">${decisionPriorityChip(r.pri)}</td>
-    <td class="${decisionConfClass(r.conf)}">${decisionConfChip(r.conf)}</td><td>${fmt(r.impactValue,0)}</td><td>${decisionReasonCell(r.reason)}</td>
+    <td>${adCell}</td><td>${r.type}</td><td>${decisionTagChip(r.tag)}</td><td>${r.action}</td>
+    <td class="${decisionConfClass(r.conf)}">${decisionConfChip(r.conf)}</td>
+    <td class="${r.pri>=4?'priority-highest':(r.pri>=3?'priority-high':'')}">${decisionPriorityChip(r.pri)}</td><td>${fmt(r.impactValue,0)}</td><td>${decisionReasonCell(r.reason)}</td>
     <td>${money(r.cur.spend)}</td><td>${money(r.cur.conv)}</td><td>${fmt(r.cur.roas,2)}</td><td>${fmt(r.wRoas,2)}</td><td>${fmt(r.cur.purchases,0)}</td><td>${money(r.cur.aov)}</td><td>${money(r.cur.cpa)}</td>
     <td>${pct(r.cur.ctr)}</td><td>${money(r.cur.cpc)}</td><td>${money(r.cur.cpm)}</td><td>${pct(r.cur.cvr)}</td>
     <td>${money(r.cur.atcCost)}</td><td>${money(r.cur.checkoutCost)}</td><td>${pct(r.cur.atcRate)}</td><td>${pct(r.cur.checkoutRate)}</td>
     <td>${fmt(r.prev3.roas,2)}</td><td>${fmt(r.prev7.roas,2)}</td><td>${fmt(r.prev14.roas,2)}</td>
-  </tr>`).join('');
+  </tr>`;
+  }).join('');
   const tbl = document.getElementById('decisionAdTable');
   tbl.innerHTML = head + body;
+  tbl.classList.toggle('compact-cols', compact);
   attachDecisionColResize('decisionAdTable', '--decision-ad-first-col', 320, 900);
+  applyDecisionHeaderTitles(tbl);
+  bindDecisionReasonDetails(tbl);
   tbl.querySelectorAll('details.reason, details.reason summary').forEach(el => el.addEventListener('click', (e) => e.stopPropagation()));
   tbl.querySelectorAll('th.sortable').forEach(th => th.addEventListener('click', () => {
     const key = th.getAttribute('data-sort');
@@ -1856,7 +2004,15 @@ function resetDashboard() {
   urlDetailSortDir = 'desc';
   urlDetailPage = 1;
   urlDetailPageSize = 10;
+  urlProductDetailSortKey = 'spend';
+  urlProductDetailSortDir = 'desc';
+  urlProductDetailPage = 1;
+  urlProductDetailPageSize = 10;
+  urlDetailOpen = false;
+  urlProductDetailOpen = false;
+  selectedUrl = '';
   if (urlDetailPageSizeSelect) urlDetailPageSizeSelect.value = '10';
+  if (urlProductDetailPageSizeSelect) urlProductDetailPageSizeSelect.value = '10';
   urlProdPage = 1;
   urlProdPageSize = 15;
   urlProdSortKey = 'url';
@@ -1895,6 +2051,8 @@ const urlSearchClearBtn = document.getElementById('urlSearchClear');
 const urlPageSizeSelect = document.getElementById('urlPageSize');
 const urlDetailBackBtn = document.getElementById('urlDetailBack');
 const urlDetailPageSizeSelect = document.getElementById('urlDetailPageSize');
+const urlProductDetailBackBtn = document.getElementById('urlProductDetailBack');
+const urlProductDetailPageSizeSelect = document.getElementById('urlProductDetailPageSize');
 const urlProdPageFilter = document.getElementById('urlProdPageFilter');
 const urlProdExpandAllBtn = document.getElementById('urlProdExpandAllBtn');
 const urlProdSearchInput = document.getElementById('urlProdSearch');
@@ -2159,12 +2317,18 @@ let urlSortKey = 'spend';
 let urlSortDir = 'desc';
 let urlDetailSortKey = 'spend';
 let urlDetailSortDir = 'desc';
+let urlProductDetailSortKey = 'spend';
+let urlProductDetailSortDir = 'desc';
 let urlTag = 'all';
 let urlSearch = '';
 let urlCompareMode = 'off';
 let selectedUrl = '';
 let urlDetailPage = 1;
 let urlDetailPageSize = 10;
+let urlProductDetailPage = 1;
+let urlProductDetailPageSize = 10;
+let urlDetailOpen = false;
+let urlProductDetailOpen = false;
 let urlProdPage = 1;
 let urlProdPageSize = 15;
 let urlProdSortKey = 'url';
@@ -2183,6 +2347,9 @@ if (urlPageSizeSelect) {
 }
 if (urlDetailPageSizeSelect) {
   urlDetailPageSize = urlDetailPageSizeSelect.value === 'all' ? 'all' : (parseInt(urlDetailPageSizeSelect.value, 10) || 10);
+}
+if (urlProductDetailPageSizeSelect) {
+  urlProductDetailPageSize = urlProductDetailPageSizeSelect.value === 'all' ? 'all' : (parseInt(urlProductDetailPageSizeSelect.value, 10) || 10);
 }
 if (urlProdPageSizeSelect) {
   urlProdPageSize = urlProdPageSizeSelect.value === 'all' ? 'all' : (parseInt(urlProdPageSizeSelect.value, 10) || 15);
@@ -3435,8 +3602,13 @@ function renderURLBoard(rowsFiltered) {
     pager.insertAdjacentHTML('beforeend', `<div class="filter-group">${status}${buttons}</div>`);
   }
 
-  if (selectedUrl && !urlAgg.find(r => r.url === selectedUrl)) selectedUrl = '';
+  if (selectedUrl && !urlAgg.find(r => r.url === selectedUrl)) {
+    selectedUrl = '';
+    urlDetailOpen = false;
+    urlProductDetailOpen = false;
+  }
   renderURLDetail(baseRows);
+  renderURLProductDetail(baseRows);
 }
 
 function renderUrlProductPageBoard() {
@@ -3626,7 +3798,7 @@ function renderURLDetail(baseRows) {
   const title = document.getElementById('urlDetailTitle');
   const pager = document.getElementById('urlDetailPager');
   if (!panel || !table || !title) return;
-  if (!selectedUrl) {
+  if (!selectedUrl || !urlDetailOpen) {
     panel.classList.add('hidden');
     table.innerHTML = '';
     if (pager) pager.classList.add('hidden');
@@ -3670,12 +3842,113 @@ function renderURLDetail(baseRows) {
   const header = `<tr>${cols.map(c=>`<th class="sortable" data-key="${c.key}">${c.label}${urlDetailSortKey===c.key?`<span class="sort-ind">${urlDetailSortDir==='asc'?'▲':'▼'}</span>`:''}</th>`).join('')}</tr>`;
   const body = pageRows.map(r=>`<tr><td>${r.ad}</td><td>${money(r.spend)}</td><td>${money(r.conv)}</td><td><span class="${roasLevelClass(r.roas)}">${fmt(r.roas,2)}</span></td><td>${fmt(r.purchases,0)}</td><td>${money(r.aov)}</td><td>${money(r.cpa)}</td><td>${pct(r.ctr)}</td><td>${money(r.cpc)}</td><td>${money(r.cpm)}</td><td>${pct(r.cvr)}</td><td>${money(r.atcCost)}</td><td>${money(r.checkoutCost)}</td><td>${pct(r.atcRate)}</td><td>${pct(r.checkoutRate)}</td></tr>`).join('');
   table.innerHTML = header + body;
+  attachTableFirstColResize('urlDetailTable', '--url-detail-first-col', 260, 760, 'url-detail-first-resize');
   title.textContent = `广告明细 ${selectedUrl}`;
   panel.classList.remove('hidden');
   if (pager) {
     const sizeGroup = pager.querySelector('#urlDetailPageSizeGroup');
     const status = `<span class="small">第 ${urlDetailPage} / ${totalPages} 页</span>`;
     const buttons = `<button class="pill-btn" data-page="prev" ${urlDetailPage===1?'disabled':''}>上一页</button><button class="pill-btn" data-page="next" ${urlDetailPage===totalPages?'disabled':''}>下一页</button>`;
+    pager.innerHTML = '';
+    if (sizeGroup) pager.appendChild(sizeGroup);
+    pager.insertAdjacentHTML('beforeend', `<div class="filter-group">${status}${buttons}</div>`);
+    pager.classList.remove('hidden');
+  }
+}
+
+function renderURLProductDetail(baseRows) {
+  const panel = document.getElementById('urlProductDetailPanel');
+  const table = document.getElementById('urlProductDetailTable');
+  const title = document.getElementById('urlProductDetailTitle');
+  const pager = document.getElementById('urlProductDetailPager');
+  if (!panel || !table || !title) return;
+  if (!selectedUrl || !urlProductDetailOpen) {
+    panel.classList.add('hidden');
+    table.innerHTML = '';
+    if (pager) pager.classList.add('hidden');
+    return;
+  }
+  const detailRowsRaw = baseRows.filter(r => r.url === selectedUrl);
+  const withSid = detailRowsRaw.filter(r => String(r.shopify_id || '').trim());
+  const bySid = groupBy(withSid, r => String(r.shopify_id || '').trim());
+  const productByShopify = (() => {
+    const m = new Map();
+    Object.values(PRODUCT_MAP || {}).forEach(p => {
+      const sid = String(p?.shopify_id || '').trim();
+      if (sid && !m.has(sid)) m.set(sid, p);
+    });
+    return m;
+  })();
+  let rowsP = Array.from(bySid.entries()).map(([sid, rs]) => {
+    const a = aggregate(rs);
+    const prod = productByShopify.get(sid) || {};
+    const adSet = new Set(rs.map(x => String(x.ad || '').trim()).filter(Boolean));
+    return {
+      shopifyId: sid,
+      skc: String(prod.skc || '-'),
+      image: String(prod.image || ''),
+      adCount: adSet.size,
+      spend: a.spend,
+      conv: a.conv,
+      roas: a.roas,
+      purchases: a.purchases,
+      aov: a.aov,
+      cpa: a.cpa,
+      ctr: a.ctr,
+      cpc: a.cpc
+    };
+  });
+  const dir = urlProductDetailSortDir === 'asc' ? 1 : -1;
+  rowsP.sort((a,b)=> {
+    const va=a[urlProductDetailSortKey], vb=b[urlProductDetailSortKey];
+    if (typeof va === 'string' || typeof vb === 'string') return String(va||'').localeCompare(String(vb||''))*dir;
+    return ((Number(va)||0)-(Number(vb)||0))*dir;
+  });
+  const cols = [
+    {label:'图片', key:'image'},
+    {label:'shopify id', key:'shopifyId'},
+    {label:'SKC', key:'skc'},
+    {label:'广告数', key:'adCount'},
+    {label:'花费', key:'spend'},
+    {label:'转化金额', key:'conv'},
+    {label:'ROAS', key:'roas'},
+    {label:'广告销量', key:'purchases'},
+    {label:'客单价', key:'aov'},
+    {label:'CPA', key:'cpa'},
+    {label:'CTR', key:'ctr'},
+    {label:'CPC', key:'cpc'}
+  ];
+  const pageSize = urlProductDetailPageSize === 'all' ? rowsP.length : urlProductDetailPageSize;
+  const totalPages = Math.max(1, Math.ceil(rowsP.length / (pageSize || 1)));
+  if (urlProductDetailPage > totalPages) urlProductDetailPage = totalPages;
+  if (urlProductDetailPage < 1) urlProductDetailPage = 1;
+  const start = (urlProductDetailPage - 1) * (pageSize || rowsP.length);
+  const pageRows = rowsP.slice(start, start + (pageSize || rowsP.length));
+  const header = `<tr>${cols.map(c=>`<th class="${c.key!=='image'?'sortable':''}" ${c.key!=='image'?`data-key="${c.key}"`:''}>${c.label}${(c.key!=='image' && urlProductDetailSortKey===c.key)?`<span class="sort-ind">${urlProductDetailSortDir==='asc'?'▲':'▼'}</span>`:''}</th>`).join('')}</tr>`;
+  const body = pageRows.map(r => {
+    const img = r.image ? `<img class="product-thumb" src="${r.image}" data-img="${r.image}" />` : '<div class="product-thumb" style="background:#faf7f2;"></div>';
+    return `<tr>
+      <td>${img}</td>
+      <td>${r.shopifyId}</td>
+      <td>${r.skc}</td>
+      <td>${fmt(r.adCount,0)}</td>
+      <td>${money(r.spend)}</td>
+      <td>${money(r.conv)}</td>
+      <td><span class="${roasLevelClass(r.roas)}">${fmt(r.roas,2)}</span></td>
+      <td>${fmt(r.purchases,0)}</td>
+      <td>${money(r.aov)}</td>
+      <td>${money(r.cpa)}</td>
+      <td>${pct(r.ctr)}</td>
+      <td>${money(r.cpc)}</td>
+    </tr>`;
+  }).join('');
+  table.innerHTML = header + body;
+  title.textContent = `商品明细 ${selectedUrl}`;
+  panel.classList.remove('hidden');
+  if (pager) {
+    const sizeGroup = pager.querySelector('#urlProductDetailPageSizeGroup');
+    const status = `<span class="small">第 ${urlProductDetailPage} / ${totalPages} 页</span>`;
+    const buttons = `<button class="pill-btn" data-page="prev" ${urlProductDetailPage===1?'disabled':''}>上一页</button><button class="pill-btn" data-page="next" ${urlProductDetailPage===totalPages?'disabled':''}>下一页</button>`;
     pager.innerHTML = '';
     if (sizeGroup) pager.appendChild(sizeGroup);
     pager.insertAdjacentHTML('beforeend', `<div class="filter-group">${status}${buttons}</div>`);
@@ -3696,10 +3969,21 @@ function bindURLBoard() {
       }
       const link = e.target.closest('.url-link');
       if (link && link.dataset.url) {
-        selectedUrl = link.dataset.url;
-        urlDetailPage = 1;
-        urlDetailSortKey = 'spend';
-        urlDetailSortDir = 'desc';
+        const nextUrl = link.dataset.url;
+        if (selectedUrl === nextUrl && (urlDetailOpen || urlProductDetailOpen)) {
+          urlDetailOpen = false;
+          urlProductDetailOpen = false;
+        } else {
+          selectedUrl = nextUrl;
+          urlDetailOpen = true;
+          urlProductDetailOpen = true;
+          urlDetailPage = 1;
+          urlDetailSortKey = 'spend';
+          urlDetailSortDir = 'desc';
+          urlProductDetailPage = 1;
+          urlProductDetailSortKey = 'spend';
+          urlProductDetailSortDir = 'desc';
+        }
         updateAll(false);
       }
     });
@@ -3754,8 +4038,48 @@ function bindURLBoard() {
   }
   if (urlDetailBackBtn) {
     urlDetailBackBtn.addEventListener('click', () => {
-      selectedUrl = '';
+      urlDetailOpen = false;
       urlDetailPage = 1;
+      if (!urlProductDetailOpen) selectedUrl = '';
+      updateAll(false);
+      const topTable = document.getElementById('urlTable');
+      if (topTable) topTable.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
+  const productDetailTable = document.getElementById('urlProductDetailTable');
+  if (productDetailTable) {
+    productDetailTable.addEventListener('click', (e) => {
+      const th = e.target.closest('th.sortable');
+      if (!th || !th.dataset.key) return;
+      if (urlProductDetailSortKey === th.dataset.key) urlProductDetailSortDir = urlProductDetailSortDir === 'asc' ? 'desc' : 'asc';
+      else { urlProductDetailSortKey = th.dataset.key; urlProductDetailSortDir = 'desc'; }
+      urlProductDetailPage = 1;
+      updateAll(false);
+    });
+  }
+  const productDetailPager = document.getElementById('urlProductDetailPager');
+  if (productDetailPager) {
+    productDetailPager.addEventListener('click', (e) => {
+      const btn = e.target.closest('button[data-page]');
+      if (!btn) return;
+      const dir = btn.getAttribute('data-page');
+      if (dir === 'prev') urlProductDetailPage -= 1;
+      if (dir === 'next') urlProductDetailPage += 1;
+      updateAll(false);
+    });
+  }
+  if (urlProductDetailPageSizeSelect) {
+    urlProductDetailPageSizeSelect.addEventListener('change', () => {
+      urlProductDetailPageSize = urlProductDetailPageSizeSelect.value === 'all' ? 'all' : (parseInt(urlProductDetailPageSizeSelect.value, 10) || 10);
+      urlProductDetailPage = 1;
+      updateAll(false);
+    });
+  }
+  if (urlProductDetailBackBtn) {
+    urlProductDetailBackBtn.addEventListener('click', () => {
+      urlProductDetailOpen = false;
+      urlProductDetailPage = 1;
+      if (!urlDetailOpen) selectedUrl = '';
       updateAll(false);
       const topTable = document.getElementById('urlTable');
       if (topTable) topTable.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -3791,6 +4115,8 @@ function bindURLBoard() {
       updateAll(false);
     });
   }
+  attachTableFirstColResize('urlTable', '--url-main-first-col', 360, 900, 'url-main-first-resize');
+  attachTableFirstColResize('urlDetailTable', '--url-detail-first-col', 260, 760, 'url-detail-first-resize');
 }
 
 function bindUrlProductPageBoard() {
