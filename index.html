@@ -128,8 +128,10 @@ select, .pill-btn, input[type="date"] { border:1px solid var(--line); background
   padding:8px 10px;
   color:#6f6559;
   line-height:1.35;
+  font-size:13px;
 }
 .hint-strip .active-mark { color:#11824b; font-weight:700; }
+.hint-strip .date-strong { color:#b3261e; font-weight:800; }
 .url-prod-page-group { margin-bottom:10px; }
 .url-prod-page-title { font-size:12px; font-weight:700; margin-bottom:6px; color:#5d4d3c; }
 #urlProductPageSection .table-scroll { overflow-x: hidden; }
@@ -147,6 +149,11 @@ select, .pill-btn, input[type="date"] { border:1px solid var(--line); background
 .url-prod-card .ads div { margin-bottom:4px; word-break:break-all; }
 .url-prod-card .ads .ad-no { color: var(--muted); margin-right:4px; }
 .url-prod-main-row { cursor: pointer; }
+.url-prod-main-row td:first-child,
+.url-prod-main-row td:first-child .url-link {
+  font-size:14px;
+  line-height:1.4;
+}
 .url-prod-main-row:hover td {
   background:#f9f2e8 !important;
   box-shadow: inset 0 -1px 0 rgba(0,0,0,0.02);
@@ -3733,7 +3740,7 @@ function renderUrlProductPageBoard() {
   const latest = base.length ? new Date(Math.max(...base.map(r => r._date?.getTime?.() || 0))) : null;
   if (meta) {
     meta.innerHTML = latest
-      ? `说明：仅展示 <span class="active-mark">Active</span> 广告的 URL 商品页码映射；不受顶部时间筛选影响。数据截止：<b>${formatDateLocal(latest)}</b>`
+      ? `说明：仅展示 <span class="active-mark">Active</span> 广告的 URL 商品页码映射；不受顶部时间筛选影响。<span class="date-strong">数据截止：${formatDateLocal(latest)}</span>`
       : `说明：仅展示 <span class="active-mark">Active</span> 广告的 URL 商品页码映射；不受顶部时间筛选影响。`;
   }
   if (!base.length) {
