@@ -209,8 +209,9 @@ select, .pill-btn, input[type="date"] { border:1px solid var(--line); background
 .triple-metrics .table-scroll .table th:nth-child(4), .triple-metrics .table-scroll .table td:nth-child(4) { min-width: 62px; }
 .triple-metrics .table-scroll .table th:nth-child(n+5), .triple-metrics .table-scroll .table td:nth-child(n+5) { min-width: 88px; }
 .triple-metrics.compare-mode .panel { min-height: 380px; }
-#productTable th:nth-child(9), #productTable td:nth-child(9) { min-width: 84px; width: 84px; }
-#productTable th:nth-child(10), #productTable td:nth-child(10) { min-width: 84px; width: 84px; }
+#productTable th:nth-child(9), #productTable td:nth-child(9) { min-width: 76px; width: 76px; }
+#productTable th:nth-child(10), #productTable td:nth-child(10) { min-width: 72px; width: 72px; }
+#productTable th:nth-child(11), #productTable td:nth-child(11) { min-width: 78px; width: 78px; }
 .span-2 { grid-column: span 2; }
 .chart-sm { height:220px; }
 .panel { display:flex; flex-direction:column; }
@@ -248,6 +249,7 @@ select, .pill-btn, input[type="date"] { border:1px solid var(--line); background
 #productFilterGroup { display:flex; flex-wrap:wrap; align-items:center; justify-content:flex-end; gap:8px 10px; }
 #productFilterGroup .badge { min-width:44px; text-align:center; }
 #productCategory { min-width:96px; }
+#productNewness { min-width:96px; }
 #productCompare { min-width:108px; }
 #productPageSize { min-width:74px; }
 #productSearch { width:180px; }
@@ -270,7 +272,9 @@ select, .pill-btn, input[type="date"] { border:1px solid var(--line); background
 .img-modal { position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:999; }
 .img-modal.active { display:flex; }
 .img-modal .backdrop { position:absolute; inset:0; background:rgba(0,0,0,0.65); }
-.img-modal img { position:relative; max-width:90vw; max-height:90vh; border-radius:12px; box-shadow:0 12px 40px rgba(0,0,0,0.35); background:#fff; }
+.img-modal .content { position:relative; display:flex; flex-direction:column; align-items:center; gap:10px; max-width:90vw; max-height:90vh; }
+.img-modal img { position:relative; max-width:90vw; max-height:calc(90vh - 48px); border-radius:12px; box-shadow:0 12px 40px rgba(0,0,0,0.35); background:#fff; }
+.img-modal .caption { color:#fff; font-size:13px; line-height:1.45; text-align:center; max-width:min(80vw, 560px); }
 .view-switch { display:flex; gap:10px; align-items:center; }
 .view-switch .pill-btn { padding:8px 14px; font-weight:700; }
 .view-switch .spacer { flex:1; }
@@ -288,6 +292,8 @@ select, .pill-btn, input[type="date"] { border:1px solid var(--line); background
 .decision-native-root .decision-kpi .k { color:var(--muted); font-size:12px; }
 .decision-native-root .decision-kpi .v { font-size:24px; font-weight:800; margin-top:4px; }
 .decision-native-root .decision-kpi .hint { margin-top:4px; font-size:11px; color:var(--muted); }
+.decision-native-root .decision-flag-btn.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+.decision-native-root .decision-flag-summary { color:var(--muted); font-size:12px; }
 .decision-native-root .decision-head { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:8px; flex-wrap:wrap; }
 .decision-native-root .decision-sub { color:var(--muted); font-size:12px; }
 .decision-native-root #decisionUpToDate { display:inline-flex; align-items:center; padding:3px 8px; border-radius:999px; background:#fff; border:1px solid var(--line); color:#2f271f; font-weight:700; }
@@ -734,6 +740,8 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
         <div class="filter-group" id="productFilterGroup">
           <span class="badge">类目</span>
           <select id="productCategory"></select>
+          <span class="badge">新老品</span>
+          <select id="productNewness"></select>
           <span class="badge">对比</span>
           <select id="productCompare">
             <option value="off" selected>关闭</option>
@@ -742,7 +750,7 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
             <option value="both">上期+环比</option>
           </select>
           <span class="badge">搜索</span>
-          <input id="productSearch" type="text" placeholder="商品id / skc / shopify id" />
+          <input id="productSearch" type="text" placeholder="商品id / skc / shopify id / 标题" />
           <button id="productSearchClear" class="pill-btn sm" type="button">清空</button>
         </div>
       </div>
@@ -817,7 +825,13 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
       <div id="urlProductDetailPanel" class="hidden" style="margin-top:10px;">
         <div class="panel-head">
           <h3 id="urlProductDetailTitle">商品明细</h3>
-          <button id="urlProductDetailBack" class="pill-btn sm" type="button">折叠</button>
+          <div class="filter-group" style="gap:8px;">
+            <span class="badge">新老品</span>
+            <select id="urlProductDetailNewness">
+              <option value="ALL">全部</option>
+            </select>
+            <button id="urlProductDetailBack" class="pill-btn sm" type="button">折叠</button>
+          </div>
         </div>
         <div class="table-scroll wide"><table class="table wide" id="urlProductDetailTable"></table></div>
         <div class="pager" id="urlProductDetailPager">
@@ -844,7 +858,7 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
           <select id="urlProdPageFilter"><option value="all">全部</option></select>
           <button id="urlProdExpandAllBtn" class="pill-btn sm" type="button">全部展开</button>
           <span class="badge">搜索</span>
-          <input id="urlProdSearch" type="text" placeholder="ad / shopify id / skc / url" />
+          <input id="urlProdSearch" type="text" placeholder="ad / shopify id / skc / 标题 / url" />
           <button id="urlProdSearchClear" class="pill-btn sm" type="button">清空</button>
         </div>
       </div>
@@ -981,7 +995,10 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
 
 <div class="img-modal" id="imgModal">
   <div class="backdrop"></div>
-  <img id="imgModalImg" src="" alt="product" />
+  <div class="content">
+    <img id="imgModalImg" src="" alt="product" />
+    <div id="imgModalCaption" class="caption"></div>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -1418,10 +1435,11 @@ function buildDecisionState() {
   const latestByCamp = groupBy(latestRows, r => r.campaign || '-');
   const allByCamp = groupBy(valid, r => r.campaign || '-');
   const d1 = new Date(latest); d1.setDate(d1.getDate()-1);
+  const d2 = new Date(latest); d2.setDate(d2.getDate()-2);
   const prev3s = new Date(latest); prev3s.setDate(prev3s.getDate()-3);
   const prev7s = new Date(latest); prev7s.setDate(prev7s.getDate()-7);
   const prev14s = new Date(latest); prev14s.setDate(prev14s.getDate()-14);
-  const k1 = dateKey(d1), k3 = dateKey(prev3s), k7 = dateKey(prev7s), k14 = dateKey(prev14s);
+  const k1 = dateKey(d1), k2 = dateKey(d2), k3 = dateKey(prev3s), k7 = dateKey(prev7s), k14 = dateKey(prev14s);
 
   const coldSpends = [];
   for (const [camp, rs] of latestByCamp.entries()) {
@@ -1488,6 +1506,12 @@ function buildDecisionState() {
     for (const item of adAggs) {
       const ad = item.ad, a = item.a;
       const allAdRows = allCampRows.filter(r => (r.ad||'-') === ad);
+      const day0Rows = allAdRows.filter(r => r.date === latestKey);
+      const day1Rows = allAdRows.filter(r => r.date === k1);
+      const day2Rows = allAdRows.filter(r => r.date === k2);
+      const day0 = aggregate(day0Rows);
+      const day1 = aggregate(day1Rows);
+      const day2 = aggregate(day2Rows);
       const p3 = aggregate(allAdRows.filter(r => inRangeKey(r.date, k3, k1)));
       const p7 = aggregate(allAdRows.filter(r => inRangeKey(r.date, k7, k1)));
       const p14 = aggregate(allAdRows.filter(r => inRangeKey(r.date, k14, k1)));
@@ -1519,6 +1543,7 @@ function buildDecisionState() {
       campPause: campaigns.filter(x=>x.actionGroup==='pause').length,
       campOpt: campaigns.filter(x=>x.actionGroup==='opt').length,
       adLoss: ads.filter(x=>x.tag==='亏损素材').length,
+      adTotal: ads.length,
       adGood: ads.filter(x=>x.tag==='优质素材').length,
       adClickWeak: ads.filter(x=>x.tag==='点击弱').length,
       adConvWeak: ads.filter(x=>x.tag==='转化弱').length,
@@ -1717,7 +1742,9 @@ function renderDecisionAdTable() {
   }
   adPanel?.classList.remove('hidden');
   if (adToggleBtn) adToggleBtn.textContent = '收起 Ad 决策';
-  if (adGlobalHint) adGlobalHint.textContent = camp ? '当前为单个 Campaign 的 Ad 明细（再次点击该 Campaign 行可取消筛选）。' : '当前为全量 Ad 决策视图（可点按钮收起）。';
+  if (adGlobalHint) adGlobalHint.textContent = camp
+    ? '当前为单个 Campaign 的 Ad 明细（再次点击该 Campaign 行可取消筛选）。'
+    : '当前为全量 Ad 决策视图（可点按钮收起）。';
   let rowsA = decisionState.ads.filter(x => !camp || x.camp === camp);
   rowsA = rowsA.filter(x => {
     if (filter==='all') return true;
@@ -1824,6 +1851,7 @@ function initDecisionSection() {
   ['decisionCampFilter','decisionCampTypeFilter'].forEach(id => document.getElementById(id)?.addEventListener('change', () => { decisionKpiFocus = 'none'; decisionCampPage = 1; if (decisionState) decisionState.selectedCamp = ''; renderDecisionKpis(); renderDecisionCampaignTable(); renderDecisionAdTable(); }));
   ['decisionAdFilter'].forEach(id => document.getElementById(id)?.addEventListener('change', () => {
     decisionKpiFocus = 'none';
+    decisionAdPage = 1;
     renderDecisionKpis(); renderDecisionCampaignTable();
     renderDecisionAdTable();
   }));
@@ -1978,6 +2006,8 @@ function resetDashboard() {
 
   productCategory = 'ALL';
   if (productCategorySelect) productCategorySelect.value = 'ALL';
+  productNewness = 'ALL';
+  if (productNewnessSelect) productNewnessSelect.value = 'ALL';
   productCompareMode = 'off';
   if (productCompareSelect) productCompareSelect.value = 'off';
   productSearch = '';
@@ -2008,11 +2038,13 @@ function resetDashboard() {
   urlProductDetailSortDir = 'desc';
   urlProductDetailPage = 1;
   urlProductDetailPageSize = 10;
+  urlProductDetailNewness = 'ALL';
   urlDetailOpen = false;
   urlProductDetailOpen = false;
   selectedUrl = '';
   if (urlDetailPageSizeSelect) urlDetailPageSizeSelect.value = '10';
   if (urlProductDetailPageSizeSelect) urlProductDetailPageSizeSelect.value = '10';
+  if (urlProductDetailNewnessSelect) urlProductDetailNewnessSelect.value = 'ALL';
   urlProdPage = 1;
   urlProdPageSize = 15;
   urlProdSortKey = 'url';
@@ -2023,7 +2055,6 @@ function resetDashboard() {
   if (urlProdPageFilter) urlProdPageFilter.value = 'all';
   if (urlProdSearchInput) urlProdSearchInput.value = '';
   if (urlProdPageSizeSelect) urlProdPageSizeSelect.value = '15';
-
   setDashboardView(currentView === 'ops' ? 'ops' : 'perf');
   updateFilterVisibility();
   updateFilterHighlights();
@@ -2040,6 +2071,7 @@ const dateRangeGroup = document.getElementById('dateRangeGroup');
 const clearRangeGroup = document.getElementById('clearRangeGroup');
 const filtersRoot = document.querySelector('.filters');
 const productCategorySelect = document.getElementById('productCategory');
+const productNewnessSelect = document.getElementById('productNewness');
 const productCompareSelect = document.getElementById('productCompare');
 const productSearchInput = document.getElementById('productSearch');
 const productSearchClearBtn = document.getElementById('productSearchClear');
@@ -2053,6 +2085,7 @@ const urlDetailBackBtn = document.getElementById('urlDetailBack');
 const urlDetailPageSizeSelect = document.getElementById('urlDetailPageSize');
 const urlProductDetailBackBtn = document.getElementById('urlProductDetailBack');
 const urlProductDetailPageSizeSelect = document.getElementById('urlProductDetailPageSize');
+const urlProductDetailNewnessSelect = document.getElementById('urlProductDetailNewness');
 const urlProdPageFilter = document.getElementById('urlProdPageFilter');
 const urlProdExpandAllBtn = document.getElementById('urlProdExpandAllBtn');
 const urlProdSearchInput = document.getElementById('urlProdSearch');
@@ -2309,6 +2342,7 @@ let productPageSize = 15;
 let productSortKey = 'spend';
 let productSortDir = 'desc';
 let productCategory = 'ALL';
+let productNewness = 'ALL';
 let productCompareMode = 'off';
 let productSearch = '';
 let urlPage = 1;
@@ -2327,6 +2361,7 @@ let urlDetailPage = 1;
 let urlDetailPageSize = 10;
 let urlProductDetailPage = 1;
 let urlProductDetailPageSize = 10;
+let urlProductDetailNewness = 'ALL';
 let urlDetailOpen = false;
 let urlProductDetailOpen = false;
 let urlProdPage = 1;
@@ -2825,12 +2860,7 @@ function bindProductTable() {
       }
       const img = e.target.closest('img.product-thumb');
       if (img && img.dataset.img) {
-        const modal = document.getElementById('imgModal');
-        const modalImg = document.getElementById('imgModalImg');
-        if (modal && modalImg) {
-          modalImg.src = img.dataset.img;
-          modal.classList.add('active');
-        }
+        openImageModal(img.dataset.img, img.dataset.title || '');
       }
     });
   }
@@ -2848,6 +2878,14 @@ function bindProductTable() {
   if (productCategorySelect) {
     productCategorySelect.addEventListener('change', () => {
       productCategory = productCategorySelect.value || 'ALL';
+      productPage = 1;
+      updateFilterHighlights();
+      updateAll(false);
+    });
+  }
+  if (productNewnessSelect) {
+    productNewnessSelect.addEventListener('change', () => {
+      productNewness = productNewnessSelect.value || 'ALL';
       productPage = 1;
       updateFilterHighlights();
       updateAll(false);
@@ -2891,6 +2929,16 @@ function bindProductTable() {
   }
 }
 
+function openImageModal(src, title='') {
+  const modal = document.getElementById('imgModal');
+  const modalImg = document.getElementById('imgModalImg');
+  const modalCaption = document.getElementById('imgModalCaption');
+  if (!modal || !modalImg) return;
+  modalImg.src = src || '';
+  if (modalCaption) modalCaption.textContent = title || '';
+  modal.classList.add('active');
+}
+
 function groupBy(rows, keyFn) {
   const map = new Map();
   for (const r of rows) {
@@ -2920,6 +2968,8 @@ function renderProductTable(rowsFiltered) {
       id: String(p.id || ''),
       img: p.image || '',
       cat: p.category || '',
+      title: p.title || '',
+      newness: p.newness || '',
       spend: a.spend,
       conv: a.conv,
       roas: a.roas,
@@ -2996,12 +3046,23 @@ function renderProductTable(rowsFiltered) {
   if (productCategory !== 'ALL') {
     rows = rows.filter(r => r.cat === productCategory);
   }
+  const newnessOptions = Array.from(new Set(rows.map(r => String(r.newness || '').trim()).filter(Boolean))).sort();
+  const prevNewness = productNewnessSelect?.value || productNewness || 'ALL';
+  if (productNewnessSelect) {
+    productNewnessSelect.innerHTML = ['ALL', ...newnessOptions].map(v => `<option value="${v}">${v === 'ALL' ? '全部' : v}</option>`).join('');
+    productNewnessSelect.value = newnessOptions.includes(prevNewness) || prevNewness === 'ALL' ? prevNewness : 'ALL';
+  }
+  productNewness = productNewnessSelect?.value || 'ALL';
+  if (productNewness !== 'ALL') {
+    rows = rows.filter(r => String(r.newness || '') === productNewness);
+  }
   const q = (productSearch || '').trim().toLowerCase();
   if (q) {
     rows = rows.filter(r =>
       String(r.id).toLowerCase().includes(q) ||
       String(r.skc).toLowerCase().includes(q) ||
-      String(r.shopifyId).toLowerCase().includes(q)
+      String(r.shopifyId).toLowerCase().includes(q) ||
+      String(r.title || '').toLowerCase().includes(q)
     );
   }
 
@@ -3028,16 +3089,17 @@ function renderProductTable(rowsFiltered) {
   };
 
   const columns = [
-    {label:'图片', key:'img', sortable:false, format:v=> v ? `<img class="product-thumb" src="${v}" data-img="${v}" />` : '<span class="muted">—</span>'},
+    {label:'图片', key:'img', sortable:false, format:(v,row)=> v ? `<img class="product-thumb" src="${v}" data-img="${v}" data-title="${String(row.title || '').replace(/"/g,'&quot;')}" />` : '<span class="muted">—</span>'},
     {label:'商品id', key:'id', sortable:true, format:v=>v},
     {label:'SKC', key:'skc', sortable:true, format:v=>v || '-'},
     {label:'shopify id', key:'shopifyId', sortable:true, format:v=>v || '-'},
+    {label:'新老品', key:'newness', sortable:true, format:v=>v || '-'},
     {label:'类目', key:'cat', sortable:true, format:v=>v||'-'},
     {label:'花费', key:'spend', sortable:true, format:(v,row)=>formatWithCompare(v, row.prev_spend, money)},
     {label:'转化金额', key:'conv', sortable:true, format:(v,row)=>formatWithCompare(v, row.prev_conv, money)},
     {label:'ROAS', key:'roas', sortable:true, format:(v,row)=>formatWithCompare(v, row.prev_roas, x=>fmt(x,2))},
     {label:'广告销量', key:'purchases', sortable:true, format:(v,row)=>formatWithCompare(v, row.prev_purchases, x=>fmt(x,0))},
-    {label:'shopify 销量', key:'shopifySales', sortable:true, format:(v,row)=>formatWithCompare(v, row.prev_shopifySales, x=>fmt(x,0))},
+    {label:'<span style="white-space:nowrap">shopify 销量</span>', key:'shopifySales', sortable:true, format:(v,row)=>formatWithCompare(v, row.prev_shopifySales, x=>fmt(x,0))},
     {label:'客单价', key:'aov', sortable:true, format:(v,row)=>formatWithCompare(v, row.prev_aov, money)},
     {label:'CPA', key:'cpa', sortable:true, format:(v,row)=>formatWithCompare(v, row.prev_cpa, money)},
     {label:'CTR', key:'ctr', sortable:true, format:(v,row)=>formatWithCompare(v, row.prev_ctr, pct)},
@@ -3533,6 +3595,8 @@ function renderURLBoard(rowsFiltered) {
     r.prev_spend = p.spend || 0;
     r.prev_conv = p.conv || 0;
     r.prev_roas = p.roas || 0;
+    r.prev_aov = p.aov || 0;
+    r.prev_cpa = p.cpa || 0;
     r.prev_ctr = p.ctr || 0;
     r.prev_cpc = p.cpc || 0;
     r.prev_cpm = p.cpm || 0;
@@ -3688,11 +3752,13 @@ function renderUrlProductPageBoard() {
     rowsAgg = rowsAgg.filter(r => {
       const prod = productByShopifyForSearch.get(String(r.shopifyId || '').trim());
       const skc = String(prod?.skc || '').toLowerCase();
+      const title = String(prod?.title || '').toLowerCase();
       return (
         String(r.ad).toLowerCase().includes(q) ||
         String(r.shopifyId).toLowerCase().includes(q) ||
         String(r.url).toLowerCase().includes(q) ||
-        skc.includes(q)
+        skc.includes(q) ||
+        title.includes(q)
       );
     });
   }
@@ -3732,7 +3798,7 @@ function renderUrlProductPageBoard() {
         .sort((a,b)=>a[0].localeCompare(b[0]))
         .map(([sid,v]) => {
           const prod = productByShopify.get(sid);
-          const img = prod?.image ? `<img class="product-thumb" src="${prod.image}" data-img="${prod.image}" />` : `<div style="width:46px;height:46px;border:1px solid var(--line);border-radius:8px;background:#faf7f2;"></div>`;
+          const img = prod?.image ? `<img class="product-thumb" src="${prod.image}" data-img="${prod.image}" data-title="${String(prod?.title || '').replace(/"/g,'&quot;')}" />` : `<div style="width:46px;height:46px;border:1px solid var(--line);border-radius:8px;background:#faf7f2;"></div>`;
           const skc = prod?.skc ? String(prod.skc) : '';
           const adList = Array.from(v.ads).filter(Boolean).sort().map((a,idx)=>`<div><span class="ad-no">${idx+1}.</span>${a}</div>`).join('');
           return `<div class="url-prod-card" data-card="1">${img}<div class="meta"><div class="sid">${sid}</div><div class="sub">${skc || '-'}</div><div class="ads">${adList || '<div class="muted">无广告</div>'}</div></div></div>`;
@@ -3887,6 +3953,8 @@ function renderURLProductDetail(baseRows) {
       shopifyId: sid,
       skc: String(prod.skc || '-'),
       image: String(prod.image || ''),
+      title: String(prod.title || ''),
+      newness: String(prod.newness || ''),
       adCount: adSet.size,
       spend: a.spend,
       conv: a.conv,
@@ -3898,6 +3966,16 @@ function renderURLProductDetail(baseRows) {
       cpc: a.cpc
     };
   });
+  const newnessOptions = Array.from(new Set(rowsP.map(r => String(r.newness || '').trim()).filter(Boolean))).sort();
+  const prevNewness = urlProductDetailNewnessSelect?.value || urlProductDetailNewness || 'ALL';
+  if (urlProductDetailNewnessSelect) {
+    urlProductDetailNewnessSelect.innerHTML = ['ALL', ...newnessOptions].map(v => `<option value="${v}">${v === 'ALL' ? '全部' : v}</option>`).join('');
+    urlProductDetailNewnessSelect.value = newnessOptions.includes(prevNewness) || prevNewness === 'ALL' ? prevNewness : 'ALL';
+  }
+  urlProductDetailNewness = urlProductDetailNewnessSelect?.value || 'ALL';
+  if (urlProductDetailNewness !== 'ALL') {
+    rowsP = rowsP.filter(r => String(r.newness || '') === urlProductDetailNewness);
+  }
   const dir = urlProductDetailSortDir === 'asc' ? 1 : -1;
   rowsP.sort((a,b)=> {
     const va=a[urlProductDetailSortKey], vb=b[urlProductDetailSortKey];
@@ -3908,6 +3986,7 @@ function renderURLProductDetail(baseRows) {
     {label:'图片', key:'image'},
     {label:'shopify id', key:'shopifyId'},
     {label:'SKC', key:'skc'},
+    {label:'新老品', key:'newness'},
     {label:'广告数', key:'adCount'},
     {label:'花费', key:'spend'},
     {label:'转化金额', key:'conv'},
@@ -3926,11 +4005,12 @@ function renderURLProductDetail(baseRows) {
   const pageRows = rowsP.slice(start, start + (pageSize || rowsP.length));
   const header = `<tr>${cols.map(c=>`<th class="${c.key!=='image'?'sortable':''}" ${c.key!=='image'?`data-key="${c.key}"`:''}>${c.label}${(c.key!=='image' && urlProductDetailSortKey===c.key)?`<span class="sort-ind">${urlProductDetailSortDir==='asc'?'▲':'▼'}</span>`:''}</th>`).join('')}</tr>`;
   const body = pageRows.map(r => {
-    const img = r.image ? `<img class="product-thumb" src="${r.image}" data-img="${r.image}" />` : '<div class="product-thumb" style="background:#faf7f2;"></div>';
+    const img = r.image ? `<img class="product-thumb" src="${r.image}" data-img="${r.image}" data-title="${String(r.title || '').replace(/"/g,'&quot;')}" />` : '<div class="product-thumb" style="background:#faf7f2;"></div>';
     return `<tr>
       <td>${img}</td>
       <td>${r.shopifyId}</td>
       <td>${r.skc}</td>
+      <td>${r.newness || '-'}</td>
       <td>${fmt(r.adCount,0)}</td>
       <td>${money(r.spend)}</td>
       <td>${money(r.conv)}</td>
@@ -4049,6 +4129,11 @@ function bindURLBoard() {
   const productDetailTable = document.getElementById('urlProductDetailTable');
   if (productDetailTable) {
     productDetailTable.addEventListener('click', (e) => {
+      const img = e.target.closest('img.product-thumb');
+      if (img && img.dataset.img) {
+        openImageModal(img.dataset.img, img.dataset.title || '');
+        return;
+      }
       const th = e.target.closest('th.sortable');
       if (!th || !th.dataset.key) return;
       if (urlProductDetailSortKey === th.dataset.key) urlProductDetailSortDir = urlProductDetailSortDir === 'asc' ? 'desc' : 'asc';
@@ -4071,6 +4156,13 @@ function bindURLBoard() {
   if (urlProductDetailPageSizeSelect) {
     urlProductDetailPageSizeSelect.addEventListener('change', () => {
       urlProductDetailPageSize = urlProductDetailPageSizeSelect.value === 'all' ? 'all' : (parseInt(urlProductDetailPageSizeSelect.value, 10) || 10);
+      urlProductDetailPage = 1;
+      updateAll(false);
+    });
+  }
+  if (urlProductDetailNewnessSelect) {
+    urlProductDetailNewnessSelect.addEventListener('change', () => {
+      urlProductDetailNewness = urlProductDetailNewnessSelect.value || 'ALL';
       urlProductDetailPage = 1;
       updateAll(false);
     });
@@ -4126,12 +4218,7 @@ function bindUrlProductPageBoard() {
       const img = e.target.closest('img.product-thumb');
       if (img && img.dataset.img) {
         e.stopPropagation();
-        const modal = document.getElementById('imgModal');
-        const modalImg = document.getElementById('imgModalImg');
-        if (modal && modalImg) {
-          modalImg.src = img.dataset.img;
-          modal.classList.add('active');
-        }
+        openImageModal(img.dataset.img, img.dataset.title || '');
         return;
       }
       const card = e.target.closest('.url-prod-card');
