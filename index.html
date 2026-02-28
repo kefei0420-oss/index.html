@@ -31,7 +31,7 @@ body { margin:0; font-family: 'Manrope', sans-serif; background: radial-gradient
 .filters { background: var(--panel); border:1px solid var(--line); border-radius: 16px; padding: 12px 14px; display:flex; flex-wrap:wrap; gap:10px; align-items:center; box-shadow: 0 6px 18px rgba(0,0,0,0.06); }
 .filters-row { display:flex; gap:10px; flex-wrap:wrap; }
 .filters.week-inline #timeRow { gap:8px; }
-#dimRow { flex-wrap:nowrap; }
+#dimRow { flex-wrap:wrap; }
 .filter-group { display:flex; gap:8px; align-items:center; }
 select, .pill-btn, input[type="date"] { border:1px solid var(--line); background:#fff; color:var(--text); padding:7px 10px; border-radius: 10px; font-size: 12px; }
 .pill-btn.active { background: var(--accent); color:white; border-color: var(--accent); }
@@ -2091,20 +2091,18 @@ const urlProdExpandAllBtn = document.getElementById('urlProdExpandAllBtn');
 const urlProdSearchInput = document.getElementById('urlProdSearch');
 const urlProdSearchClearBtn = document.getElementById('urlProdSearchClear');
 const urlProdPageSizeSelect = document.getElementById('urlProdPageSize');
-const dimControls = Array.from(dimRow.querySelectorAll('.filter-group'));
+let filterHighlightTimer = null;
+function scheduleFilterHighlights() {
+  if (filterHighlightTimer) window.clearTimeout(filterHighlightTimer);
+  filterHighlightTimer = window.setTimeout(() => {
+    filterHighlightTimer = null;
+    updateFilterHighlights();
+  }, 80);
+}
 
 function setDimInlineWeek(inline) {
-  if (inline) {
-    dimControls.forEach(g => {
-      if (g.parentElement !== timeRow) timeRow.appendChild(g);
-    });
-    dimRow.classList.add('hidden');
-  } else {
-    dimControls.forEach(g => {
-      if (g.parentElement !== dimRow) dimRow.appendChild(g);
-    });
-    dimRow.classList.remove('hidden');
-  }
+  dimRow.classList.remove('hidden');
+  filtersRoot?.classList.toggle('week-inline', !!inline);
 }
 
 function updateTimeOrder() {
@@ -2167,7 +2165,6 @@ function updateFilterVisibility() {
   clearRangeGroup?.classList.toggle('hidden', !isRange);
   timeRow.classList.toggle('hidden', false);
   setDimInlineWeek(isWeek);
-  filtersRoot?.classList.toggle('week-inline', isWeek);
   updateTimeOrder();
   if (weekBackBtn) weekBackBtn.classList.toggle('hidden', !isWeek);
   const weeklyNewAdsSection = document.getElementById('weeklyNewAdsSection');
@@ -4439,7 +4436,7 @@ timeMode.addEventListener('change', () => {
     applyDefaultTimeForMode('month');
   }
   updateFilterVisibility();
-  updateFilterHighlights();
+  scheduleFilterHighlights();
   updateAll();
 });
 
@@ -4460,7 +4457,7 @@ weekSelect.addEventListener('change', () => {
   } else {
     dayButtons.innerHTML = '';
   }
-  updateFilterHighlights();
+  scheduleFilterHighlights();
   updateAll();
 });
 if (weekBackBtn) {
@@ -4469,21 +4466,21 @@ if (weekBackBtn) {
     weekSelect.value = 'MONTH';
     dayButtons.innerHTML = '';
     updateFilterVisibility();
-    updateFilterHighlights();
+    scheduleFilterHighlights();
     updateAll();
   });
 }
 
 categorySelect.addEventListener('change', () => {
-  updateFilterHighlights();
+  scheduleFilterHighlights();
   updateAll();
 });
 adTypeSelect.addEventListener('change', () => {
-  updateFilterHighlights();
+  scheduleFilterHighlights();
   updateAll();
 });
 materialSelect.addEventListener('change', () => {
-  updateFilterHighlights();
+  scheduleFilterHighlights();
   updateAll();
 });
 if (weeklyNewAdsViewModeSelect) {
@@ -4501,29 +4498,29 @@ if (weeklyNewAdsGroupModeSelect) {
   });
 }
 categoryMode.addEventListener('change', () => {
-  updateFilterHighlights();
+  scheduleFilterHighlights();
   updateAll();
 });
 pieMetric.addEventListener('change', () => {
-  updateFilterHighlights();
+  scheduleFilterHighlights();
   updateAll();
 });
 chartMode.addEventListener('change', () => {
-  updateFilterHighlights();
+  scheduleFilterHighlights();
   updateAll(false);
 });
 pieSpendBtn.addEventListener('click', () => {
   pieMetric.value = 'spend';
   pieSpendBtn.classList.add('active');
   pieConvBtn.classList.remove('active');
-  updateFilterHighlights();
+  scheduleFilterHighlights();
   updateAll(false);
 });
 pieConvBtn.addEventListener('click', () => {
   pieMetric.value = 'conv';
   pieConvBtn.classList.add('active');
   pieSpendBtn.classList.remove('active');
-  updateFilterHighlights();
+  scheduleFilterHighlights();
   updateAll(false);
 });
 compareCategory.addEventListener('change', () => updateAll(false));
@@ -4542,7 +4539,7 @@ startDateInput.addEventListener('change', () => {
   updateWeeks();
   if (timeMode.value === 'week' && weekSelect.value) renderDayButtons(weekSelect.value);
   updateFilterVisibility();
-  updateFilterHighlights();
+  scheduleFilterHighlights();
   updateAll();
 });
 endDateInput.addEventListener('change', () => {
@@ -4552,14 +4549,14 @@ endDateInput.addEventListener('change', () => {
   updateWeeks();
   if (timeMode.value === 'week' && weekSelect.value) renderDayButtons(weekSelect.value);
   updateFilterVisibility();
-  updateFilterHighlights();
+  scheduleFilterHighlights();
   updateAll();
 });
 if (clearRangeBtn) {
   clearRangeBtn.addEventListener('click', () => {
     applyDefaultTimeForMode('range');
     updateFilterVisibility();
-    updateFilterHighlights();
+    scheduleFilterHighlights();
     updateAll();
   });
 }
@@ -4585,13 +4582,6 @@ if (viewDecisionBtn) viewDecisionBtn.addEventListener('click', () => setDashboar
 if (resetDashboardBtn) resetDashboardBtn.addEventListener('click', resetDashboard);
 setDashboardView('perf');
 updateAll();
-
-// Global listener to catch any filter change
-document.addEventListener('change', (e) => {
-  if (e.target && (e.target.matches('select') || e.target.matches('input[type="date"]'))) {
-    updateFilterHighlights();
-  }
-});
 </script>
 </body>
 </html>
