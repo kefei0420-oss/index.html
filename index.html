@@ -95,8 +95,8 @@ select, .pill-btn, input[type="date"] { border:1px solid var(--line); background
 }
 .url-detail-first-resize:hover::after,
 .url-main-first-resize:hover::after { background:#d0b89f; width:2px; right:-1px; top:0; height:100%; }
-#urlTable th:first-child, #urlTable td:first-child { width: 420px; min-width: 420px; max-width: 420px; white-space: normal; overflow-wrap:anywhere; word-break: break-word; }
-#urlDetailTable th:first-child, #urlDetailTable td:first-child { width: var(--url-detail-first-col, 420px); min-width: var(--url-detail-first-col, 420px); max-width: var(--url-detail-first-col, 420px); white-space: normal; overflow-wrap:anywhere; }
+#urlTable th:first-child, #urlTable td:first-child { width: 440px; min-width: 440px; max-width: 440px; white-space: normal; overflow-wrap:anywhere; word-break: break-word; }
+#urlDetailTable th:first-child, #urlDetailTable td:first-child { width: var(--url-detail-first-col, 460px); min-width: var(--url-detail-first-col, 460px); max-width: var(--url-detail-first-col, 460px); white-space: normal; overflow-wrap:anywhere; }
 .table-scroll { width:100%; min-width:0; overflow-x:scroll; overflow-y:hidden; padding-bottom:10px; margin-bottom:2px; }
 .table-scroll .table { min-width: 100%; }
 .table-scroll.compact .table { min-width: 700px; }
@@ -140,9 +140,9 @@ select, .pill-btn, input[type="date"] { border:1px solid var(--line); background
 .url-prod-card.is-open { border-color:#cda47f; background:#fff8ef; }
 .url-prod-card img { width:46px; height:46px; object-fit:cover; border-radius:8px; border:1px solid var(--line); background:#faf7f2; flex:none; cursor:zoom-in; }
 .url-prod-card .meta { min-width:0; }
-.url-prod-card .sid { font-size:12px; font-weight:700; line-height:1.2; word-break:break-all; }
-.url-prod-card .sub { font-size:11px; color:var(--muted); line-height:1.25; margin-top:2px; word-break:break-all; }
-.url-prod-card .ads { display:none; margin-top:6px; font-size:11px; color:#5d4d3c; line-height:1.25; max-height:120px; overflow:auto; padding-top:5px; border-top:1px dashed var(--line); }
+.url-prod-card .sid { font-size:13px; font-weight:700; line-height:1.25; word-break:break-all; }
+.url-prod-card .sub { font-size:12px; color:var(--muted); line-height:1.3; margin-top:3px; word-break:break-all; }
+.url-prod-card .ads { display:none; margin-top:6px; font-size:12px; color:#5d4d3c; line-height:1.35; max-height:140px; overflow:auto; padding-top:5px; border-top:1px dashed var(--line); }
 .url-prod-card.is-open .ads { display:block; }
 .url-prod-card .ads div { margin-bottom:4px; word-break:break-all; }
 .url-prod-card .ads .ad-no { color: var(--muted); margin-right:4px; }
@@ -209,6 +209,9 @@ select, .pill-btn, input[type="date"] { border:1px solid var(--line); background
 .triple-metrics .table-scroll .table th:nth-child(4), .triple-metrics .table-scroll .table td:nth-child(4) { min-width: 62px; }
 .triple-metrics .table-scroll .table th:nth-child(n+5), .triple-metrics .table-scroll .table td:nth-child(n+5) { min-width: 88px; }
 .triple-metrics.compare-mode .panel { min-height: 380px; }
+#productTable th:nth-child(5), #productTable td:nth-child(5) { white-space: nowrap; }
+#productTable th:nth-child(6), #productTable td:nth-child(6) { white-space: nowrap; }
+#productTable th:nth-child(3), #productTable td:nth-child(3) { white-space: nowrap; }
 #productTable th:nth-child(9), #productTable td:nth-child(9) { min-width: 76px; width: 76px; }
 #productTable th:nth-child(10), #productTable td:nth-child(10) { min-width: 72px; width: 72px; }
 #productTable th:nth-child(11), #productTable td:nth-child(11) { min-width: 78px; width: 78px; }
@@ -242,11 +245,37 @@ select, .pill-btn, input[type="date"] { border:1px solid var(--line); background
 .roas-lv-1 { color:#b3261e; font-weight:700; }
 .panel-head { display:flex; align-items:center; justify-content:space-between; gap:10px; }
 .product-thumb { width:64px; height:64px; object-fit:cover; border-radius:10px; border:1px solid var(--line); background:#fff; cursor:zoom-in; }
+#productSection .table,
+#urlSection .table,
+#urlDetailTable,
+#urlProductDetailTable { font-size:13px; }
+#productSection .table th,
+#productSection .table td,
+#urlSection .table th,
+#urlSection .table td,
+#urlDetailTable th,
+#urlDetailTable td,
+#urlProductDetailTable th,
+#urlProductDetailTable td { padding:7px 9px; line-height:1.4; }
+#productSection .table th,
+#urlSection .table th,
+#urlDetailTable th,
+#urlProductDetailTable th { font-size:13px; }
+#productSection .table td,
+#urlSection .table td,
+#urlDetailTable td,
+#urlProductDetailTable td { font-size:13px; }
+#productSection .small,
+#urlSection .small,
+#urlProductPageSection .small { font-size:12px; }
+#productSection .badge,
+#urlSection .badge,
+#urlProductPageSection .badge { font-size:12px; }
 .table th.sortable { cursor:pointer; }
 .table th.sortable .sort-ind { margin-left:6px; font-size:10px; color: var(--muted); }
 .table-tools { display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:8px; }
 .table-tools .filter-group { gap:6px; }
-#productFilterGroup { display:flex; flex-wrap:wrap; align-items:center; justify-content:flex-end; gap:8px 10px; }
+#productFilterGroup { display:flex; flex-wrap:wrap; align-items:center; justify-content:flex-end; gap:8px 10px; font-size:13px; }
 #productFilterGroup .badge { min-width:44px; text-align:center; }
 #productCategory { min-width:96px; }
 #productNewness { min-width:96px; }
@@ -254,9 +283,9 @@ select, .pill-btn, input[type="date"] { border:1px solid var(--line); background
 #productPageSize { min-width:74px; }
 #productSearch { width:180px; }
 #productSearchClear { min-width:52px; height:30px; padding:0 10px; line-height:28px; }
-#urlFilterGroup { display:flex; flex-wrap:wrap; align-items:center; justify-content:flex-end; gap:8px 10px; padding:6px 8px; border:1px solid var(--line); border-radius:12px; background:#fcf8f3; }
+#urlFilterGroup { display:flex; flex-wrap:wrap; align-items:center; justify-content:flex-end; gap:8px 10px; padding:6px 8px; border:1px solid var(--line); border-radius:12px; background:#fcf8f3; font-size:13px; }
 #urlFilterGroup .badge { min-width:44px; text-align:center; }
-#urlProdFilterGroup { display:flex; flex-wrap:wrap; align-items:center; justify-content:flex-end; gap:8px 10px; padding:6px 8px; border:1px solid var(--line); border-radius:12px; background:#fcf8f3; }
+#urlProdFilterGroup { display:flex; flex-wrap:wrap; align-items:center; justify-content:flex-end; gap:8px 10px; padding:6px 8px; border:1px solid var(--line); border-radius:12px; background:#fcf8f3; font-size:13px; }
 #urlProdFilterGroup .badge { min-width:44px; text-align:center; }
 #urlTagFilter { min-width:96px; }
 #urlCompare { min-width:108px; }
@@ -2904,11 +2933,12 @@ function bindProductTable() {
     });
   }
   if (productSearchInput) {
-    productSearchInput.addEventListener('input', () => {
+    const handleProductSearch = debounce(() => {
       productSearch = productSearchInput.value || '';
       productPage = 1;
       updateAll(false);
-    });
+    }, 250);
+    productSearchInput.addEventListener('input', handleProductSearch);
   }
   if (productSearchClearBtn) {
     productSearchClearBtn.addEventListener('click', () => {
@@ -2944,6 +2974,17 @@ function groupBy(rows, keyFn) {
     map.get(k).push(r);
   }
   return map;
+}
+
+function debounce(fn, wait=250) {
+  let timer = null;
+  return (...args) => {
+    if (timer) window.clearTimeout(timer);
+    timer = window.setTimeout(() => {
+      timer = null;
+      fn(...args);
+    }, wait);
+  };
 }
 
 
@@ -4190,11 +4231,12 @@ function bindURLBoard() {
     });
   }
   if (urlSearchInput) {
-    urlSearchInput.addEventListener('input', ()=>{
+    const handleUrlSearch = debounce(() => {
       urlSearch = urlSearchInput.value || '';
       urlPage = 1;
       updateAll(false);
-    });
+    }, 250);
+    urlSearchInput.addEventListener('input', handleUrlSearch);
   }
   if (urlSearchClearBtn) {
     urlSearchClearBtn.addEventListener('click', ()=>{
@@ -4260,11 +4302,12 @@ function bindUrlProductPageBoard() {
     });
   }
   if (urlProdSearchInput) {
-    urlProdSearchInput.addEventListener('input', () => {
+    const handleUrlProdSearch = debounce(() => {
       urlProdSearch = urlProdSearchInput.value || '';
       urlProdPage = 1;
       updateAll(false);
-    });
+    }, 250);
+    urlProdSearchInput.addEventListener('input', handleUrlProdSearch);
   }
   if (urlProdSearchClearBtn) {
     urlProdSearchClearBtn.addEventListener('click', () => {
