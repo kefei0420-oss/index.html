@@ -218,6 +218,16 @@ select, .pill-btn, input[type="date"] { border:1px solid var(--line); background
 .triple-metrics.compare-mode .panel { min-height: 380px; }
 #productTable th:nth-child(5), #productTable td:nth-child(5) { white-space: nowrap; }
 #productTable th:nth-child(6), #productTable td:nth-child(6) { white-space: nowrap; }
+
+.ops-category-sales-grid { display:grid; grid-template-columns: 1.05fr .95fr; gap:12px; align-items:stretch; }
+.ops-category-sales-grid .panel { height:100%; }
+.ops-category-sales-chart { height: 280px; }
+#productCategorySalesTable th, #productCategorySalesTable td { white-space: nowrap; }
+#productCategorySalesTable th:first-child, #productCategorySalesTable td:first-child { text-align:left; }
+#productCategorySalesTable td:nth-child(2), #productCategorySalesTable td:nth-child(3),
+#productCategorySalesTable th:nth-child(2), #productCategorySalesTable th:nth-child(3) { text-align:right; }
+#productCategorySalesTable tr.total-row td { font-weight:800; background:#fbf6ef; }
+#productCategorySalesEmpty { display:flex; align-items:center; justify-content:center; height:100%; color:var(--muted); font-size:12px; }
 #productTable th:nth-child(3), #productTable td:nth-child(3) { white-space: nowrap; }
 #productTable th:nth-child(9), #productTable td:nth-child(9) { min-width: 76px; width: 76px; }
 #productTable th:nth-child(10), #productTable td:nth-child(10) { min-width: 72px; width: 72px; }
@@ -766,6 +776,28 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
         </select>
       </div>
       <div class="table-scroll daily-wide"><table class="table wide" id="weeklyNewAdsTable"></table></div>
+    </div>
+  </div>
+
+  <div class="section" id="productCategorySalesSection">
+    <div class="ops-category-sales-grid">
+      <div class="panel">
+        <div class="panel-head">
+          <h3>类目 Shopify 销量</h3>
+        </div>
+        <div class="table-scroll" style="overflow-x:hidden;padding-bottom:0;">
+          <table class="table" id="productCategorySalesTable"></table>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head">
+          <h3>类目销量占比</h3>
+        </div>
+        <div class="ops-category-sales-chart" id="productCategorySalesChartWrap">
+          <canvas id="productCategorySalesPie"></canvas>
+          <div id="productCategorySalesEmpty" class="hidden">当前时间范围暂无 Shopify 销量数据</div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1961,7 +1993,7 @@ function setDashboardView(mode) {
   const showPerf = dashboardView === 'perf';
   const showDecision = dashboardView === 'decision';
   const perfIds = ['kpiGrid','trendSection','categorySection','tripleMetrics','chartSection','dailySection'];
-  const opsIds = ['productSection','urlSection','urlProductPageSection'];
+  const opsIds = ['productCategorySalesSection','productSection','urlSection','urlProductPageSection'];
   perfIds.forEach(id => document.getElementById(id)?.classList.toggle('hidden', !showPerf));
   opsIds.forEach(id => document.getElementById(id)?.classList.toggle('hidden', showPerf || showDecision));
   document.getElementById('weeklyNewAdsSection')?.classList.add('hidden');
@@ -2367,6 +2399,7 @@ let materialPie = null;
 let comboAudience = null;
 let comboMaterial = null;
 let comboAdType = null;
+let productCategorySalesPie = null;
 
 let dailyPage = 1;
 let dailyPageSize = 15;
@@ -2544,7 +2577,7 @@ function renderChart(rowsFiltered) {
   });
 }
 
-const SORTABLE_TABLE_IDS = new Set(['categoryTable','audienceTable','materialTable','adTypeTable','dailyTable','weeklyNewAdsTable','urlTable','urlDetailTable']);
+const SORTABLE_TABLE_IDS = new Set(['categoryTable','audienceTable','materialTable','adTypeTable','dailyTable','weeklyNewAdsTable','urlTable','urlDetailTable','productCategorySalesTable']);
 const tableSortState = {};
 
 function getSortedRows(elId, rows, columns) {
@@ -2994,6 +3027,95 @@ function debounce(fn, wait=250) {
   };
 }
 
+
+
+function renderProductCategorySalesPanel() {
+  const table = document.getElementById('productCategorySalesTable');
+  const empty = document.getElementById('productCategorySalesEmpty');
+  const chartWrap = document.getElementById('productCategorySalesChartWrap');
+  const ctx = document.getElementById('productCategorySalesPie')?.getContext('2d');
+  if (!table || !chartWrap) return;
+
+  const [start, end] = getDateRangeForCurrentFilter();
+  const byShopify = new Map();
+  Object.values(PRODUCT_MAP || {}).forEach(p => {
+    const sid = String(p?.shopify_id || '').trim();
+    if (!sid || byShopify.has(sid)) return;
+    byShopify.set(sid, p);
+  });
+  const byCategory = new Map();
+  for (const shopifyId of Object.keys(SHOPIFY_SALES_DAILY || {})) {
+    const product = byShopify.get(String(shopifyId).trim());
+    const category = String(product?.category || 'Other').trim() || 'Other';
+    const sales = getShopifySalesInRange(shopifyId, start, end);
+    if (!sales) continue;
+    if (!byCategory.has(category)) byCategory.set(category, { name: category, sales: 0 });
+    byCategory.get(category).sales += Number(sales) || 0;
+  }
+
+  const columns = [
+    { label:'类目', key:'name', sortable:false, format:v=>v },
+    { label:'Shopify销量', key:'sales', sortable:true, format:v=>fmt(v,0) },
+    { label:'占比', key:'share', sortable:true, format:v=>`${(v*100).toFixed(1)}%` }
+  ];
+  const st = tableSortState['productCategorySalesTable'] || { key:'sales', dir:'desc' };
+  if (!tableSortState['productCategorySalesTable']) tableSortState['productCategorySalesTable'] = st;
+  let rows = Array.from(byCategory.values()).filter(r => r.sales > 0);
+  const total = rows.reduce((sum, r) => sum + r.sales, 0);
+  rows = rows.map(r => ({ ...r, share: total ? (r.sales / total) : 0 }));
+  rows = getSortedRows('productCategorySalesTable', rows, columns);
+
+  const header = `<tr>${columns.map(c => {
+    const isSortable = c.sortable !== false;
+    const active = isSortable && st.key === c.key;
+    const ind = active ? (st.dir === 'asc' ? '▲' : '▼') : '';
+    return `<th class="${isSortable ? 'sortable' : ''}" ${isSortable ? `data-key="${c.key}"` : ''}>${c.label}${isSortable ? `<span class="sort-ind">${ind}</span>` : ''}</th>`;
+  }).join('')}</tr>`;
+  if (!rows.length || total <= 0) {
+    table.innerHTML = header + '<tr><td colspan="3" class="muted" style="text-align:left;">当前时间范围暂无 Shopify 销量数据</td></tr>';
+    if (productCategorySalesPie) { productCategorySalesPie.destroy(); productCategorySalesPie = null; }
+    if (empty) empty.classList.remove('hidden');
+    const canvas = document.getElementById('productCategorySalesPie');
+    if (canvas) canvas.classList.add('hidden');
+    return;
+  }
+
+  const body = rows.map(r => {
+    return `<tr><td>${r.name}</td><td>${fmt(r.sales,0)}</td><td>${(r.share*100).toFixed(1)}%</td></tr>`;
+  }).join('');
+  const totalRow = `<tr class="total-row"><td>Total</td><td>${fmt(total,0)}</td><td>100.0%</td></tr>`;
+  table.innerHTML = header + body + totalRow;
+
+  const canvas = document.getElementById('productCategorySalesPie');
+  if (empty) empty.classList.add('hidden');
+  if (canvas) canvas.classList.remove('hidden');
+  if (!ctx) return;
+  if (productCategorySalesPie) productCategorySalesPie.destroy();
+
+  const colors = ['#c76a1f','#1f7a7a','#2b5d9a','#b08a57','#7c5f4b','#7ea36d','#b85d4e','#8c6dc7'];
+  productCategorySalesPie = new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: rows.map(r => r.name),
+      datasets: [{ data: rows.map(r => r.sales), backgroundColor: rows.map((_, i) => colors[i % colors.length]) }]
+    },
+    options: {
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'right', labels: { font: { size: 10 }, boxWidth: 10, boxHeight: 10, padding: 8 } },
+        tooltip: {
+          callbacks: {
+            label(ctx) {
+              const value = Number(ctx.raw) || 0;
+              const pct = total ? (value / total * 100).toFixed(1) : '0.0';
+              return `${ctx.label}: ${fmt(value,0)} (${pct}%)`;
+            }
+          }
+        }
+      }
+    }
+  });
+}
 
 function renderProductTable(rowsFiltered) {
   const [curStart, curEnd] = getDateRangeForCurrentFilter();
@@ -4462,6 +4584,7 @@ function updateAll(resetPage=true) {
   renderTables(rowsFiltered);
   renderWeeklyNewAdsBoard();
   renderSummary(rowsFiltered);
+  renderProductCategorySalesPanel();
   renderProductTable(rowsFiltered);
   renderURLBoard(rowsFiltered);
   renderUrlProductPageBoard();
