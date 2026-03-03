@@ -330,7 +330,7 @@ select, .pill-btn, input[type="date"] { border:1px solid var(--line); background
 .decision-native-root .decision-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
 .decision-native-root .decision-grid.cols-1 { grid-template-columns: 1fr; }
 .decision-native-root .decision-grid > * { min-width: 0; }
-.decision-native-root .decision-kpis { display:grid; grid-template-columns: repeat(4, 1fr); gap:12px; }
+.decision-native-root .decision-kpis { display:grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap:12px; }
 .decision-native-root .decision-kpi { border:1px solid var(--line); background:#fff; border-radius:12px; padding:12px; }
 .decision-native-root .decision-kpi.clickable { cursor:pointer; transition:.15s ease; }
 .decision-native-root .decision-kpi.clickable:hover { border-color:#d9b089; box-shadow:0 4px 14px rgba(42,35,29,.06); transform:translateY(-1px); }
@@ -347,6 +347,9 @@ select, .pill-btn, input[type="date"] { border:1px solid var(--line); background
 .decision-native-root .decision-ad-toggle-row { margin-top:8px; }
 .decision-native-root .decision-ad-toggle-row .filter-group { width:100%; justify-content:flex-start; }
 .decision-native-root .decision-chip { display:inline-flex; align-items:center; border-radius:999px; padding:2px 8px; font-size:11px; font-weight:700; border:1px solid var(--line); background:#fbf7f1; }
+.decision-native-root .decision-tag-cell { display:inline-flex; align-items:center; justify-content:center; gap:6px; flex-wrap:nowrap; white-space:nowrap; min-height:24px; }
+.decision-native-root .decision-chip.tag-test { color:#2f6fb7; background:#eef5ff; border-color:#b9d3f3; transform:scale(.96); }
+.decision-native-root .decision-group-row td { background:#f7f0e6; font-weight:700; color:#5f4a35; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
 .decision-native-root .tag-scale { color:#0b8f5a; border-color:#bce5d1; background:#eefaf4; }
 .decision-native-root .tag-pause { color:#b3261e; border-color:#f2c3bf; background:#fff1ef; }
 .decision-native-root .tag-watch { color:#9b5f00; border-color:#ecd6aa; background:#fff8e8; }
@@ -374,10 +377,14 @@ select, .pill-btn, input[type="date"] { border:1px solid var(--line); background
 .decision-native-root .decision-table-scroll::-webkit-scrollbar-track { background:#f3ece2; border-radius:999px; }
 .decision-native-root .decision-table { min-width:1500px; }
 .decision-native-root .decision-table.ad-table { min-width:1400px; }
-.decision-native-root .decision-table { min-width:1820px; }
-.decision-native-root .decision-table.ad-table { min-width:1780px; }
-.decision-native-root .decision-table.compact-cols { min-width: 1320px; }
-.decision-native-root .decision-table.ad-table.compact-cols { min-width: 1400px; }
+.decision-native-root .decision-table { min-width:1710px; }
+.decision-native-root .decision-table.ad-table { min-width:1680px; }
+.decision-native-root .decision-table.compact-cols { min-width: 1240px; }
+.decision-native-root .decision-table.ad-table.compact-cols { min-width: 1320px; }
+.decision-native-root .decision-table.three-day-summary { min-width: 860px; }
+.decision-native-root .decision-table.ad-table.three-day-focus { min-width: 1120px; }
+.decision-native-root .decision-table.ad-table.three-day-focus th.three-day-metric,
+.decision-native-root .decision-table.ad-table.three-day-focus td.three-day-metric { text-align:center !important; }
 .decision-native-root .decision-table th,
 .decision-native-root .decision-table td { padding: 9px 10px; line-height: 1.35; vertical-align: middle; }
 .decision-native-root .decision-table th { white-space: nowrap; }
@@ -398,15 +405,15 @@ select, .pill-btn, input[type="date"] { border:1px solid var(--line); background
 .decision-native-root #decisionCampTable th:nth-child(7), .decision-native-root #decisionCampTable td:nth-child(7),
 .decision-native-root #decisionAdTable th:nth-child(7), .decision-native-root #decisionAdTable td:nth-child(7) { min-width: 124px; width:124px; text-align:center; }
 .decision-native-root #decisionCampTable th:nth-child(8), .decision-native-root #decisionCampTable td:nth-child(8),
-.decision-native-root #decisionAdTable th:nth-child(8), .decision-native-root #decisionAdTable td:nth-child(8) { min-width: 140px; width: 140px; text-align:left; }
+.decision-native-root #decisionAdTable th:nth-child(8), .decision-native-root #decisionAdTable td:nth-child(8) { min-width: 108px; width: 108px; text-align:left; }
 .decision-native-root #decisionCampTable.compact-cols th:nth-child(8), .decision-native-root #decisionCampTable.compact-cols td:nth-child(8),
-.decision-native-root #decisionAdTable.compact-cols th:nth-child(8), .decision-native-root #decisionAdTable.compact-cols td:nth-child(8) { min-width: 110px; width: 110px; }
+.decision-native-root #decisionAdTable.compact-cols th:nth-child(8), .decision-native-root #decisionAdTable.compact-cols td:nth-child(8) { min-width: 92px; width: 92px; }
 .decision-native-root #decisionCampTable.reason-open th:nth-child(8), .decision-native-root #decisionCampTable.reason-open td:nth-child(8),
 .decision-native-root #decisionAdTable.reason-open th:nth-child(8), .decision-native-root #decisionAdTable.reason-open td:nth-child(8) { min-width: 360px; width: 360px; }
 .decision-native-root #decisionCampTable.compact-cols.reason-open th:nth-child(8), .decision-native-root #decisionCampTable.compact-cols.reason-open td:nth-child(8),
 .decision-native-root #decisionAdTable.compact-cols.reason-open th:nth-child(8), .decision-native-root #decisionAdTable.compact-cols.reason-open td:nth-child(8) { min-width: 300px; width: 300px; }
 .decision-native-root #decisionCampTable th:nth-child(n+9), .decision-native-root #decisionCampTable td:nth-child(n+9),
-.decision-native-root #decisionAdTable th:nth-child(n+9), .decision-native-root #decisionAdTable td:nth-child(n+9) { min-width: 88px; }
+.decision-native-root #decisionAdTable th:nth-child(n+9), .decision-native-root #decisionAdTable td:nth-child(n+9) { min-width: 78px; }
 .decision-native-root #decisionCampTable th:first-child, .decision-native-root #decisionCampTable td:first-child,
 .decision-native-root #decisionAdTable th:first-child, .decision-native-root #decisionAdTable td:first-child { box-shadow: 1px 0 0 #eee2d2; }
 .decision-native-root .decision-table th.sortable { cursor:pointer; user-select:none; }
@@ -956,26 +963,26 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
         </div>
         <div class="decision-rules-grid">
           <div class="decision-rule-card">
-            <div class="rule-title">Campaign 暂停</div>
-            <div class="rule-text">更偏保守：要求较高花费 + 7/14天持续偏弱 + 订单不足，才进入暂停队列，不因单日波动直接暂停。</div>
-          </div>
-          <div class="decision-rule-card">
             <div class="rule-title">Campaign 扩量</div>
-            <div class="rule-text">当天ROAS + 前3天ROAS + 前7天ROAS加权（综合ROAS）共同判断；且需满足订单样本量与趋势一致性，避免偶发出单误判扩量。</div>
+            <div class="rule-text">当天ROAS + 前3天ROAS + 前7天ROAS加权（综合ROAS）共同判断；同时看订单样本量与趋势一致性，避免偶发出单误判扩量。</div>
           </div>
           <div class="decision-rule-card">
-            <div class="rule-title">置信度</div>
-            <div class="rule-text">用于判断信号稳定性：结合当天花费/点击/订单与近7天表现评估。高=信号更稳定；中=可参考但需观察；低=样本不足或波动较大。</div>
+            <div class="rule-title">Campaign 暂停</div>
+            <div class="rule-text">暂停线更积极：近3天连续低于目标、连续多天不出单且预算已跑开时，会进入暂停队列，避免一直空耗预算。</div>
           </div>
           <div class="decision-rule-card">
-            <div class="rule-title">优先级分值</div>
-            <div class="rule-text">用于排序的内部分值（已压缩显示，不是报表金额）。暂停类偏风险，扩量类偏放量潜力。</div>
+            <div class="rule-title">近7天测试</div>
+            <div class="rule-text">近7天（含当天）首次上线的广告视为测试广告。近3天累计花费＞$10且0单判为关闭风险；＞$20且0单直接建议关闭；前5天仅1单且ROAS低于类型关闭线也建议关闭。</div>
+          </div>
+          <div class="decision-rule-card">
+            <div class="rule-title">连续3天未达目标（非测试）</div>
+            <div class="rule-text">按广告类型目标值判断：COLD 2.0、ASC 1.8、RT 2.8。前天、昨天、今天三天ROAS都低于目标，且不属于近7天测试广告时，才计入连续未达标广告。</div>
           </div>
         </div>
       </div>
 
-      <div class="decision-grid cols-1" style="margin-top:12px;">
-        <div class="panel decision-panel">
+      <div class="decision-grid cols-1" id="decisionMainGrid" style="margin-top:12px;">
+        <div class="panel decision-panel" id="decisionCampPanel">
           <div class="decision-head">
             <h3>Campaign 决策</h3>
             <div class="filter-group">
@@ -1031,6 +1038,7 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
               <select id="decisionAdFilter">
                 <option value="all">全部</option>
                 <option value="loss">优先关闭</option>
+                <option value="risk">关闭风险</option>
                 <option value="click">点击弱</option>
                 <option value="conv">转化弱</option>
               </select>
@@ -1347,9 +1355,39 @@ function decisionPriorityLabel(n) {
 }
 function decisionActionGroup(tag) {
   if (['扩量','小幅扩量','强扩量'].includes(tag)) return 'scale';
-  if (['关闭','亏损素材'].includes(tag)) return 'pause';
-  if (['优化结构','降量','点击弱','转化弱'].includes(tag)) return 'opt';
+  if (['关闭','亏损素材','优先关闭'].includes(tag)) return 'pause';
+  if (['优化结构','降量','点击弱','转化弱','关闭风险'].includes(tag)) return 'opt';
   return 'watch';
+}
+function decisionTypeTarget(type) {
+  if (type === 'RT') return 2.8;
+  if (type === 'ASC') return 1.8;
+  return 2.0;
+}
+function decisionTypeCloseThreshold(type) {
+  if (type === 'RT') return 2.0;
+  if (type === 'ASC') return 1.15;
+  return 1.25;
+}
+function decisionTypeRiskThreshold(type) {
+  if (type === 'RT') return 2.3;
+  if (type === 'ASC') return 1.4;
+  return 1.5;
+}
+function decisionDayAgg(allRows, key) {
+  return aggregate((allRows || []).filter(r => r.date === key));
+}
+function hasDayData(allRows, key) {
+  return (allRows || []).some(r => r.date === key);
+}
+function decisionFirstSeenKey(rows) {
+  const dates = (rows || []).map(r => r.date).filter(Boolean).sort();
+  return dates.length ? dates[0] : '';
+}
+function dateDiffDays(aKey, bKey) {
+  if (!aKey || !bKey) return 999;
+  const a = parseDate(aKey), b = parseDate(bKey);
+  return Math.round((b - a) / 86400000);
 }
 function decisionWeightedRoas(curRoas, prev3Roas, prev7Roas) {
   const items = [
@@ -1510,7 +1548,7 @@ function buildDecisionState() {
   const k1 = dateKey(d1), k2 = dateKey(d2), k3 = dateKey(prev3s), k7 = dateKey(prev7s), k14 = dateKey(prev14s);
 
   const coldSpends = [];
-  for (const [camp, rs] of latestByCamp.entries()) {
+  for (const [, rs] of latestByCamp.entries()) {
     const a = aggregate(rs);
     const t = (rs.find(x=>x.adType)?.adType || '').toUpperCase();
     if (t === 'COLD') coldSpends.push(a.spend);
@@ -1533,29 +1571,36 @@ function buildDecisionState() {
     const enoughScaleSample = (p7Orders >= minScaleP7) || (curOrders >= 3 && p3Orders >= 2);
     const enoughLightScaleSample = (p7Orders >= minLightScaleP7) || (curOrders >= 2 && p3Orders >= 1);
     const weakSample = (curOrders < 1) && (p3Orders < 2) && (p7Orders < 4);
-    const longSpendHeavy = (prev7.spend || 0) >= 140 || (prev14.spend || 0) >= 260 || cur.spend >= 150;
+    const longSpendHeavy = (prev7.spend || 0) >= 120 || (prev14.spend || 0) >= 220 || cur.spend >= 130;
+    const campDay0 = aggregate(allCampRows.filter(r => r.date === latestKey));
+    const campDay1 = aggregate(allCampRows.filter(r => r.date === k1));
+    const campDay2 = aggregate(allCampRows.filter(r => r.date === k2));
+    const targetRoas = decisionTypeTarget(type);
+    const pauseRiskLine = type === 'RT' ? 2.35 : (type === 'ASC' ? 1.45 : 1.55);
+    const campHas3d = hasDayData(allCampRows, latestKey) && hasDayData(allCampRows, k1) && hasDayData(allCampRows, k2);
+    const campLast3Spend = (campDay0.spend||0) + (campDay1.spend||0) + (campDay2.spend||0);
+    const campLast3Orders = (campDay0.purchases||0) + (campDay1.purchases||0) + (campDay2.purchases||0);
+    const campLast3BelowTarget = campHas3d && (campDay0.roas < targetRoas) && (campDay1.roas < targetRoas) && (campDay2.roas < targetRoas);
 
     let tag='观察', action='继续观察', pri=1, reason='规则未触发阈值，继续观察';
     if (type === 'COLD') {
-      if (longSpendHeavy && cur.spend >= 140 && cur.roas < 0.8 && wRoas < 1.1 && prev14.roas < 1.2 && prev7.roas < 1.25 && p7Orders <= 4) { tag='关闭'; action='暂停'; pri=4; reason=`COLD: 高花费且7/14天持续偏弱，并且近7天订单不足（防止偶发单误判）`; }
-      else if (wRoas >= 2.0 && cur.roas >= 1.7 && prev3.roas >= 1.6 && prev7.roas >= 1.6 && cur.spend > Math.max(coldMedian, 60) && enoughScaleSample) { tag='扩量'; action='预算 +20%~30%'; pri=3; reason=`COLD: 综合ROAS/3天/7天均达标，且订单样本量充足`; }
-      else if (wRoas >= 1.8 && cur.roas >= 1.5 && prev3.roas >= 1.4 && prev7.roas >= 1.4 && enoughLightScaleSample) { tag='小幅扩量'; action='预算 +10%'; pri=2; reason=`COLD: 综合ROAS达标且3/7天一致性较好，样本量满足小幅扩量`; }
-      else if (wRoas >= 1.5) { tag='观察'; action='暂不调整 / 减量10%'; pri=1; reason=`COLD: 综合ROAS ${fmt(wRoas,2)} 在 [1.5,1.8)，观察稳定性`; }
-      else if (wRoas >= 1.3) { tag='降量'; action='预算 -20%'; pri=2; reason=`COLD: 综合ROAS ${fmt(wRoas,2)} 在 [1.3,1.5)，建议降量`; }
-      else if (longSpendHeavy && cur.spend >= 150 && cur.roas < 0.9 && wRoas < 1.15 && prev7.roas < 1.2 && prev14.roas < 1.3 && p7Orders <= 5) { tag='关闭'; action='暂停'; pri=4; reason=`COLD: 花费较高且7/14天连续偏弱，近7天订单不足`; }
+      if ((campHas3d && campLast3Spend >= 35 && campLast3Orders === 0 && campLast3BelowTarget) || (campHas3d && campLast3Spend >= 60 && campLast3Orders <= 1 && campLast3BelowTarget && prev7.roas < pauseRiskLine) || (longSpendHeavy && cur.spend >= 70 && cur.roas < 1.1 && prev7.roas < 1.4 && prev14.roas < 1.45 && p7Orders <= 5)) { tag='关闭'; action='暂停'; pri=4; reason=`COLD：近3天花费 ${money(campLast3Spend)}、${fmt(campLast3Orders,0)} 单，且连续低于目标，建议暂停。`; }
+      else if (wRoas >= 2.0 && cur.roas >= 1.7 && prev3.roas >= 1.6 && prev7.roas >= 1.6 && cur.spend > Math.max(coldMedian, 60) && enoughScaleSample) { tag='扩量'; action='预算 +20%~30%'; pri=3; reason='COLD：综合ROAS与3/7天表现达标，且订单样本量充足。'; }
+      else if (wRoas >= 1.8 && cur.roas >= 1.5 && prev3.roas >= 1.4 && prev7.roas >= 1.4 && enoughLightScaleSample) { tag='小幅扩量'; action='预算 +10%'; pri=2; reason='COLD：综合ROAS达标，3/7天一致性较好。'; }
+      else if (wRoas >= 1.5) { tag='观察'; action='暂不调整 / 减量10%'; pri=1; reason=`COLD：综合ROAS ${fmt(wRoas,2)} 仍在观察区间。`; }
+      else if (wRoas >= 1.25 || weakSample) { tag='降量'; action='预算 -20%'; pri=2; reason='COLD：综合ROAS偏弱或样本不足，先降量观察。'; }
+      else { tag='关闭'; action='暂停'; pri=4; reason='COLD：综合ROAS明显低于安全线，建议暂停。'; }
     } else if (type === 'ASC') {
-      if (longSpendHeavy && cur.spend >= 180 && cur.roas < 0.9 && wRoas < 1.15 && prev14.roas < 1.25 && prev7.roas < 1.3 && p7Orders <= 5) { tag='关闭'; action='暂停'; pri=4; reason=`ASC: 高花费且7/14天持续偏弱，近7天订单不足`; }
-      else if (wRoas >= 1.9 && cur.roas >= 1.5 && prev3.roas >= 1.4 && prev7.roas >= 1.4 && cur.spend >= 80 && enoughScaleSample) { tag='扩量'; action='预算 +20%~30%'; pri=3; reason=`ASC: 综合ROAS与3/7天ROAS一致达标，且订单样本量充足`; }
-      else if ((wRoas >= 1.3 || cur.roas >= 1.3) || weakSample) { tag='优化结构'; action='检查素材结构'; pri=2; reason=`ASC: ROAS进入结构优化区间，或样本量不足不直接扩量`; }
-      else if (longSpendHeavy && cur.roas < 1.0 && wRoas < 1.2 && prev7.roas < 1.25 && prev14.roas < 1.3 && cur.spend >= 160 && p7Orders <= 5) { tag='关闭'; action='暂停'; pri=4; reason=`ASC: 高花费且7/14天持续低于目标，订单不足`; }
-      else { tag='观察'; action='继续观察'; pri=1; reason=`ASC: 花费偏低或历史/当天信号不一致`; }
+      if ((campHas3d && campLast3Spend >= 35 && campLast3Orders === 0 && campLast3BelowTarget) || (campHas3d && campLast3Spend >= 60 && campLast3Orders <= 1 && campLast3BelowTarget && prev7.roas < pauseRiskLine) || (longSpendHeavy && cur.spend >= 65 && cur.roas < 1.05 && prev7.roas < 1.35 && prev14.roas < 1.4 && p7Orders <= 5)) { tag='关闭'; action='暂停'; pri=4; reason=`ASC：近3天花费 ${money(campLast3Spend)}、${fmt(campLast3Orders,0)} 单，且回收连续偏弱，建议暂停。`; }
+      else if (wRoas >= 1.9 && cur.roas >= 1.5 && prev3.roas >= 1.4 && prev7.roas >= 1.4 && cur.spend >= 80 && enoughScaleSample) { tag='扩量'; action='预算 +20%~30%'; pri=3; reason='ASC：综合ROAS与3/7天ROAS一致达标。'; }
+      else if ((wRoas >= 1.3 || cur.roas >= 1.3) || weakSample) { tag='优化结构'; action='检查素材结构'; pri=2; reason='ASC：进入结构优化区间，或样本不足不直接扩量。'; }
+      else { tag='观察'; action='继续观察'; pri=1; reason='ASC：花费偏低或历史/当天信号不一致。'; }
     } else if (type === 'RT') {
-      if (longSpendHeavy && cur.spend >= 220 && cur.roas < 1.4 && wRoas < 1.9 && prev14.roas < 2.0 && prev7.roas < 2.0 && p7Orders <= 5) { tag='关闭'; action='暂停'; pri=4; reason=`RT: 高花费且7/14天持续低于安全线，订单不足`; }
-      else if (wRoas >= 3.0 && cur.roas >= 2.5 && prev3.roas >= 2.4 && prev7.roas >= 2.4 && enoughScaleSample) { tag='强扩量'; action='预算 +20%~30%'; pri=3; reason=`RT: 综合ROAS与3/7天高位稳定，且订单样本量充足`; }
-      else if (wRoas >= 2.3) { tag='观察'; action='稳定观察'; pri=1; reason=`RT: 综合ROAS处于稳定区间；若样本量不足不直接扩量`; }
-      else if (wRoas >= 2.0) { tag='降量'; action='预算 -10%~-20%'; pri=2; reason=`RT: 综合ROAS ${fmt(wRoas,2)} 在 [2.0,2.3)`; }
-      else if (longSpendHeavy && cur.spend >= 180 && cur.roas < 1.7 && wRoas < 1.95 && prev7.roas < 2.0 && prev14.roas < 2.1 && p7Orders <= 5) { tag='关闭'; action='暂停'; pri=4; reason=`RT: 花费较高且7/14天连续低于目标，订单不足`; }
-      else { tag='观察'; action='继续观察'; pri=1; reason=`RT: 花费偏低或信号不足`; }
+      if ((campHas3d && campLast3Spend >= 55 && campLast3Orders === 0 && campLast3BelowTarget) || (campHas3d && campLast3Spend >= 85 && campLast3Orders <= 1 && campLast3BelowTarget && prev7.roas < pauseRiskLine) || (longSpendHeavy && cur.spend >= 85 && cur.roas < 2.0 && prev7.roas < 2.25 && prev14.roas < 2.3 && p7Orders <= 6)) { tag='关闭'; action='暂停'; pri=4; reason=`RT：近3天花费 ${money(campLast3Spend)}、${fmt(campLast3Orders,0)} 单，且连续低于目标，建议暂停。`; }
+      else if (wRoas >= 3.0 && cur.roas >= 2.5 && prev3.roas >= 2.4 && prev7.roas >= 2.4 && enoughScaleSample) { tag='强扩量'; action='预算 +20%~30%'; pri=3; reason='RT：综合ROAS与3/7天高位稳定，可强扩量。'; }
+      else if (wRoas >= 2.3) { tag='观察'; action='稳定观察'; pri=1; reason='RT：综合ROAS处于稳定区间。'; }
+      else if (wRoas >= 2.0) { tag='降量'; action='预算 -10%~-20%'; pri=2; reason=`RT：综合ROAS ${fmt(wRoas,2)} 在 [2.0,2.3)。`; }
+      else { tag='关闭'; action='暂停'; pri=4; reason='RT：综合ROAS低于回收线，建议关闭。'; }
     }
     const conf = decisionConfidence(cur, prev7);
     const riskValue = cur.spend * Math.max(1 - cur.roas, 0);
@@ -1584,16 +1629,44 @@ function buildDecisionState() {
       const p7 = aggregate(allAdRows.filter(r => inRangeKey(r.date, k7, k1)));
       const p14 = aggregate(allAdRows.filter(r => inRangeKey(r.date, k14, k1)));
       const awRoas = decisionWeightedRoas(a.roas, p3.roas, p7.roas);
+      const firstSeenKey = decisionFirstSeenKey(allAdRows);
+      const ageDays = firstSeenKey ? (dateDiffDays(firstSeenKey, latestKey) + 1) : 999;
+      const isTesting = ageDays <= 7;
+      const targetRoas = decisionTypeTarget(type);
+      const closeRoas = decisionTypeCloseThreshold(type);
+      const riskRoas = decisionTypeRiskThreshold(type);
+      const has3d = hasDayData(allAdRows, latestKey) && hasDayData(allAdRows, k1) && hasDayData(allAdRows, k2);
+      const last3Spend = (day0.spend||0) + (day1.spend||0) + (day2.spend||0);
+      const last3Orders = (day0.purchases||0) + (day1.purchases||0) + (day2.purchases||0);
+      const last3BelowTarget = has3d && (day0.roas < targetRoas) && (day1.roas < targetRoas) && (day2.roas < targetRoas);
+      const firstFiveEnd = firstSeenKey ? dateKey(new Date(Math.min(parseDate(latestKey).getTime(), (function(){ const d=parseDate(firstSeenKey); d.setDate(d.getDate()+4); return d; })().getTime()))) : latestKey;
+      const first5 = aggregate(allAdRows.filter(r => firstSeenKey && inRangeKey(r.date, firstSeenKey, firstFiveEnd)));
+      const day0Orders = day0.purchases || 0;
       let atag='普通', aaction='-', apri=1, areason='未触发重点规则';
-      if (a.spend >= 20 && a.roas < 1 && awRoas < 1.2) { atag='亏损素材'; aaction='建议暂停'; apri=4; areason=`当天ROAS ${fmt(a.roas,2)} < 1 且综合ROAS ${fmt(awRoas,2)} < 1.2，花费 ${money(a.spend)} ≥ $20`; }
-      else if (awRoas >= avgRoas && a.ctr >= avgCtr && a.cvr >= avgCvr) { atag='优质素材'; aaction='复制或扩量'; apri=3; areason=`综合ROAS + CTR + CVR 均高于Campaign均值`; }
-      else if (a.ctr < avgCtr * 0.8) { atag='点击弱'; aaction='优化封面/标题'; apri=2; areason=`CTR ${pct(a.ctr)} 低于Campaign均值 ${pct(avgCtr)} 的80%`; }
-      else if (a.ctr >= avgCtr * 0.8 && a.cvr < avgCvr * 0.8) { atag='转化弱'; aaction='检查落地页/人群'; apri=2; areason=`CVR ${pct(a.cvr)} 低于Campaign均值 ${pct(avgCvr)} 的80%`; }
+      if (isTesting && last3Orders === 0 && last3Spend >= 20) {
+        atag='优先关闭'; aaction='建议关闭'; apri=4; areason=`测试广告：近3天累计花费 ${money(last3Spend)} 且0单，达到立即关闭阈值。`;
+      } else if (isTesting && last3Orders === 0 && last3Spend >= 10) {
+        atag='关闭风险'; aaction='建议关闭'; apri=3; areason=`测试广告：近3天累计花费 ${money(last3Spend)} 且0单，已进入关闭风险区间。`;
+      } else if (isTesting && ageDays >= 5 && first5.purchases === 1 && first5.roas < closeRoas) {
+        atag='优先关闭'; aaction='建议关闭'; apri=4; areason=`测试广告：前5天仅出1单，5天ROAS ${fmt(first5.roas,2)} 低于 ${type} 关闭线 ${fmt(closeRoas,2)}。`;
+      } else if (a.spend >= 20 && a.roas < 1 && awRoas < Math.max(1.05, closeRoas - 0.1)) {
+        atag='亏损素材'; aaction='建议暂停'; apri=4; areason=`当天ROAS ${fmt(a.roas,2)} 偏低，综合ROAS ${fmt(awRoas,2)} 也未达安全线，花费 ${money(a.spend)}。`;
+      } else if (last3BelowTarget && last3Spend >= 25 && last3Orders <= 1 && awRoas < riskRoas) {
+        atag='关闭风险'; aaction='建议关闭'; apri=3; areason=`前天/昨天/今天ROAS连续低于 ${type} 目标 ${fmt(targetRoas,2)}，且近3天花费 ${money(last3Spend)}、仅 ${fmt(last3Orders,0)} 单。`;
+      } else if (awRoas >= avgRoas && a.ctr >= avgCtr && a.cvr >= avgCvr) {
+        atag='优质素材'; aaction='复制或扩量'; apri=3; areason='综合ROAS、CTR、CVR 均高于所属 Campaign 均值。';
+      } else if (a.ctr < avgCtr * 0.8) {
+        atag='点击弱'; aaction='优化封面/标题'; apri=2; areason=`CTR ${pct(a.ctr)} 低于 Campaign 均值 ${pct(avgCtr)} 的80%。`;
+      } else if (a.ctr >= avgCtr * 0.8 && a.cvr < avgCvr * 0.8) {
+        atag='转化弱'; aaction='检查落地页/人群'; apri=2; areason=`CVR ${pct(a.cvr)} 低于 Campaign 均值 ${pct(avgCvr)} 的80%。`;
+      } else if (last3BelowTarget && has3d) {
+        atag='观察'; aaction='连续低于目标，继续观察'; apri=2; areason=`前天/昨天/今天ROAS连续低于 ${type} 目标 ${fmt(targetRoas,2)}。`;
+      }
       const aconf = decisionConfidence(a, p7);
-      const ariskValue = a.spend * Math.max(1 - a.roas, 0);
+      const ariskValue = isTesting && last3Orders === 0 ? last3Spend * 1.6 : a.spend * Math.max(1 - a.roas, 0);
       const ascalePotential = (a.conv || 0) * Math.max(a.roas - 1, 0);
-      const aimpactRaw = decisionActionGroup(atag)==='pause' ? ariskValue : (decisionActionGroup(atag)==='scale' ? ascalePotential : a.spend*0.15);
-      ads.push({ camp, ad, type, tag: atag, action: aaction, pri: apri, reason: areason, conf: aconf, wRoas: awRoas, cur: a, prev3:p3, prev7:p7, prev14:p14, riskValue: ariskValue, scalePotential: ascalePotential, impactRaw: aimpactRaw, impactValue: 0, actionGroup: decisionActionGroup(atag) });
+      const aimpactRaw = decisionActionGroup(atag)==='pause' ? ariskValue : (decisionActionGroup(atag)==='scale' ? ascalePotential : Math.max(last3Spend, a.spend*0.2));
+      ads.push({ camp, ad, type, tag: atag, action: aaction, pri: apri, reason: areason, conf: aconf, wRoas: awRoas, cur: a, prev3:p3, prev7:p7, prev14:p14, riskValue: ariskValue, scalePotential: ascalePotential, impactRaw: aimpactRaw, impactValue: 0, actionGroup: decisionActionGroup(atag), firstSeenKey, ageDays, isTesting, targetRoas, closeRoas, riskRoas, last3BelowTarget, last3Spend, last3Orders, roasD2: day2.roas||0, roasD1: day1.roas||0, roasD0: day0.roas||0 });
     }
   }
 
@@ -1601,6 +1674,7 @@ function buildDecisionState() {
 
   campaigns.sort((a,b)=>b.pri-a.pri || b.cur.spend-a.cur.spend);
   ads.sort((a,b)=>b.pri-a.pri || b.cur.spend-a.cur.spend);
+  const threeDayLowAds = ads.filter(x => x.last3BelowTarget && !x.isTesting).length;
   return {
     latestKey,
     campaigns,
@@ -1610,20 +1684,28 @@ function buildDecisionState() {
       campScale: campaigns.filter(x=>x.actionGroup==='scale').length,
       campPause: campaigns.filter(x=>x.actionGroup==='pause').length,
       campOpt: campaigns.filter(x=>x.actionGroup==='opt').length,
-      adLoss: ads.filter(x=>x.tag==='亏损素材').length,
+      adLoss: ads.filter(x=>['亏损素材','优先关闭'].includes(x.tag)).length,
       adTotal: ads.length,
       adGood: ads.filter(x=>x.tag==='优质素材').length,
       adClickWeak: ads.filter(x=>x.tag==='点击弱').length,
       adConvWeak: ads.filter(x=>x.tag==='转化弱').length,
+      campWatch: campaigns.filter(x=>x.actionGroup==='watch').length,
+      adThreeDayLow: threeDayLowAds,
+      adThreeDayLowShare: ads.length ? threeDayLowAds / ads.length : 0,
+      adTesting: ads.filter(x=>x.isTesting).length,
+      adTestingShare: ads.length ? ads.filter(x=>x.isTesting).length / ads.length : 0,
+      adCloseRisk: ads.filter(x=>['优先关闭','关闭风险'].includes(x.tag)).length,
     }
   };
 }
-
 function decisionTagChip(tag) {
-  const cls = ['扩量','小幅扩量','强扩量'].includes(tag) ? 'tag-scale'
+  const cls = tag === '测试' ? 'tag-test' : (['扩量','小幅扩量','强扩量'].includes(tag) ? 'tag-scale'
     : (['关闭','亏损素材'].includes(tag) ? 'tag-pause'
-    : (['优化结构','点击弱','转化弱'].includes(tag) ? 'tag-opt' : 'tag-watch'));
+    : (['优化结构','点击弱','转化弱'].includes(tag) ? 'tag-opt' : 'tag-watch')));
   return `<span class="decision-chip ${cls}">${tag}</span>`;
+}
+function decisionTagCell(tag, extraTag='') {
+  return `<span class="decision-tag-cell">${decisionTagChip(tag)}${extraTag ? decisionTagChip(extraTag) : ''}</span>`;
 }
 
 function renderDecisionTodoBoard() {}
@@ -1634,15 +1716,17 @@ function renderDecisionKpis() {
   const upEl = document.getElementById('decisionUpToDate'); if (upEl) upEl.textContent = decisionState.latestKey;
   const rulesSub = document.getElementById('decisionRulesSub');
   if (rulesSub) rulesSub.innerHTML = `数据截止：<span class="decision-date-strong">${decisionState.latestKey}</span>`;
-  const watchCount = (decisionState.campaigns || []).filter(x=>x.actionGroup==='watch').length;
   const cards = [
-    { key:'camp_pause', title:'暂停队列', value:s.campPause, hint:'长期偏弱且预算已跑开' },
+    { key:'camp_pause', title:'暂停队列', value:s.campPause, hint:'连续偏弱且预算已跑开' },
     { key:'camp_scale', title:'扩量队列', value:s.campScale, hint:'综合ROAS达标，可优先放量' },
     { key:'camp_opt', title:'优化队列', value:s.campOpt, hint:'结构优化 / 降量处理' },
-    { key:'camp_watch', title:'观察队列', value:watchCount, hint:'信号不足或需继续观察' },
+    { key:'camp_watch', title:'观察队列', value:s.campWatch, hint:'信号不足或需继续观察' },
+    { key:'ad_testing', title:'近7天测试', value:s.adTesting, hint:`占比 ${(s.adTestingShare*100).toFixed(1)}%` },
+    { key:'ad_3day_low', title:'连续3天未达标广告（非测试）', value:s.adThreeDayLow, hint:`占比 ${(s.adThreeDayLowShare*100).toFixed(1)}%` },
   ];
+  const ordered = [cards[0], cards[1], cards[2], cards[3], cards[4], cards[5]];
   const wrap = document.getElementById('decisionKpis');
-  wrap.innerHTML = cards.map(c => `
+  wrap.innerHTML = ordered.map(c => `
     <div class="decision-kpi clickable ${decisionKpiFocus===c.key?'active':''}" data-focus="${c.key}">
       <div class="k">${c.title}</div>
       <div class="v">${c.value}</div>
@@ -1661,33 +1745,122 @@ function renderDecisionKpis() {
 function applyDecisionKpiFocus() {
   const campSel = document.getElementById('decisionCampFilter');
   if (!campSel) return;
-  if (decisionKpiFocus === 'camp_pause') {
-    campSel.value = 'pause';
-  } else if (decisionKpiFocus === 'camp_scale') {
-    campSel.value = 'scale';
-  } else if (decisionKpiFocus === 'camp_opt') {
-    campSel.value = 'opt';
-  } else if (decisionKpiFocus === 'camp_watch') {
-    campSel.value = 'watch';
-  } else {
-    campSel.value = 'all';
-  }
+  const adSel = document.getElementById('decisionAdFilter');
+  if (decisionKpiFocus === 'camp_pause') campSel.value = 'pause';
+  else if (decisionKpiFocus === 'camp_scale') campSel.value = 'scale';
+  else if (decisionKpiFocus === 'camp_opt') campSel.value = 'opt';
+  else if (decisionKpiFocus === 'camp_watch') campSel.value = 'watch';
+  else campSel.value = 'all';
+  if (adSel) adSel.value = 'all';
   if (decisionState) decisionState.selectedCamp = '';
+  decisionAdPanelOpen = decisionKpiFocus === 'ad_3day_low' || decisionKpiFocus === 'ad_testing' ? true : decisionAdPanelOpen;
+  if (decisionKpiFocus === 'none') decisionAdPanelOpen = true;
   decisionCampPage = 1;
+  decisionAdPage = 1;
   renderDecisionKpis();
   renderDecisionCampaignTable();
   renderDecisionAdTable();
 }
 
+function updateDecisionMainGridLayout() {
+  const grid = document.getElementById('decisionMainGrid');
+  if (!grid) return;
+  grid.classList.remove('cols-1', 'cols-2', 'cols-3');
+  grid.classList.add('cols-1');
+}
 
 function renderDecisionCampaignTable() {
   const latestKeyTip = decisionState?.latestKey || '-';
   const filter = document.getElementById('decisionCampFilter')?.value || 'all';
   const typeFilter = document.getElementById('decisionCampTypeFilter')?.value || 'all';
+  const is3DayFocus = decisionKpiFocus === 'ad_3day_low';
+  const panel = document.getElementById('decisionCampPanel');
+  updateDecisionMainGridLayout();
+  if (panel) panel.classList.remove('hidden');
+
+  if (is3DayFocus) {
+    const headTitle = panel?.querySelector('h3');
+    if (headTitle) headTitle.textContent = 'Campaign 摘要表';
+    let focusAds = decisionState.ads.filter(x => x.last3BelowTarget && !x.isTesting && (typeFilter === 'all' ? true : x.type === typeFilter));
+    const grouped = new Map();
+    focusAds.forEach(a => {
+      const cur = grouped.get(a.camp) || {
+        camp: a.camp,
+        type: a.type,
+        count: 0,
+        spend: 0,
+        roas0: [],
+        roas1: [],
+        roas2: [],
+      };
+      cur.count += 1;
+      cur.spend += a.cur.spend || 0;
+      cur.roas0.push(a.cur.roas || 0);
+      cur.roas1.push(a.roasD1 || 0);
+      cur.roas2.push(a.roasD2 || 0);
+      grouped.set(a.camp, cur);
+    });
+    let rowsC = Array.from(grouped.values()).map(r => ({
+      ...r,
+      roas0Avg: r.roas0.length ? r.roas0.reduce((s,v)=>s+v,0)/r.roas0.length : 0,
+      roas1Avg: r.roas1.length ? r.roas1.reduce((s,v)=>s+v,0)/r.roas1.length : 0,
+      roas2Avg: r.roas2.length ? r.roas2.reduce((s,v)=>s+v,0)/r.roas2.length : 0,
+    }));
+    rowsC.sort((a,b)=> (b.count-a.count) || (b.spend-a.spend) || a.camp.localeCompare(b.camp));
+    const total = rowsC.length;
+    const totalPages = Math.max(1, Math.ceil(total / decisionCampPageSize));
+    if (decisionCampPage > totalPages) decisionCampPage = totalPages;
+    if (decisionCampPage < 1) decisionCampPage = 1;
+    const startIdx = (decisionCampPage - 1) * decisionCampPageSize;
+    const pageRows = rowsC.slice(startIdx, startIdx + decisionCampPageSize);
+    const head = `<tr>
+      <th>Campaign</th>
+      <th>类型</th>
+      <th>未达标广告数（非测试）</th>
+    </tr>`;
+    const body = pageRows.map(r => {
+      const sel = decisionState.selectedCamp === r.camp ? ' style="background:#fbf4eb;"' : '';
+      return `<tr data-camp="${String(r.camp).replace(/"/g,'&quot;')}" class="decision-camp-row"${sel}>
+        <td>${r.camp}</td>
+        <td>${r.type}</td>
+        <td>${fmt(r.count,0)}</td>
+      </tr>`;
+    }).join('');
+    const tbl = document.getElementById('decisionCampTable');
+    tbl.innerHTML = head + body;
+    tbl.classList.remove('compact-cols');
+    tbl.classList.add('three-day-summary');
+    decisionNativeRoot?.style.setProperty('--decision-camp-first-col', '280px');
+    attachDecisionColResize('decisionCampTable', '--decision-camp-first-col', 220, 460);
+    applyDecisionHeaderTitles(tbl);
+    bindDecisionReasonDetails(tbl);
+    tbl.querySelectorAll('.decision-camp-row').forEach(tr => tr.addEventListener('click', () => {
+      const nextCamp = tr.getAttribute('data-camp') || '';
+      const isSame = decisionState.selectedCamp === nextCamp;
+      decisionState.selectedCamp = isSame ? '' : nextCamp;
+      decisionAdPage = 1;
+      decisionAdPanelOpen = true;
+      renderDecisionCampaignTable();
+      renderDecisionAdTable();
+      document.getElementById('decisionAdTitle')?.scrollIntoView({behavior:'smooth', block:'start'});
+    }));
+    const info = document.getElementById('decisionCampPageInfo');
+    if (info) info.textContent = `第${decisionCampPage}/${totalPages}页`;
+    document.getElementById('decisionCampPrev')?.toggleAttribute('disabled', decisionCampPage <= 1);
+    document.getElementById('decisionCampNext')?.toggleAttribute('disabled', decisionCampPage >= totalPages);
+    return;
+  }
+
+  const headTitle = panel?.querySelector('h3');
+  if (headTitle) headTitle.textContent = 'Campaign 决策';
   let rowsC = decisionState.campaigns.filter(x =>
     (filter === 'all' ? true : x.actionGroup === filter) &&
     (typeFilter === 'all' ? true : x.type === typeFilter)
   );
+  if (decisionKpiFocus === 'ad_testing') {
+    const focusCamps = new Set(decisionState.ads.filter(x => x.isTesting).map(x => x.camp));
+    rowsC = rowsC.filter(x => focusCamps.has(x.camp));
+  }
   rowsC = rowsC.slice();
   rowsC.sort((a,b)=>{
     const { key, dir } = decisionCampSortState;
@@ -1719,6 +1892,8 @@ function renderDecisionCampaignTable() {
     <th class="sortable help-tip" data-sort="priority" data-tip="最高/高/中/低；综合动作类型、风险程度与放量机会后的处理顺序建议。">优先级<span class="sort-ind">${si('priority')}</span></th><th class="sortable help-tip" data-sort="impact" data-tip="用于排序的内部处理分值（非金额）；基于风险/潜力原始值压缩，并叠加优先级与置信度。">优先级分值<span class="sort-ind">${si('impact')}</span></th><th>原因</th>
     <th class="sortable help-tip" data-sort="spend" data-tip="最新决策日（${latestKeyTip}）的花费">当天花费<span class="sort-ind">${si('spend')}</span></th>
     <th class="sortable help-tip" data-sort="roas" data-tip="最新决策日（${latestKeyTip}）的ROAS">当天ROAS<span class="sort-ind">${si('roas')}</span></th>
+    <th class="help-tip" data-tip="最新决策日前1天的ROAS">昨天ROAS</th>
+    <th class="help-tip" data-tip="最新决策日前2天的ROAS">前天ROAS</th>
     <th class="sortable help-tip" data-sort="wroas" data-tip="综合ROAS：当天/前3天/前7天加权">综合ROAS<span class="sort-ind">${si('wroas')}</span></th>
     <th class="sortable help-tip" data-sort="purchases" data-tip="最新决策日（${latestKeyTip}）当天订单">当天订单<span class="sort-ind">${si('purchases')}</span></th>
   </tr>` : `<tr>
@@ -1728,6 +1903,8 @@ function renderDecisionCampaignTable() {
     <th class="sortable help-tip" data-sort="spend" data-tip="最新决策日（${latestKeyTip}）的花费">当天花费<span class="sort-ind">${si('spend')}</span></th>
     <th class="sortable" data-sort="conv">转化金额<span class="sort-ind">${si('conv')}</span></th>
     <th class="sortable help-tip" data-sort="roas" data-tip="最新决策日（${latestKeyTip}）的ROAS">当天ROAS<span class="sort-ind">${si('roas')}</span></th>
+    <th class="help-tip" data-tip="最新决策日前1天的ROAS">昨天ROAS</th>
+    <th class="help-tip" data-tip="最新决策日前2天的ROAS">前天ROAS</th>
     <th class="sortable help-tip" data-sort="wroas" data-tip="综合ROAS：当天/前3天/前7天加权">综合ROAS<span class="sort-ind">${si('wroas')}</span></th>
     <th class="sortable help-tip" data-sort="purchases" data-tip="最新决策日（${latestKeyTip}）当天订单">当天订单<span class="sort-ind">${si('purchases')}</span></th>
     <th>客单价</th><th>CPA</th>
@@ -1735,22 +1912,24 @@ function renderDecisionCampaignTable() {
     <th>CPC</th><th>CPM</th><th class="sortable" data-sort="cvr">转化率<span class="sort-ind">${si('cvr')}</span></th>
     <th>加购成本</th><th>结帐成本</th><th>加购率</th><th>结账率</th><th>前3天ROAS</th><th>前7天ROAS</th><th>前14天ROAS</th>
   </tr>`;
+  const hasTestingAds = campName => decisionState.ads.some(a => a.camp === campName && a.isTesting);
   const body = pageRows.map(r => {
     const sel = decisionState.selectedCamp === r.camp ? ' style="background:#fbf4eb;"' : '';
+    const tagHtml = decisionTagCell(r.tag, hasTestingAds(r.camp) ? '测试' : '');
     const rowCompact = `<tr data-camp="${String(r.camp).replace(/"/g,'&quot;')}" class="decision-camp-row"${sel}>
-      <td>${r.camp}</td><td>${r.type}</td><td>${decisionTagChip(r.tag)}</td><td>${r.action}</td>
+      <td>${r.camp}</td><td>${r.type}</td><td>${tagHtml}</td><td>${r.action}</td>
       <td class="${decisionConfClass(r.conf)}">${decisionConfChip(r.conf)}</td>
       <td class="${r.pri>=4?'priority-highest':(r.pri>=3?'priority-high':'')}">${decisionPriorityChip(r.pri)}</td>
       <td>${fmt(r.impactValue,0)}</td>
       <td>${decisionReasonCell(r.reason)}</td>
-      <td>${money(r.cur.spend)}</td><td>${fmt(r.cur.roas,2)}</td><td>${fmt(r.wRoas,2)}</td><td>${fmt(r.cur.purchases,0)}</td>
+      <td>${money(r.cur.spend)}</td><td>${fmt(r.cur.roas,2)}</td><td>${fmt(r.roasD1||0,2)}</td><td>${fmt(r.roasD2||0,2)}</td><td>${fmt(r.wRoas,2)}</td><td>${fmt(r.cur.purchases,0)}</td>
     </tr>`;
     const rowFull = `<tr data-camp="${String(r.camp).replace(/"/g,'&quot;')}" class="decision-camp-row"${sel}>
-      <td>${r.camp}</td><td>${r.type}</td><td>${decisionTagChip(r.tag)}</td><td>${r.action}</td>
+      <td>${r.camp}</td><td>${r.type}</td><td>${tagHtml}</td><td>${r.action}</td>
       <td class="${decisionConfClass(r.conf)}">${decisionConfChip(r.conf)}</td>
       <td class="${r.pri>=4?'priority-highest':(r.pri>=3?'priority-high':'')}">${decisionPriorityChip(r.pri)}</td>
       <td>${fmt(r.impactValue,0)}</td><td>${decisionReasonCell(r.reason)}</td>
-      <td>${money(r.cur.spend)}</td><td>${money(r.cur.conv)}</td><td>${fmt(r.cur.roas,2)}</td><td>${fmt(r.wRoas,2)}</td><td>${fmt(r.cur.purchases,0)}</td><td>${money(r.cur.aov)}</td><td>${money(r.cur.cpa)}</td>
+      <td>${money(r.cur.spend)}</td><td>${money(r.cur.conv)}</td><td>${fmt(r.cur.roas,2)}</td><td>${fmt(r.roasD1||0,2)}</td><td>${fmt(r.roasD2||0,2)}</td><td>${fmt(r.wRoas,2)}</td><td>${fmt(r.cur.purchases,0)}</td><td>${money(r.cur.aov)}</td><td>${money(r.cur.cpa)}</td>
       <td>${pct(r.cur.ctr)}</td><td>${money(r.cur.cpc)}</td><td>${money(r.cur.cpm)}</td><td>${pct(r.cur.cvr)}</td>
       <td>${money(r.cur.atcCost)}</td><td>${money(r.cur.checkoutCost)}</td><td>${pct(r.cur.atcRate)}</td><td>${pct(r.cur.checkoutRate)}</td>
       <td>${fmt(r.prev3.roas,2)}</td><td>${fmt(r.prev7.roas,2)}</td><td>${fmt(r.prev14.roas,2)}</td>
@@ -1759,6 +1938,7 @@ function renderDecisionCampaignTable() {
   }).join('');
   const tbl = document.getElementById('decisionCampTable');
   tbl.innerHTML = head + body;
+  tbl.classList.remove('three-day-summary');
   tbl.classList.toggle('compact-cols', compact);
   attachDecisionColResize('decisionCampTable', '--decision-camp-first-col', 280, 720);
   applyDecisionHeaderTitles(tbl);
@@ -1792,14 +1972,22 @@ function renderDecisionAdTable() {
   const latestKeyTip = decisionState?.latestKey || '-';
   const filter = document.getElementById('decisionAdFilter')?.value || 'all';
   const camp = decisionState.selectedCamp;
+  const is3DayFocus = decisionKpiFocus === 'ad_3day_low';
   const adPanel = document.getElementById('decisionAdPanel');
   const adToggleBtn = document.getElementById('decisionAdPanelToggle');
   const adGlobalHint = document.getElementById('decisionAdGlobalHint');
   const adTitle = document.getElementById('decisionAdTitle');
   const adSub = document.getElementById('decisionAdSubline');
+  updateDecisionMainGridLayout();
   if (adTitle) adTitle.textContent = 'Ad 决策';
-  if (adSub) adSub.textContent = camp ? camp : '点击上方 Campaign 行后展示该 Campaign 下 Ad 明细';
-  const shouldShow = decisionAdPanelOpen || !!camp;
+  if (adSub) {
+    if (is3DayFocus && camp) adSub.textContent = `${camp} · 连续3天未达标广告（非测试）`;
+    else if (is3DayFocus) adSub.textContent = `当前展示全部连续3天未达标广告（非测试）：${decisionState.summary.adThreeDayLow} 个，占 ${(decisionState.summary.adThreeDayLowShare*100).toFixed(1)}%。点击上方 Campaign 可筛选。`;
+    else if (camp) adSub.textContent = camp;
+    else if (decisionKpiFocus === 'ad_testing') adSub.textContent = `当前展示近7天测试广告：${decisionState.summary.adTesting} 个，占 ${(decisionState.summary.adTestingShare*100).toFixed(1)}%。`;
+    else adSub.textContent = '点击上方 Campaign 行后展示该 Campaign 下 Ad 明细';
+  }
+  const shouldShow = decisionAdPanelOpen || !!camp || is3DayFocus || decisionKpiFocus === 'ad_testing';
   if (!shouldShow) {
     adPanel?.classList.add('hidden');
     if (adToggleBtn) adToggleBtn.textContent = '显示 Ad 决策';
@@ -1811,15 +1999,17 @@ function renderDecisionAdTable() {
   adPanel?.classList.remove('hidden');
   if (adToggleBtn) adToggleBtn.textContent = '收起 Ad 决策';
   if (adGlobalHint) adGlobalHint.textContent = camp
-    ? '当前为单个 Campaign 的 Ad 明细（再次点击该 Campaign 行可取消筛选）。'
-    : '当前为全量 Ad 决策视图（可点按钮收起）。';
+    ? '当前为单个 Campaign 的 Ad 明细（再次点击上方 Campaign 行可取消筛选）。'
+    : (is3DayFocus ? '当前展示全部连续3天未达标广告（非测试）；点击上方 Campaign 摘要可筛选到单个 Campaign。' : '当前为全量 Ad 决策视图（可点按钮收起）。');
   let rowsA = decisionState.ads.filter(x => !camp || x.camp === camp);
+  if (is3DayFocus) rowsA = rowsA.filter(x => x.last3BelowTarget && !x.isTesting);
+  if (decisionKpiFocus === 'ad_testing') rowsA = rowsA.filter(x => x.isTesting);
   rowsA = rowsA.filter(x => {
     if (filter==='all') return true;
     if (filter==='good') return x.tag==='优质素材';
     if (filter==='click') return x.tag==='点击弱';
     if (filter==='conv') return x.tag==='转化弱';
-    if (filter==='loss') return x.tag==='亏损素材';
+    if (filter==='loss') return x.tag==='亏损素材' || x.tag==='关闭风险';
     return true;
   }).slice();
   rowsA.sort((a,b)=>{
@@ -1846,12 +2036,20 @@ function renderDecisionAdTable() {
   const pageRows = rowsA.slice(startIdx, startIdx + decisionAdPageSize);
   const si = (k)=> decisionAdSortState.key===k ? (decisionAdSortState.dir==='desc'?'▼':'▲') : '';
   const compact = decisionAdColumnMode === 'compact';
-  const head = compact ? `<tr>
+  const head = is3DayFocus ? `<tr>
+    <th>Ad</th><th>类型</th><th>标签</th><th>动作</th><th class="help-tip three-day-metric" data-tip="连续3天未达标广告（非测试）对应的目标ROAS">目标ROAS</th>
+    <th class="help-tip three-day-metric" data-tip="最新决策日前2天的ROAS">前天ROAS</th>
+    <th class="help-tip three-day-metric" data-tip="最新决策日前1天的ROAS">昨天ROAS</th>
+    <th class="help-tip three-day-metric" data-tip="最新决策日（${latestKeyTip}）的ROAS">今天ROAS</th>
+    <th class="help-tip three-day-metric" data-tip="最新决策日（${latestKeyTip}）的花费">当天花费</th>
+  </tr>` : compact ? `<tr>
     <th>Ad</th><th>类型</th><th>标签</th><th>动作</th>
     <th class="help-tip" data-tip="结合当天花费/点击/订单与近7天稳定性评估；高=信号更稳定，低=波动或样本不足。">置信度</th>
     <th class="sortable help-tip" data-sort="priority" data-tip="最高/高/中/低；综合动作类型、风险程度与放量机会后的处理顺序建议。">优先级<span class="sort-ind">${si('priority')}</span></th><th class="sortable help-tip" data-sort="impact" data-tip="用于排序的内部处理分值（非金额）；基于风险/潜力原始值压缩，并叠加优先级与置信度。">优先级分值<span class="sort-ind">${si('impact')}</span></th><th>原因</th>
     <th class="sortable help-tip" data-sort="spend" data-tip="最新决策日（${latestKeyTip}）的花费">当天花费<span class="sort-ind">${si('spend')}</span></th>
     <th class="sortable help-tip" data-sort="roas" data-tip="最新决策日（${latestKeyTip}）的ROAS">当天ROAS<span class="sort-ind">${si('roas')}</span></th>
+    <th class="help-tip" data-tip="最新决策日前1天的ROAS">昨天ROAS</th>
+    <th class="help-tip" data-tip="最新决策日前2天的ROAS">前天ROAS</th>
     <th class="sortable help-tip" data-sort="wroas" data-tip="综合ROAS：当天/前3天/前7天加权">综合ROAS<span class="sort-ind">${si('wroas')}</span></th>
     <th class="sortable help-tip" data-sort="purchases" data-tip="最新决策日（${latestKeyTip}）当天订单">当天订单<span class="sort-ind">${si('purchases')}</span></th>
   </tr>` : `<tr>
@@ -1861,6 +2059,8 @@ function renderDecisionAdTable() {
     <th class="sortable help-tip" data-sort="spend" data-tip="最新决策日（${latestKeyTip}）的花费">当天花费<span class="sort-ind">${si('spend')}</span></th>
     <th class="sortable" data-sort="conv">转化金额<span class="sort-ind">${si('conv')}</span></th>
     <th class="sortable help-tip" data-sort="roas" data-tip="最新决策日（${latestKeyTip}）的ROAS">当天ROAS<span class="sort-ind">${si('roas')}</span></th>
+    <th class="help-tip" data-tip="最新决策日前1天的ROAS">昨天ROAS</th>
+    <th class="help-tip" data-tip="最新决策日前2天的ROAS">前天ROAS</th>
     <th class="sortable help-tip" data-sort="wroas" data-tip="综合ROAS：当天/前3天/前7天加权">综合ROAS<span class="sort-ind">${si('wroas')}</span></th>
     <th class="sortable help-tip" data-sort="purchases" data-tip="最新决策日（${latestKeyTip}）当天订单">当天订单<span class="sort-ind">${si('purchases')}</span></th>
     <th>客单价</th><th>CPA</th>
@@ -1868,30 +2068,40 @@ function renderDecisionAdTable() {
     <th>CPC</th><th>CPM</th><th class="sortable" data-sort="cvr">转化率<span class="sort-ind">${si('cvr')}</span></th>
     <th>加购成本</th><th>结帐成本</th><th>加购率</th><th>结账率</th><th>前3天ROAS</th><th>前7天ROAS</th><th>前14天ROAS</th>
   </tr>`;
-  const body = pageRows.map(r => {
-    const adCell = !camp
-      ? `<div class="ad-cell-wrap"><div class="ad-main">${r.ad}</div><div class="ad-camp">${r.camp}</div></div>`
-      : r.ad;
-    return compact ? `<tr>
-    <td>${adCell}</td><td>${r.type}</td><td>${decisionTagChip(r.tag)}</td><td>${r.action}</td>
-    <td class="${decisionConfClass(r.conf)}">${decisionConfChip(r.conf)}</td>
-    <td class="${r.pri>=4?'priority-highest':(r.pri>=3?'priority-high':'')}">${decisionPriorityChip(r.pri)}</td>
-    <td>${fmt(r.impactValue,0)}</td>
-    <td>${decisionReasonCell(r.reason)}</td>
-    <td>${money(r.cur.spend)}</td><td>${fmt(r.cur.roas,2)}</td><td>${fmt(r.wRoas,2)}</td><td>${fmt(r.cur.purchases,0)}</td>
-  </tr>` : `<tr>
-    <td>${adCell}</td><td>${r.type}</td><td>${decisionTagChip(r.tag)}</td><td>${r.action}</td>
-    <td class="${decisionConfClass(r.conf)}">${decisionConfChip(r.conf)}</td>
-    <td class="${r.pri>=4?'priority-highest':(r.pri>=3?'priority-high':'')}">${decisionPriorityChip(r.pri)}</td><td>${fmt(r.impactValue,0)}</td><td>${decisionReasonCell(r.reason)}</td>
-    <td>${money(r.cur.spend)}</td><td>${money(r.cur.conv)}</td><td>${fmt(r.cur.roas,2)}</td><td>${fmt(r.wRoas,2)}</td><td>${fmt(r.cur.purchases,0)}</td><td>${money(r.cur.aov)}</td><td>${money(r.cur.cpa)}</td>
-    <td>${pct(r.cur.ctr)}</td><td>${money(r.cur.cpc)}</td><td>${money(r.cur.cpm)}</td><td>${pct(r.cur.cvr)}</td>
-    <td>${money(r.cur.atcCost)}</td><td>${money(r.cur.checkoutCost)}</td><td>${pct(r.cur.atcRate)}</td><td>${pct(r.cur.checkoutRate)}</td>
-    <td>${fmt(r.prev3.roas,2)}</td><td>${fmt(r.prev7.roas,2)}</td><td>${fmt(r.prev14.roas,2)}</td>
-  </tr>`;
-  }).join('');
+  const renderTagHtml = (r) => {
+    if (is3DayFocus) return decisionTagCell('3天未达标');
+    if (decisionKpiFocus === 'ad_testing' && r.isTesting) return decisionTagCell(r.tag, '测试');
+    return decisionTagCell(r.tag, r.isTesting ? '测试' : '');
+  };
+  const renderRow = (r) => {
+    const adCell = !camp ? `<div class="ad-cell-wrap"><div class="ad-main">${r.ad}</div><div class="ad-camp">${r.camp}</div></div>` : r.ad;
+    const tagHtml = renderTagHtml(r);
+    return is3DayFocus ? `<tr>
+      <td>${adCell}</td><td>${r.type}</td><td>${tagHtml}</td><td>${r.action}</td><td class="num">${fmt(r.targetRoas,2)}</td>
+      <td class="num">${fmt(r.roasD2||0,2)}</td><td class="num">${fmt(r.roasD1||0,2)}</td><td style="text-align:center !important;">${fmt(r.cur.roas,2)}</td><td class="num">${money(r.cur.spend)}</td>
+    </tr>` : compact ? `<tr>
+      <td>${adCell}</td><td>${r.type}</td><td>${tagHtml}</td><td>${r.action}</td>
+      <td class="${decisionConfClass(r.conf)}">${decisionConfChip(r.conf)}</td>
+      <td class="${r.pri>=4?'priority-highest':(r.pri>=3?'priority-high':'')}">${decisionPriorityChip(r.pri)}</td>
+      <td>${fmt(r.impactValue,0)}</td>
+      <td>${decisionReasonCell(r.reason)}</td>
+      <td>${money(r.cur.spend)}</td><td>${fmt(r.cur.roas,2)}</td><td>${fmt(r.roasD1||0,2)}</td><td>${fmt(r.roasD2||0,2)}</td><td>${fmt(r.wRoas,2)}</td><td>${fmt(r.cur.purchases,0)}</td>
+    </tr>` : `<tr>
+      <td>${adCell}</td><td>${r.type}</td><td>${tagHtml}</td><td>${r.action}</td>
+      <td class="${decisionConfClass(r.conf)}">${decisionConfChip(r.conf)}</td>
+      <td class="${r.pri>=4?'priority-highest':(r.pri>=3?'priority-high':'')}">${decisionPriorityChip(r.pri)}</td>
+      <td>${fmt(r.impactValue,0)}</td><td>${decisionReasonCell(r.reason)}</td>
+      <td>${money(r.cur.spend)}</td><td>${money(r.cur.conv)}</td><td>${fmt(r.cur.roas,2)}</td><td>${fmt(r.roasD1||0,2)}</td><td>${fmt(r.roasD2||0,2)}</td><td>${fmt(r.wRoas,2)}</td><td>${fmt(r.cur.purchases,0)}</td><td>${money(r.cur.aov)}</td><td>${money(r.cur.cpa)}</td>
+      <td>${pct(r.cur.ctr)}</td><td>${money(r.cur.cpc)}</td><td>${money(r.cur.cpm)}</td><td>${pct(r.cur.cvr)}</td>
+      <td>${money(r.cur.atcCost)}</td><td>${money(r.cur.checkoutCost)}</td><td>${pct(r.cur.atcRate)}</td><td>${pct(r.cur.checkoutRate)}</td>
+      <td>${fmt(r.prev3.roas,2)}</td><td>${fmt(r.prev7.roas,2)}</td><td>${fmt(r.prev14.roas,2)}</td>
+    </tr>`;
+  };
+  const body = pageRows.map(renderRow).join('');
   const tbl = document.getElementById('decisionAdTable');
   tbl.innerHTML = head + body;
-  tbl.classList.toggle('compact-cols', compact);
+  tbl.classList.toggle('compact-cols', compact && !is3DayFocus);
+  tbl.classList.toggle('three-day-focus', is3DayFocus);
   attachDecisionColResize('decisionAdTable', '--decision-ad-first-col', 320, 900);
   applyDecisionHeaderTitles(tbl);
   bindDecisionReasonDetails(tbl);
@@ -1909,7 +2119,6 @@ function renderDecisionAdTable() {
   document.getElementById('decisionAdPrev')?.toggleAttribute('disabled', decisionAdPage <= 1);
   document.getElementById('decisionAdNext')?.toggleAttribute('disabled', decisionAdPage >= totalPages);
 }
-
 function initDecisionSection() {
   if (decisionRenderDone) return;
   decisionState = buildDecisionState();
