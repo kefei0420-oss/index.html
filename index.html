@@ -1614,7 +1614,7 @@ function buildDecisionState() {
     const avgCvr = adAggs.length ? adAggs.reduce((s,x)=>s+(x.a.cvr||0),0)/adAggs.length : 0;
     const avgRoas = adAggs.length ? adAggs.reduce((s,x)=>s+(x.a.roas||0),0)/adAggs.length : 0;
 
-    campaigns.push({ camp, type, tag, action, pri, reason, conf, wRoas, cur, prev3, prev7, prev14, riskValue, scalePotential, impactRaw, impactValue, adCount: adAggs.length, actionGroup: decisionActionGroup(tag) });
+    campaigns.push({ camp, type, tag, action, pri, reason, conf, wRoas, cur, prev3, prev7, prev14, riskValue, scalePotential, impactRaw, impactValue, adCount: adAggs.length, actionGroup: decisionActionGroup(tag), roasD1: campDay1.roas || 0, roasD2: campDay2.roas || 0 });
 
     for (const item of adAggs) {
       const ad = item.ad, a = item.a;
