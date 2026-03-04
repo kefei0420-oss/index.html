@@ -971,7 +971,7 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
             <div class="rule-text">当天ROAS + 前3天ROAS + 前7天ROAS加权（综合ROAS）共同判断；同时看订单样本量与趋势一致性，避免偶发出单误判扩量。</div>
           </div>
           <div class="decision-rule-card">
-            <div class="rule-title">近7天测试</div>
+            <div class="rule-title">近7天测试广告系列</div>
             <div class="rule-text">近7天（含当天）首次上线的广告视为测试广告。近3天累计花费＞$10且0单判为关闭风险；＞$20且0单直接建议关闭；前5天仅1单且ROAS低于类型关闭线也建议关闭。</div>
           </div>
           <div class="decision-rule-card">
@@ -1675,6 +1675,7 @@ function buildDecisionState() {
   campaigns.sort((a,b)=>b.pri-a.pri || b.cur.spend-a.cur.spend);
   ads.sort((a,b)=>b.pri-a.pri || b.cur.spend-a.cur.spend);
   const threeDayLowAds = ads.filter(x => x.last3BelowTarget && !x.isTesting).length;
+  const testingCampaigns = new Set(ads.filter(x => x.isTesting).map(x => x.camp)).size;
   return {
     latestKey,
     campaigns,
@@ -1690,6 +1691,7 @@ function buildDecisionState() {
       adClickWeak: ads.filter(x=>x.tag==='点击弱').length,
       adConvWeak: ads.filter(x=>x.tag==='转化弱').length,
       campWatch: campaigns.filter(x=>x.actionGroup==='watch').length,
+      campTesting: testingCampaigns,
       adThreeDayLow: threeDayLowAds,
       adThreeDayLowShare: ads.length ? threeDayLowAds / ads.length : 0,
       adTesting: ads.filter(x=>x.isTesting).length,
@@ -1721,7 +1723,7 @@ function renderDecisionKpis() {
     { key:'camp_scale', title:'扩量队列', value:s.campScale, hint:'综合ROAS达标，可优先放量' },
     { key:'camp_opt', title:'优化队列', value:s.campOpt, hint:'结构优化 / 降量处理' },
     { key:'camp_watch', title:'观察队列', value:s.campWatch, hint:'信号不足或需继续观察' },
-    { key:'ad_testing', title:'近7天测试', value:s.adTesting, hint:`占比 ${(s.adTestingShare*100).toFixed(1)}%` },
+    { key:'ad_testing', title:'近7天测试广告系列', value:s.campTesting, hint:`Ad: ${s.adTesting}, 占比 ${(s.adTestingShare*100).toFixed(1)}%` },
     { key:'ad_3day_low', title:'连续3天未达标广告（非测试）', value:s.adThreeDayLow, hint:`占比 ${(s.adThreeDayLowShare*100).toFixed(1)}%` },
   ];
   const ordered = [cards[0], cards[1], cards[2], cards[3], cards[4], cards[5]];
