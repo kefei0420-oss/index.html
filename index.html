@@ -545,6 +545,67 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
 #chartSection #comboPanel { row-gap: 18px; margin-top: 10px; }
 #chartSection #comboPanel .panel { padding-top: 10px; }
 #chartSection #comboPanel .panel:not(:last-child) { margin-bottom: 10px; }
+.cross-panel { overflow: hidden; }
+.cross-toolbar { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap; margin-bottom:10px; }
+.cross-title-wrap { min-width:0; }
+.cross-title-wrap h3 { margin:0; }
+.cross-sub { margin-top:4px; font-size:12px; color:var(--muted); }
+.cross-dim-pills { display:flex; flex-wrap:wrap; gap:8px; justify-content:flex-end; }
+.cross-dim-pill {
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--text);
+  border-radius:999px;
+  padding:6px 12px;
+  font-size:12px;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  transition: background .15s ease, border-color .15s ease, box-shadow .15s ease, opacity .15s ease;
+}
+.cross-dim-pill .ord {
+  width:18px; height:18px; border-radius:999px;
+  display:inline-flex; align-items:center; justify-content:center;
+  font-size:11px; font-weight:800;
+  background:#efe4d6; color:#7b5b3e;
+}
+.cross-dim-pill.active {
+  background:#fff4e8;
+  border-color:#d8b089;
+  color:#8d4e12;
+  box-shadow:0 0 0 1px rgba(199,106,31,.08) inset;
+}
+.cross-dim-pill.active .ord { background:#c76a1f; color:#fff; }
+.cross-dim-pill:not(.active) { opacity:.72; }
+.cross-dim-pill:hover { opacity:1; border-color:#d8b089; background:#fffaf4; }
+.cross-actions { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.cross-empty { padding:18px 4px 6px; font-size:12px; color:var(--muted); }
+.cross-table-scroll { overflow:auto; padding-bottom:8px; }
+.cross-table { min-width: 980px; }
+.cross-table th, .cross-table td { padding:10px 10px; line-height:1.45; }
+.cross-table th:first-child, .cross-table td:first-child { width:280px; min-width:280px; max-width:280px; }
+.cross-dim-cell { text-align:left !important; }
+.cross-node { display:flex; align-items:center; gap:10px; min-width:0; max-width:100%; min-height:34px; }
+.cross-node .label { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.cross-row.is-toggleable { cursor:pointer; }
+.cross-node .toggle {
+  width:18px; height:18px; border-radius:999px;
+  border:1px solid var(--line); background:#fff9f2; color:#8d6a46;
+  display:inline-flex; align-items:center; justify-content:center;
+  font-size:11px; flex:none; cursor:pointer; pointer-events:none;
+}
+.cross-node .dot { width:6px; height:6px; border-radius:999px; background:#d7b18d; flex:none; }
+.cross-node-path { display:flex; align-items:center; gap:10px; min-width:0; flex-wrap:wrap; }
+.cross-node-chip {
+  display:inline-flex; align-items:center; padding:2px 8px; border-radius:999px;
+  background:#f8f1e8; border:1px solid #e3d2bf; color:#8b6e51; font-size:11px; line-height:1.2;
+}
+.cross-row.level-0 td { background:#fbf5ed; font-weight:700; }
+.cross-row.level-1 td { background:#fffaf6; }
+.cross-row.level-2 td { background:#fff; }
+.cross-row:hover td { background:#f8f1e8; }
+.cross-row.total-row td { font-weight:800; background:#f4ecdf; }
 @media (max-width: 980px) {
   .kpi-grid { grid-template-columns: repeat(2, 1fr); }
   .grid-2 { grid-template-columns: 1fr; }
@@ -700,6 +761,26 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
         </div>
       </div>
       <div class="table-scroll compact"><table class="table" id="adTypeTable"></table></div>
+    </div>
+  </div>
+
+  <div class="section" id="crossAnalysisSection">
+    <div class="panel cross-panel">
+      <div class="cross-toolbar">
+        <div class="cross-title-wrap">
+          <h3>交叉分析</h3>
+          <div class="cross-sub" id="crossAnalysisMode">当前交叉：品线 &gt; 广告类型 &gt; 素材</div>
+        </div>
+        <div class="cross-actions">
+          <div class="cross-dim-pills" id="crossDimPicker"></div>
+          <button id="crossResetBtn" class="pill-btn sm" type="button">恢复默认</button>
+          <button id="crossToggleAllBtn" class="pill-btn sm" type="button">展开全部</button>
+        </div>
+      </div>
+      <div class="cross-table-scroll">
+        <table class="table wide cross-table" id="crossAnalysisTable"></table>
+      </div>
+      <div class="cross-empty hidden" id="crossAnalysisEmpty">当前筛选范围暂无交叉数据</div>
     </div>
   </div>
 
@@ -1238,6 +1319,12 @@ const tripleMetrics = document.getElementById('tripleMetrics');
 const audiencePanel = document.getElementById('audiencePanel');
 const materialPanel = document.getElementById('materialPanel');
 const adTypePanel = document.getElementById('adTypePanel');
+const crossDimPicker = document.getElementById('crossDimPicker');
+const crossAnalysisMode = document.getElementById('crossAnalysisMode');
+const crossAnalysisTable = document.getElementById('crossAnalysisTable');
+const crossAnalysisEmpty = document.getElementById('crossAnalysisEmpty');
+const crossResetBtn = document.getElementById('crossResetBtn');
+const crossToggleAllBtn = document.getElementById('crossToggleAllBtn');
 const viewPerfBtn = document.getElementById('viewPerfBtn');
 const viewOpsBtn = document.getElementById('viewOpsBtn');
 const viewDecisionBtn = document.getElementById('viewDecisionBtn');
@@ -1257,6 +1344,13 @@ let decisionCampColumnMode = 'compact';
 let decisionAdColumnMode = 'compact';
 let decisionAdPanelOpen = true;
 let decisionKpiFocus = 'none';
+const CROSS_DIMENSIONS = [
+  { key:'category', label:'品线' },
+  { key:'adType', label:'广告类型' },
+  { key:'material', label:'素材' },
+];
+let crossSelectedDims = ['category', 'adType', 'material'];
+const crossExpandedKeys = new Set();
 
 function scopeDecisionCss(cssText) {
   const rootSel = '#decisionNativeRoot';
@@ -1631,7 +1725,6 @@ function buildDecisionState() {
       const awRoas = decisionWeightedRoas(a.roas, p3.roas, p7.roas);
       const firstSeenKey = decisionFirstSeenKey(allAdRows);
       const ageDays = firstSeenKey ? (dateDiffDays(firstSeenKey, latestKey) + 1) : 999;
-      const isTesting = ageDays <= 7;
       const targetRoas = decisionTypeTarget(type);
       const closeRoas = decisionTypeCloseThreshold(type);
       const riskRoas = decisionTypeRiskThreshold(type);
@@ -1639,6 +1732,7 @@ function buildDecisionState() {
       const last3Spend = (day0.spend||0) + (day1.spend||0) + (day2.spend||0);
       const last3Orders = (day0.purchases||0) + (day1.purchases||0) + (day2.purchases||0);
       const last3BelowTarget = has3d && (day0.roas < targetRoas) && (day1.roas < targetRoas) && (day2.roas < targetRoas);
+      const isTesting = ageDays <= 7;
       const firstFiveEnd = firstSeenKey ? dateKey(new Date(Math.min(parseDate(latestKey).getTime(), (function(){ const d=parseDate(firstSeenKey); d.setDate(d.getDate()+4); return d; })().getTime()))) : latestKey;
       const first5 = aggregate(allAdRows.filter(r => firstSeenKey && inRangeKey(r.date, firstSeenKey, firstFiveEnd)));
       const day0Orders = day0.purchases || 0;
@@ -2253,7 +2347,7 @@ function setDashboardView(mode) {
   dashboardView = (mode === 'ops' || mode === 'decision') ? mode : 'perf';
   const showPerf = dashboardView === 'perf';
   const showDecision = dashboardView === 'decision';
-  const perfIds = ['kpiGrid','trendSection','categorySection','tripleMetrics','chartSection','dailySection'];
+  const perfIds = ['kpiGrid','trendSection','categorySection','tripleMetrics','crossAnalysisSection','chartSection','dailySection'];
   const opsIds = ['productCategorySalesSection','productSection','urlSection','urlProductPageSection'];
   perfIds.forEach(id => document.getElementById(id)?.classList.toggle('hidden', !showPerf));
   opsIds.forEach(id => document.getElementById(id)?.classList.toggle('hidden', showPerf || showDecision));
@@ -2653,6 +2747,159 @@ function renderKPIs(rowsFiltered) {
   }).join('');
 }
 
+function crossMetricColumns() {
+  return [
+    { label:'花费', key:'spend', format:v=>money(v) },
+    { label:'转化金额', key:'conv', format:v=>money(v) },
+    { label:'ROAS', key:'roas', format:v=>fmt(v,2) },
+    { label:'订单', key:'purchases', format:v=>fmt(v,0) },
+    { label:'CTR', key:'ctr', format:v=>pct(v) },
+    { label:'转化率', key:'cvr', format:v=>pct(v) },
+    { label:'CPA', key:'cpa', format:v=>money(v) },
+    { label:'AOV', key:'aov', format:v=>money(v) },
+  ];
+}
+
+function formatCrossDimValue(dimKey, raw) {
+  const val = String(raw || '').trim();
+  if (!val) return '—';
+  if (dimKey === 'material') return val.toUpperCase();
+  return val;
+}
+
+function buildCrossTree(rowsList, dims, level=0, path=[]) {
+  if (!dims.length) return [];
+  const dimKey = dims[0];
+  const grouped = groupBy(rowsList, r => formatCrossDimValue(dimKey, r[dimKey]));
+  return Array.from(grouped.entries())
+    .map(([name, groupRows]) => {
+      const nodePath = [...path, `${dimKey}:${name}`];
+      return {
+        key: nodePath.join('||'),
+        dimKey,
+        name,
+        level,
+        labels: nodePath.map(part => part.split(':').slice(1).join(':')),
+        agg: aggregate(groupRows),
+        children: buildCrossTree(groupRows, dims.slice(1), level + 1, nodePath),
+      };
+    })
+    .sort((a, b) => (b.agg.spend - a.agg.spend) || a.name.localeCompare(b.name));
+}
+
+function flattenCrossNodes(nodes) {
+  const out = [];
+  nodes.forEach(node => {
+    out.push(node);
+    if (node.children.length && crossExpandedKeys.has(node.key)) {
+      out.push(...flattenCrossNodes(node.children));
+    }
+  });
+  return out;
+}
+
+function collectCrossExpandableKeys(nodes, out=[]) {
+  nodes.forEach(node => {
+    if (node.children.length) {
+      out.push(node.key);
+      collectCrossExpandableKeys(node.children, out);
+    }
+  });
+  return out;
+}
+
+function remapCrossExpandedKeys(nextDims) {
+  if (!Array.isArray(nextDims) || !nextDims.length) {
+    crossExpandedKeys.clear();
+    return;
+  }
+  const nextKeys = new Set();
+  Array.from(crossExpandedKeys).forEach(key => {
+    const pairs = key.split('||').map(part => {
+      const idx = part.indexOf(':');
+      return idx >= 0 ? [part.slice(0, idx), part.slice(idx + 1)] : null;
+    }).filter(Boolean);
+    const pairMap = new Map(pairs);
+    const rebuilt = nextDims.map(dim => pairMap.has(dim) ? `${dim}:${pairMap.get(dim)}` : null).filter(Boolean);
+    if (rebuilt.length) nextKeys.add(rebuilt.join('||'));
+  });
+  crossExpandedKeys.clear();
+  nextKeys.forEach(key => crossExpandedKeys.add(key));
+}
+
+function renderCrossDimPicker() {
+  if (!crossDimPicker) return;
+  crossDimPicker.innerHTML = CROSS_DIMENSIONS.map(dim => {
+    const idx = crossSelectedDims.indexOf(dim.key);
+    const active = idx >= 0;
+    return `<button type="button" class="cross-dim-pill ${active ? 'active' : ''}" data-cross-dim="${dim.key}">
+      <span class="ord">${active ? idx + 1 : '+'}</span>
+      <span>${dim.label}</span>
+    </button>`;
+  }).join('');
+  if (crossAnalysisMode) {
+    const labels = crossSelectedDims.map(key => CROSS_DIMENSIONS.find(d => d.key === key)?.label || key);
+    crossAnalysisMode.textContent = !labels.length
+      ? '当前未选择维度'
+      : (labels.length > 1 ? `当前交叉：${labels.join(' > ')}` : `当前汇总：${labels[0] || '品线'}`);
+  }
+}
+
+function renderCrossAnalysis(rowsFiltered) {
+  if (!crossAnalysisTable || !crossAnalysisEmpty) return;
+  renderCrossDimPicker();
+  const dims = crossSelectedDims.slice();
+  if (!dims.length) {
+    crossAnalysisTable.innerHTML = '';
+    crossAnalysisEmpty.textContent = '请先选择至少 1 个维度';
+    crossAnalysisEmpty.classList.remove('hidden');
+    if (crossToggleAllBtn) crossToggleAllBtn.textContent = '展开全部';
+    return;
+  }
+  const tree = buildCrossTree(rowsFiltered, dims);
+  const flat = flattenCrossNodes(tree);
+  const expandableKeys = collectCrossExpandableKeys(tree);
+  const metrics = crossMetricColumns();
+  const dimLabels = dims.map(key => CROSS_DIMENSIONS.find(d => d.key === key)?.label || key);
+  const dimHeader = dims.length > 1 ? `交叉维度（${dimLabels.join(' > ')}）` : `维度（${dimLabels[0] || '品线'}）`;
+  const header = `<tr><th>${dimHeader}</th>${metrics.map(c => `<th>${c.label}</th>`).join('')}</tr>`;
+  if (crossToggleAllBtn) {
+    const allExpanded = expandableKeys.length > 0 && expandableKeys.every(key => crossExpandedKeys.has(key));
+    crossToggleAllBtn.textContent = allExpanded ? '收起全部' : '展开全部';
+  }
+  if (!tree.length) {
+    crossAnalysisTable.innerHTML = header;
+    crossAnalysisEmpty.textContent = '当前筛选范围暂无交叉数据';
+    crossAnalysisEmpty.classList.remove('hidden');
+    return;
+  }
+  crossAnalysisEmpty.classList.add('hidden');
+  const body = flat.map(node => {
+    const hasChildren = node.children.length > 0;
+    const open = hasChildren && crossExpandedKeys.has(node.key);
+    const indent = node.level * 18;
+    const parentChips = node.labels.slice(0, -1).map(label => `<span class="cross-node-chip">${label}</span>`).join('');
+    const currentLabel = node.labels[node.labels.length - 1] || node.name;
+    const dimCell = `<td class="cross-dim-cell" style="padding-left:${10 + indent}px;">
+      <div class="cross-node">
+        ${hasChildren ? `<button type="button" class="toggle" data-cross-toggle="${node.key}">${open ? '−' : '+'}</button>` : '<span class="dot"></span>'}
+        <div class="cross-node-path">${parentChips}<span class="label">${currentLabel}</span></div>
+      </div>
+    </td>`;
+    return `<tr class="cross-row level-${node.level} ${hasChildren ? 'is-toggleable' : ''}" ${hasChildren ? `data-cross-toggle="${node.key}"` : ''}>
+      ${dimCell}
+      ${metrics.map(c => `<td>${c.format(node.agg[c.key] || 0)}</td>`).join('')}
+    </tr>`;
+  }).join('');
+  const totalAgg = aggregate(rowsFiltered);
+  const totalLabel = dims.length > 1 ? '总计' : '汇总';
+  const totalRow = `<tr class="cross-row total-row">
+    <td class="cross-dim-cell">${totalLabel}</td>
+    ${metrics.map(c => `<td>${c.format(totalAgg[c.key] || 0)}</td>`).join('')}
+  </tr>`;
+  crossAnalysisTable.innerHTML = header + body + totalRow;
+}
+
 let chart = null;
 let adTypePie = null;
 let audiencePie = null;
@@ -2727,15 +2974,103 @@ const roasLabelPlugin = {
     chartInstance.data.datasets.forEach((dataset, i) => {
       if (!dataset.showLabels) return;
       const meta = chartInstance.getDatasetMeta(i);
+      const values = (dataset.data || []).map(v => Number(v));
+      const valid = values
+        .map((v, idx) => ({ v, idx }))
+        .filter(item => isFinite(item.v));
+      if (!valid.length) return;
+
+      const visible = new Set();
+      const totalPoints = valid.length;
+      const nonZero = valid.filter(item => Math.abs(item.v) > 0.0001);
+      const maxItem = nonZero.length ? nonZero.reduce((a, b) => (b.v > a.v ? b : a), nonZero[0]) : null;
+      const minItem = nonZero.length ? nonZero.reduce((a, b) => (b.v < a.v ? a : b), nonZero[0]) : null;
+      const lastItem = valid[valid.length - 1];
+
+      if (totalPoints <= 10) {
+        valid.forEach(item => {
+          if (Math.abs(item.v) > 0.0001) visible.add(item.idx);
+        });
+      } else if (totalPoints <= 20) {
+        valid.forEach((item, pos) => {
+          if (pos % 2 === 0 && Math.abs(item.v) > 0.0001) visible.add(item.idx);
+        });
+      } else {
+        valid.forEach((item, pos) => {
+          if (pos % 3 === 0 && Math.abs(item.v) > 0.0001) visible.add(item.idx);
+        });
+      }
+
+      if (maxItem) visible.add(maxItem.idx);
+      if (minItem) visible.add(minItem.idx);
+      if (lastItem && Math.abs(lastItem.v) > 0.0001) visible.add(lastItem.idx);
+
       meta.data.forEach((pt, idx) => {
-        const val = dataset.data[idx];
-        if (!isFinite(val)) return;
-        ctx.fillText(Number(val).toFixed(2), pt.x - 10, pt.y - 10);
+        const val = values[idx];
+        if (!isFinite(val) || !visible.has(idx) || Math.abs(val) <= 0.0001) return;
+        const text = Number(val).toFixed(2);
+        const x = idx === lastItem?.idx ? pt.x + 6 : pt.x - 10;
+        const y = pt.y - 10;
+        ctx.fillText(text, x, y);
       });
     });
     ctx.restore();
   }
 };
+
+const piePercentLabelPlugin = {
+  id: 'piePercentLabel',
+  afterDatasetsDraw(chartInstance, args, pluginOptions) {
+    if (chartInstance.config.type !== 'pie') return;
+    const dataset = chartInstance.data.datasets?.[0];
+    const meta = chartInstance.getDatasetMeta(0);
+    const data = (dataset?.data || []).map(v => Number(v) || 0);
+    const total = data.reduce((sum, v) => sum + v, 0);
+    if (!meta?.data?.length || total <= 0) return;
+
+    const ctx = chartInstance.ctx;
+    const insideThreshold = Number(pluginOptions?.insideThreshold ?? 0.08);
+    ctx.save();
+    ctx.font = '11px Manrope';
+    ctx.fillStyle = '#5f5143';
+
+    meta.data.forEach((arc, idx) => {
+      const value = data[idx];
+      if (!value) return;
+      const pct = value / total;
+      const label = `${(pct * 100).toFixed(1)}%`;
+      const angle = (arc.startAngle + arc.endAngle) / 2;
+      const cos = Math.cos(angle);
+      const sin = Math.sin(angle);
+
+      if (pct >= insideThreshold) {
+        const radius = arc.innerRadius + (arc.outerRadius - arc.innerRadius) * 0.58;
+        const x = arc.x + cos * radius;
+        const y = arc.y + sin * radius;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = '#ffffff';
+        ctx.fillText(label, x, y);
+      }
+    });
+
+    ctx.restore();
+  }
+};
+
+function chartMetricTooltip() {
+  return {
+    callbacks: {
+      label(ctx) {
+        const label = ctx.dataset?.label || '';
+        const value = Number(ctx.parsed?.y ?? ctx.parsed) || 0;
+        if (label.includes('ROAS')) return `${label}: ${value.toFixed(2)}`;
+        if (label.includes('花费') || label.includes('转化金额')) return `${label}: ${money(value)}`;
+        return `${label}: ${value.toFixed(2)}`;
+      }
+    }
+  };
+}
 function renderChart(rowsFiltered) {
   const custom = isCustomRange();
   const w = weekSelect.value;
@@ -2832,7 +3167,7 @@ function renderChart(rowsFiltered) {
         y: { beginAtZero:true },
         y1: { beginAtZero:true, position:'right', grid:{drawOnChartArea:false} }
       },
-      plugins: { legend: { position:'top' } }
+      plugins: { legend: { position:'top' }, tooltip: chartMetricTooltip() }
     },
     plugins: [roasLabelPlugin]
   });
@@ -3362,8 +3697,10 @@ function renderProductCategorySalesPanel() {
     },
     options: {
       maintainAspectRatio: false,
+      layout: { padding: { left: 26, right: 34, top: 14, bottom: 14 } },
       plugins: {
         legend: { position: 'right', labels: { font: { size: 10 }, boxWidth: 10, boxHeight: 10, padding: 8 } },
+        piePercentLabel: { insideThreshold: 0.1, minOutsidePct: 0.012 },
         tooltip: {
           callbacks: {
             label(ctx) {
@@ -3374,7 +3711,8 @@ function renderProductCategorySalesPanel() {
           }
         }
       }
-    }
+    },
+    plugins: [piePercentLabelPlugin]
   });
 }
 
@@ -3859,10 +4197,12 @@ function renderTables(rowsFiltered) {
       type:'pie',
       data:{labels:adLabels, datasets:[{data:useAd, backgroundColor:colors}]},
       options:{plugins:{
+        piePercentLabel: { insideThreshold: 0.08, minOutsidePct: 0.015 },
         legend:{position:'right', labels:{font:{size:9}, boxWidth:10, boxHeight:10, padding:6}},
         title:{display:true,text:`广告 ${metric==='spend'?'花费':'转化金额'}`},
         tooltip: percentTooltip(useAd)
-      }, maintainAspectRatio:false}
+      }, maintainAspectRatio:false, layout:{padding:{left:18,right:26,top:10,bottom:10}}},
+      plugins: [piePercentLabelPlugin]
     });
   }
   if (audCtx) {
@@ -3871,10 +4211,12 @@ function renderTables(rowsFiltered) {
       type:'pie',
       data:{labels:audLabels, datasets:[{data:useAud, backgroundColor:colors}]},
       options:{plugins:{
+        piePercentLabel: { insideThreshold: 0.08, minOutsidePct: 0.015 },
         legend:{position:'right', labels:{font:{size:9}, boxWidth:10, boxHeight:10, padding:6}},
         title:{display:true,text:`人群 ${metric==='spend'?'花费':'转化金额'}`},
         tooltip: percentTooltip(useAud)
-      }, maintainAspectRatio:false}
+      }, maintainAspectRatio:false, layout:{padding:{left:18,right:26,top:10,bottom:10}}},
+      plugins: [piePercentLabelPlugin]
     });
   }
   if (matCtx) {
@@ -3883,10 +4225,12 @@ function renderTables(rowsFiltered) {
       type:'pie',
       data:{labels:matLabels, datasets:[{data:useMat, backgroundColor:colors}]},
       options:{plugins:{
+        piePercentLabel: { insideThreshold: 0.08, minOutsidePct: 0.015 },
         legend:{position:'right', labels:{font:{size:9}, boxWidth:10, boxHeight:10, padding:6}},
         title:{display:true,text:`素材 ${metric==='spend'?'花费':'转化金额'}`},
         tooltip: percentTooltip(useMat)
-      }, maintainAspectRatio:false}
+      }, maintainAspectRatio:false, layout:{padding:{left:18,right:26,top:10,bottom:10}}},
+      plugins: [piePercentLabelPlugin]
     });
   }
 
@@ -3922,7 +4266,7 @@ function renderCombo(rowsFiltered) {
           y: { beginAtZero:true },
           y1: { beginAtZero:true, position:'right', grid:{drawOnChartArea:false} }
         },
-        plugins: { legend: { position:'top', labels:{font:{size:10}, boxWidth:10, boxHeight:10, padding:6} } }
+        plugins: { legend: { position:'top', labels:{font:{size:10}, boxWidth:10, boxHeight:10, padding:6} }, tooltip: chartMetricTooltip() }
       },
       plugins: [roasLabelPlugin]
     });
@@ -4843,6 +5187,7 @@ function updateAll(resetPage=true) {
   renderKPIs(rowsFiltered);
   renderChart(rowsFiltered);
   renderTables(rowsFiltered);
+  renderCrossAnalysis(rowsFiltered);
   renderWeeklyNewAdsBoard();
   renderSummary(rowsFiltered);
   renderProductCategorySalesPanel();
@@ -4961,6 +5306,56 @@ compareCategory.addEventListener('change', () => updateAll(false));
 compareAudience.addEventListener('change', () => updateAll(false));
 compareMaterial.addEventListener('change', () => updateAll(false));
 compareAdType.addEventListener('change', () => updateAll(false));
+if (crossDimPicker) {
+  crossDimPicker.addEventListener('click', (e) => {
+    const pill = e.target.closest('[data-cross-dim]');
+    if (!pill) return;
+    const dimKey = pill.dataset.crossDim;
+    const idx = crossSelectedDims.indexOf(dimKey);
+    let nextDims;
+    if (idx >= 0) {
+      nextDims = crossSelectedDims.filter(key => key !== dimKey);
+    } else {
+      nextDims = crossSelectedDims.concat(dimKey);
+    }
+    remapCrossExpandedKeys(nextDims);
+    crossSelectedDims = nextDims;
+    updateAll(false);
+  });
+}
+if (crossAnalysisTable) {
+  crossAnalysisTable.addEventListener('click', (e) => {
+    const toggle = e.target.closest('[data-cross-toggle]');
+    if (!toggle) return;
+    const key = toggle.dataset.crossToggle;
+    if (!key) return;
+    if (crossExpandedKeys.has(key)) crossExpandedKeys.delete(key);
+    else crossExpandedKeys.add(key);
+    updateAll(false);
+  });
+}
+if (crossResetBtn) {
+  crossResetBtn.addEventListener('click', () => {
+    crossSelectedDims = ['category', 'adType', 'material'];
+    remapCrossExpandedKeys(crossSelectedDims);
+    updateAll(false);
+  });
+}
+if (crossToggleAllBtn) {
+  crossToggleAllBtn.addEventListener('click', () => {
+    const dims = crossSelectedDims.slice();
+    if (!dims.length) return;
+    const tree = buildCrossTree(filterRows(), dims);
+    const expandableKeys = collectCrossExpandableKeys(tree);
+    const allExpanded = expandableKeys.length > 0 && expandableKeys.every(key => crossExpandedKeys.has(key));
+    if (allExpanded) {
+      expandableKeys.forEach(key => crossExpandedKeys.delete(key));
+    } else {
+      expandableKeys.forEach(key => crossExpandedKeys.add(key));
+    }
+    updateAll(false);
+  });
+}
 dailyPageSizeSelect.addEventListener('change', () => {
   dailyPageSize = parseInt(dailyPageSizeSelect.value, 10) || 15;
   dailyPage = 1;
