@@ -303,6 +303,16 @@ select, .pill-btn, input[type="date"] { border:1px solid var(--line); background
 .url-prod-main-row:hover td:first-child {
   background:#f7eee3 !important;
 }
+.url-ad-cell { display:flex; align-items:flex-start; gap:8px; min-width:0; }
+.url-ad-thumb {
+  width:32px; height:32px; border-radius:8px; flex:none;
+  object-fit:cover; border:1px solid var(--line); background:#f5efe7; cursor:zoom-in;
+}
+.url-ad-thumb.empty {
+  display:inline-flex; align-items:center; justify-content:center;
+  color:#9b8b7a; font-size:10px; font-weight:700;
+}
+.url-ad-name { min-width:0; overflow-wrap:anywhere; line-height:1.28; }
 #weeklyNewAdsTable th:first-child,
 #weeklyNewAdsTable td:first-child {
   position: sticky;
@@ -598,7 +608,16 @@ select, .pill-btn, input[type="date"] { border:1px solid var(--line); background
 .decision-native-root details.reason summary::-webkit-details-marker { margin-right:2px; }
 .decision-native-root details.reason div { color:var(--muted); font-size:12px; margin-top:6px; line-height:1.45; white-space:normal; overflow-wrap:anywhere; max-width:620px; }
 .decision-native-root details.reason[open] { display:block; min-width:260px; }
-.decision-native-root .ad-cell-wrap { display:flex; flex-direction:column; gap:2px; }
+.decision-native-root .ad-cell-wrap { display:flex; align-items:flex-start; gap:8px; min-width:0; }
+.decision-native-root .ad-thumb {
+  width:34px; height:34px; border-radius:8px; flex:none;
+  object-fit:cover; border:1px solid var(--line); background:#f5efe7; cursor:zoom-in;
+}
+.decision-native-root .ad-thumb.empty {
+  display:inline-flex; align-items:center; justify-content:center;
+  color:#9b8b7a; font-size:10px; font-weight:700;
+}
+.decision-native-root .ad-cell-text { display:flex; flex-direction:column; gap:2px; min-width:0; }
 .decision-native-root .ad-cell-wrap .ad-main { color:#2f271f; }
 .decision-native-root .ad-cell-wrap .ad-camp { color:var(--muted); font-size:11px; line-height:1.25; white-space:normal; overflow-wrap:anywhere; }
 .decision-native-root { --decision-camp-first-col: 360px; --decision-ad-first-col: 460px; }
@@ -1344,11 +1363,12 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script type="module">
-const [DATA, PRODUCT_MAP, SHOPIFY_SALES_DAILY, URL_DATA] = await Promise.all([
+const [DATA, PRODUCT_MAP, SHOPIFY_SALES_DAILY, URL_DATA, AD_THUMBS] = await Promise.all([
   fetch('./data/rows.json', { cache: 'no-store' }).then(r => { if (!r.ok) throw new Error('Failed to load rows.json: ' + r.status); return r.json(); }),
   fetch('./data/products.json', { cache: 'no-store' }).then(r => { if (!r.ok) throw new Error('Failed to load products.json: ' + r.status); return r.json(); }),
   fetch('./data/shopify_daily.json', { cache: 'no-store' }).then(r => { if (!r.ok) throw new Error('Failed to load shopify_daily.json: ' + r.status); return r.json(); }),
   fetch('./data/urls.json', { cache: 'no-store' }).then(r => { if (!r.ok) throw new Error('Failed to load urls.json: ' + r.status); return r.json(); }),
+  fetch('./data/ad_thumbs.json', { cache: 'no-store' }).then(r => r.ok ? r.json() : ({ by_ad_name:{}, by_ad_id:{} })).catch(() => ({ by_ad_name:{}, by_ad_id:{} })),
 ]);
 const DECISION_HTML = '';
 window.addEventListener('error', (e) => console.error(e.error || e.message));
@@ -1370,6 +1390,10 @@ function pct(n) { return (n*100).toFixed(2) + '%'; }
 function weekdayCN(d) {
   const map = ['日','一','二','三','四','五','六'];
   return '周' + map[d.getDay()];
+}
+
+function normalizeAdNameKey(s) {
+  return String(s || '').trim().toLowerCase().replace(/\s+/g, ' ');
 }
 
 function extractCountry(campaign) {
@@ -1545,6 +1569,16 @@ const CROSS_DIMENSIONS = [
 ];
 let crossSelectedDims = ['category', 'adType', 'material'];
 const crossExpandedKeys = new Set();
+const AD_THUMB_BY_NAME = (AD_THUMBS && AD_THUMBS.by_ad_name) || {};
+const AD_THUMB_BY_ID = (AD_THUMBS && AD_THUMBS.by_ad_id) || {};
+
+function adThumbPathFor(row) {
+  if (!row) return '';
+  const adId = String(row.ad_id || '').trim();
+  if (adId && AD_THUMB_BY_ID[adId]) return AD_THUMB_BY_ID[adId];
+  const key = normalizeAdNameKey(row.ad);
+  return AD_THUMB_BY_NAME[key] || '';
+}
 
 function scopeDecisionCss(cssText) {
   const rootSel = '#decisionNativeRoot';
@@ -2438,7 +2472,14 @@ function renderDecisionAdTable() {
     return decisionTagCell(r.tag, r.isTesting ? '测试' : '');
   };
   const renderRow = (r) => {
-    const adCell = !camp ? `<div class="ad-cell-wrap"><div class="ad-main">${r.ad}</div><div class="ad-camp">${r.camp}</div></div>` : r.ad;
+    const thumbPath = adThumbPathFor(r);
+    const thumbHtml = thumbPath
+      ? `<img class="ad-thumb" src="${thumbPath}" alt="ad-thumb" loading="lazy" data-img="${thumbPath}" data-title="${String(r.ad || '').replace(/"/g,'&quot;')}" />`
+      : `<span class="ad-thumb empty">AD</span>`;
+    const adText = !camp
+      ? `<div class="ad-cell-text"><div class="ad-main">${r.ad}</div><div class="ad-camp">${r.camp}</div></div>`
+      : `<div class="ad-cell-text"><div class="ad-main">${r.ad}</div></div>`;
+    const adCell = `<div class="ad-cell-wrap">${thumbHtml}${adText}</div>`;
     const tagHtml = renderTagHtml(r);
     return is3DayFocus ? `<tr>
       <td>${adCell}</td><td>${r.type}</td><td>${tagHtml}</td><td>${decisionThreeDayAction(r)}</td><td class="num">${fmt(r.targetRoas,2)}</td>
@@ -2470,6 +2511,14 @@ function renderDecisionAdTable() {
   applyDecisionHeaderTitles(tbl);
   bindDecisionReasonDetails(tbl);
   tbl.querySelectorAll('details.reason, details.reason summary').forEach(el => el.addEventListener('click', (e) => e.stopPropagation()));
+  tbl.querySelectorAll('img.ad-thumb').forEach((img) => {
+    img.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const src = img.dataset.img || img.getAttribute('src') || '';
+      if (!src) return;
+      openImageModal(src, img.dataset.title || '');
+    });
+  });
   tbl.querySelectorAll('th.sortable').forEach(th => th.addEventListener('click', () => {
     const key = th.getAttribute('data-sort');
     if (!key) return;
@@ -5087,7 +5136,8 @@ function renderURLDetail(baseRows) {
   const byAd = groupBy(detailRowsRaw, r => r.ad || '-');
   let rowsD = Array.from(byAd.entries()).map(([ad, rs]) => {
     const a = aggregate(rs);
-    return {ad, ...a};
+    const adId = String((rs.find(x => x.ad_id) || {}).ad_id || '').trim();
+    return {ad, ad_id: adId, ...a};
   });
   const dir = urlDetailSortDir === 'asc' ? 1 : -1;
   rowsD.sort((a,b)=> {
@@ -5119,7 +5169,14 @@ function renderURLDetail(baseRows) {
   const start = (urlDetailPage - 1) * (pageSize || rowsD.length);
   const pageRows = rowsD.slice(start, start + (pageSize || rowsD.length));
   const header = `<tr>${cols.map(c=>`<th class="sortable" data-key="${c.key}">${c.label}${urlDetailSortKey===c.key?`<span class="sort-ind">${urlDetailSortDir==='asc'?'▲':'▼'}</span>`:''}</th>`).join('')}</tr>`;
-  const body = pageRows.map(r=>`<tr><td>${r.ad}</td><td>${money(r.spend)}</td><td>${money(r.conv)}</td><td><span class="${roasLevelClass(r.roas)}">${fmt(r.roas,2)}</span></td><td>${fmt(r.purchases,0)}</td><td>${money(r.aov)}</td><td>${money(r.cpa)}</td><td>${pct(r.ctr)}</td><td>${money(r.cpc)}</td><td>${money(r.cpm)}</td><td>${pct(r.cvr)}</td><td>${money(r.atcCost)}</td><td>${money(r.checkoutCost)}</td><td>${pct(r.atcRate)}</td><td>${pct(r.checkoutRate)}</td></tr>`).join('');
+  const body = pageRows.map(r => {
+    const thumbPath = adThumbPathFor(r);
+    const thumb = thumbPath
+      ? `<img class="url-ad-thumb" src="${thumbPath}" alt="ad-thumb" loading="lazy" data-img="${thumbPath}" data-title="${String(r.ad || '').replace(/"/g,'&quot;')}" />`
+      : `<span class="url-ad-thumb empty">AD</span>`;
+    const adCell = `<div class="url-ad-cell">${thumb}<div class="url-ad-name">${r.ad}</div></div>`;
+    return `<tr><td>${adCell}</td><td>${money(r.spend)}</td><td>${money(r.conv)}</td><td><span class="${roasLevelClass(r.roas)}">${fmt(r.roas,2)}</span></td><td>${fmt(r.purchases,0)}</td><td>${money(r.aov)}</td><td>${money(r.cpa)}</td><td>${pct(r.ctr)}</td><td>${money(r.cpc)}</td><td>${money(r.cpm)}</td><td>${pct(r.cvr)}</td><td>${money(r.atcCost)}</td><td>${money(r.checkoutCost)}</td><td>${pct(r.atcRate)}</td><td>${pct(r.checkoutRate)}</td></tr>`;
+  }).join('');
   table.innerHTML = header + body;
   attachTableFirstColResize('urlDetailTable', '--url-detail-first-col', 260, 760, 'url-detail-first-resize');
   title.textContent = `广告明细 ${selectedUrl}`;
@@ -5284,6 +5341,12 @@ function bindURLBoard() {
   const detail = document.getElementById('urlDetailTable');
   if (detail) {
     detail.addEventListener('click', (e) => {
+      const img = e.target.closest('img.url-ad-thumb');
+      if (img && img.dataset.img) {
+        e.stopPropagation();
+        openImageModal(img.dataset.img, img.dataset.title || '');
+        return;
+      }
       const th = e.target.closest('th.sortable');
       if (!th || !th.dataset.key) return;
       if (urlDetailSortKey === th.dataset.key) urlDetailSortDir = urlDetailSortDir === 'asc' ? 'desc' : 'asc';
