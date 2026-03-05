@@ -1879,6 +1879,12 @@ function buildDecisionState() {
       pri=1;
       reason='新上 Campaign 仅有当天数据，至少观察1天后再判断是否进入暂停队列。';
     }
+    if ((cur.spend || 0) <= 0 && decisionActionGroup(tag) === 'pause') {
+      tag='观察';
+      action='继续观察';
+      pri=1;
+      reason='当天花费为0，不纳入暂停队列。';
+    }
     const conf = decisionConfidence(cur, prev7);
     const riskValue = cur.spend * Math.max(1 - cur.roas, 0);
     const scalePotential = (cur.conv || 0) * Math.max(cur.roas - 1, 0);
@@ -2087,10 +2093,13 @@ function matchesDecisionAdFocus(row) {
   if (!row) return false;
   if (decisionKpiFocus === 'ad_testing') return !!row.isTesting;
   if (decisionKpiFocus === 'ad_3day_low') return !!row.last3BelowTarget && !row.isTesting;
-  if (decisionKpiFocus === 'camp_pause') return row.actionGroup === 'pause';
-  if (decisionKpiFocus === 'camp_scale') return row.actionGroup === 'scale';
-  if (decisionKpiFocus === 'camp_opt') return row.actionGroup === 'opt';
-  if (decisionKpiFocus === 'camp_watch') return row.actionGroup === 'watch';
+  const inCampGroup = (group) => decisionState?.campaigns?.some(c => c.camp === row.camp && c.actionGroup === group);
+  if (decisionKpiFocus === 'camp_pause') {
+    return inCampGroup('pause');
+  }
+  if (decisionKpiFocus === 'camp_scale') return inCampGroup('scale');
+  if (decisionKpiFocus === 'camp_opt') return inCampGroup('opt');
+  if (decisionKpiFocus === 'camp_watch') return inCampGroup('watch');
   return true;
 }
 
