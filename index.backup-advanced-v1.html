@@ -23,122 +23,23 @@
 }
 * { box-sizing: border-box; }
 body { margin:0; font-family: 'Manrope', sans-serif; background: radial-gradient(1200px 600px at 10% -10%, #fff7ef 0%, #f6efe8 45%, #f3e9df 100%); color: var(--text); }
-.auth-pending .container { visibility:hidden; }
 .container { max-width: 1180px; margin: 28px auto 60px; padding: 0 18px; }
-.auth-gate {
-  position: fixed;
-  inset: 0;
-  z-index: 2000;
-  background:
-    radial-gradient(1100px 560px at 10% 0%, rgba(255, 214, 170, .24), transparent 60%),
-    radial-gradient(900px 500px at 90% 100%, rgba(191, 130, 79, .18), transparent 60%),
-    rgba(22,16,12,.52);
-  backdrop-filter: blur(6px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 18px;
-}
-.auth-gate.hidden { display:none !important; }
-.auth-card {
-  width: min(420px, 100%);
-  background: linear-gradient(180deg, #fff 0%, #fffaf4 100%);
-  border:1px solid #efdcc7;
-  border-radius:18px;
-  padding:18px;
-  box-shadow:0 22px 50px rgba(0,0,0,.24), 0 1px 0 rgba(255,255,255,.85) inset;
-  position: relative;
-  overflow: hidden;
-}
-.auth-card::before {
-  content:'';
-  position:absolute;
-  top:-80px;
-  right:-40px;
-  width:220px;
-  height:220px;
-  border-radius:999px;
-  background: radial-gradient(circle, rgba(236,175,120,.28) 0%, rgba(236,175,120,0) 70%);
-  pointer-events:none;
-}
-.auth-title { font-size:18px; font-weight:800; margin:0 0 6px; }
-.auth-sub { font-size:12px; color:var(--muted); margin-bottom:10px; }
-.auth-form { display:flex; gap:8px; align-items:center; }
-.auth-input {
-  flex:1;
-  min-width:0;
-  border:1px solid #e8d4be;
-  border-radius:12px;
-  padding:9px 12px;
-  font-size:13px;
-  background:#fff;
-  transition: border-color .16s ease, box-shadow .16s ease;
-}
-.auth-input:focus {
-  outline:0;
-  border-color:#c97832;
-  box-shadow:0 0 0 3px rgba(201,120,50,.18);
-}
-.auth-submit {
-  border:1px solid #ba6422;
-  background: linear-gradient(180deg, #d37d35 0%, #bf6823 100%);
-  color:#fff;
-  border-radius:12px;
-  padding:8px 14px;
-  font-size:12px;
-  font-weight:700;
-  cursor:pointer;
-}
-.auth-submit:hover { filter: brightness(1.04); }
-.auth-submit:active { transform: translateY(1px); }
-.auth-actions { margin-top:8px; display:flex; align-items:center; justify-content:space-between; gap:8px; }
-.auth-help { font-size:12px; color:var(--muted); }
-.auth-help a { color:#8a2e00; text-decoration:none; border-bottom:1px dashed #c99873; }
-.auth-help a:hover { text-decoration:underline; }
-.auth-error { margin-top:8px; color:#b3261e; font-size:12px; min-height:18px; padding-left:2px; }
-.auth-badge {
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  border:1px solid #edd7c0;
-  border-radius:999px;
-  padding:3px 9px;
-  font-size:11px;
-  color:#8a6c4e;
-  background:#fff;
-  margin-bottom:8px;
-}
-.auth-dot {
-  width:6px;
-  height:6px;
-  border-radius:999px;
-  background:#c96a1f;
-}
-.header { display:block; }
-.header-meta { min-width:0; padding-top:2px; margin-bottom:10px; }
-.title { font-size: 30px; font-weight: 800; letter-spacing: .2px; line-height: 1.05; white-space: nowrap; }
+.header { display:grid; grid-template-columns: 220px minmax(0, 1fr); align-items:start; gap:16px; }
+.header-meta { min-width:0; padding-top:2px; }
+.title { font-size: 30px; font-weight: 800; letter-spacing: .2px; line-height: 1.05; }
+.title .line { display:block; }
+.title .line { white-space: nowrap; }
 .subtitle { color: var(--muted); font-size: 13px; margin-top:4px; }
 .filters { background: var(--panel); border:1px solid var(--line); border-radius: 16px; padding: 12px 14px; display:flex; flex-wrap:wrap; gap:8px; align-items:center; box-shadow: 0 6px 18px rgba(0,0,0,0.06); width:100%; max-width:100%; }
 .filters-row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
-.filters #timeRow { width:auto; max-width:100%; }
+.filters #timeRow { width:100%; }
 .filters.week-inline #timeRow { gap:8px; }
 #dimRow { flex-wrap:wrap; }
 .filter-group { display:flex; gap:8px; align-items:center; }
 .adv-filter-btn { white-space:nowrap; }
-.adv-filter-inline { margin-left:0; display:flex; align-items:center; gap:8px; }
+.adv-filter-inline { margin-left:auto; display:flex; align-items:center; gap:8px; }
 .adv-filter-state { font-size:11px; color:var(--muted); display:none; white-space:nowrap; }
 .adv-filter-state.show { display:inline; }
-.adv-filter-btn.active-filter {
-  background:#ffd9bf;
-  border-color:#b84a00;
-  color:#8a2e00;
-  font-weight:700;
-  box-shadow:0 0 0 2px rgba(184,74,0,0.18);
-}
-.adv-filter-state.active-filter {
-  color:#8a2e00;
-  font-weight:700;
-}
 #dayButtons { width:100%; margin-top:2px; padding-top:6px; border-top:1px dashed #efe4d6; }
 .adv-overlay {
   position: fixed;
@@ -749,7 +650,7 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
 .cross-row:hover td { background:#f8f1e8; }
 .cross-row.total-row td { font-weight:800; background:#f4ecdf; }
 @media (max-width: 980px) {
-  .header { display:block; }
+  .header { grid-template-columns: 1fr; }
   .kpi-grid { grid-template-columns: repeat(2, 1fr); }
   .grid-2 { grid-template-columns: 1fr; }
   .grid-3, .grid-4 { grid-template-columns: 1fr; }
@@ -761,27 +662,11 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
 }
 </style>
 </head>
-<body class="auth-pending">
-<div id="authGate" class="auth-gate hidden">
-  <div class="auth-card">
-    <div class="auth-badge"><span class="auth-dot"></span>Private Access</div>
-    <h2 class="auth-title">访问验证</h2>
-    <div class="auth-sub">请输入密码后访问看板。当前浏览器验证通过后 24 小时内无需重复输入。</div>
-    <form id="authForm" class="auth-form">
-      <input id="authInput" class="auth-input" type="password" placeholder="请输入密码" autocomplete="off" />
-      <button class="auth-submit" type="submit">进入</button>
-    </form>
-    <div class="auth-actions">
-      <div class="auth-help"><a href="https://interfocus.feishu.cn/wiki/KdinwUL8wit7uNkXnFKcRkrHnAh" target="_blank" rel="noopener noreferrer">查看密码文档</a></div>
-      <div class="small">大小写敏感</div>
-    </div>
-    <div id="authError" class="auth-error"></div>
-  </div>
-</div>
+<body>
 <div class="container">
   <div class="header">
     <div class="header-meta">
-      <div class="title">Meta Ads Dashboard</div>
+      <div class="title"><span class="line">Meta</span><span class="line">广告看板</span></div>
       <div class="subtitle" id="rangeLabel">数据范围：</div>
     </div>
     <div class="filters">
@@ -808,6 +693,12 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
           <span class="small">至</span>
           <input id="endDate" type="date" />
         </div>
+        <div class="adv-filter-inline">
+          <span class="adv-filter-state" id="advancedFilterState">细分：全部</span>
+          <button id="advancedFiltersBtn" class="pill-btn sm adv-filter-btn" type="button">高级筛选</button>
+        </div>
+      </div>
+      <div class="filters-row" id="dimRow">
         <div class="filter-group">
           <span class="badge">品类</span>
           <select id="categorySelect"></select>
@@ -819,10 +710,6 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
         <div class="filter-group">
           <span class="badge">素材</span>
           <select id="materialSelect"></select>
-        </div>
-        <div class="adv-filter-inline">
-          <span class="adv-filter-state" id="advancedFilterState">细分：全部</span>
-          <button id="advancedFiltersBtn" class="pill-btn sm adv-filter-btn" type="button">高级筛选</button>
         </div>
       </div>
       <div class="filter-group" id="dayButtons"></div>
@@ -1856,8 +1743,6 @@ function buildDecisionState() {
     const campLast3Spend = (campDay0.spend||0) + (campDay1.spend||0) + (campDay2.spend||0);
     const campLast3Orders = (campDay0.purchases||0) + (campDay1.purchases||0) + (campDay2.purchases||0);
     const campLast3BelowTarget = campHas3d && (campDay0.roas < targetRoas) && (campDay1.roas < targetRoas) && (campDay2.roas < targetRoas);
-    const campFirstSeenKey = decisionFirstSeenKey(allCampRows);
-    const campIsOnlyToday = !!campFirstSeenKey && campFirstSeenKey === latestKey;
 
     let tag='观察', action='继续观察', pri=1, reason='规则未触发阈值，继续观察';
     if (type === 'COLD') {
@@ -1878,12 +1763,6 @@ function buildDecisionState() {
       else if (wRoas >= 2.3) { tag='观察'; action='稳定观察'; pri=1; reason='RT：综合ROAS处于稳定区间。'; }
       else if (wRoas >= 2.0) { tag='降量'; action='预算 -10%~-20%'; pri=2; reason=`RT：综合ROAS ${fmt(wRoas,2)} 在 [2.0,2.3)。`; }
       else { tag='关闭'; action='暂停'; pri=4; reason='RT：综合ROAS低于回收线，建议关闭。'; }
-    }
-    if (campIsOnlyToday && decisionActionGroup(tag) === 'pause') {
-      tag='观察';
-      action='继续观察';
-      pri=1;
-      reason='新上 Campaign 仅有当天数据，至少观察1天后再判断是否进入暂停队列。';
     }
     const conf = decisionConfidence(cur, prev7);
     const riskValue = cur.spend * Math.max(1 - cur.roas, 0);
@@ -2716,7 +2595,7 @@ function scheduleFilterHighlights() {
 }
 
 function setDimInlineWeek(inline) {
-  if (dimRow) dimRow.classList.remove('hidden');
+  dimRow.classList.remove('hidden');
   filtersRoot?.classList.toggle('week-inline', !!inline);
 }
 
@@ -2748,7 +2627,6 @@ const categorySubOrder = {
 const categorySubGlobalOrder = ['IP亲子装', '常规亲子装', 'IP童装', '常规童装', 'Bamboo', 'Sales', 'IP其他', '其他'];
 let selectedCategorySubs = new Set();
 let categorySubOptions = [];
-let categoryModeAutoByAdvanced = false;
 const adTypeOrder = ['COLD','ASC','RT'];
 const materialOrder = ['feed','img','vid','ptn','post','other'];
 
@@ -2767,7 +2645,8 @@ function updateWeeks() {
     const range = weekRangeFromKey(w);
     const s = formatDateLocal(range[0]).slice(5,10);
     const e = formatDateLocal(range[1]).slice(5,10);
-    return `<option value="${w}">${s}~${e}</option>`;
+    const monthTag = formatDateLocal(range[0]).slice(0,7);
+    return `<option value="${w}">${monthTag}｜${s}~${e}</option>`;
   }).join('');
 }
 
@@ -2915,8 +2794,6 @@ function renderCategorySubFilter(categoryVal) {
   const label = categoryVal === 'ALL' ? '全部品类' : categoryVal;
   categorySubTitle.textContent = `品类细分（${label}）`;
   advancedFiltersBtn.textContent = '高级筛选';
-  advancedFiltersBtn.classList.remove('active-filter');
-  advancedFilterState?.classList.remove('active-filter');
   if (!categorySubOptions.length) {
     if (advancedFilterState) {
       advancedFilterState.textContent = '细分：当前无可用细分';
@@ -2935,17 +2812,11 @@ function renderCategorySubFilter(categoryVal) {
       advancedFilterState.textContent = `细分：${Array.from(selectedCategorySubs)[0]}`;
       advancedFilterState.classList.add('show');
     }
-    advancedFiltersBtn.textContent = '高级筛选 · 1';
-    advancedFiltersBtn.classList.add('active-filter');
-    advancedFilterState?.classList.add('active-filter');
   } else {
     if (advancedFilterState) {
       advancedFilterState.textContent = `细分：${selectedCategorySubs.size}项`;
       advancedFilterState.classList.add('show');
     }
-    advancedFiltersBtn.textContent = `高级筛选 · ${selectedCategorySubs.size}`;
-    advancedFiltersBtn.classList.add('active-filter');
-    advancedFilterState?.classList.add('active-filter');
   }
   const allActive = selectedCategorySubs.size === 0;
   const allChip = `<button type="button" class="sub-chip ${allActive ? 'active' : ''}" data-sub-action="all">全部</button>`;
@@ -2971,21 +2842,7 @@ function syncCategorySubOptions(rowsBase, categoryVal) {
   if (selectedCategorySubs.size) {
     selectedCategorySubs = new Set(Array.from(selectedCategorySubs).filter(s => categorySubOptions.includes(s)));
   }
-  syncCategoryModeWithAdvancedFilter();
   renderCategorySubFilter(categoryVal);
-}
-
-function syncCategoryModeWithAdvancedFilter() {
-  if (!categoryMode) return;
-  if (selectedCategorySubs.size > 0) {
-    categoryMode.value = 'subcategory';
-    categoryModeAutoByAdvanced = true;
-    return;
-  }
-  if (categoryModeAutoByAdvanced) {
-    categoryMode.value = 'category';
-    categoryModeAutoByAdvanced = false;
-  }
 }
 
 function filterRows() {
@@ -5484,16 +5341,10 @@ function renderSummary(rowsFiltered) {
     return best ? `${label} ${best.k} (ROAS ${fmt(best.roas,2)})` : null;
   }
 
-  const isSubFiltered = selectedCategorySubs.size > 0;
-  const dimLabel = '品类亮点';
-  const dimKeyFn = isSubFiltered
-    ? (r) => String(r.categorySub || '其他').trim() || '其他'
-    : (r) => r.category;
-
   const bestCategory = (() => {
     const m = new Map();
     for (const r of rowsFiltered) {
-      const k = dimKeyFn(r);
+      const k = r.category;
       if (!m.has(k)) m.set(k, {spend:0, conv:0});
       const v=m.get(k); v.spend += num(r.spend); v.conv += num(r.conv);
     }
@@ -5508,7 +5359,7 @@ function renderSummary(rowsFiltered) {
   const warnDims = (() => {
     const m = new Map();
     for (const r of rowsFiltered) {
-      const k = dimKeyFn(r);
+      const k = r.category;
       if (!m.has(k)) m.set(k, {spend:0, conv:0});
       const v=m.get(k); v.spend += num(r.spend); v.conv += num(r.conv);
     }
@@ -5536,7 +5387,7 @@ function renderSummary(rowsFiltered) {
   };
 
   const insights = [
-    topBy(dimKeyFn, '品类细分亮点'),
+    topBy(r=>r.category, '品类亮点'),
     topBy(r=>r.audience, '人群亮点'),
     topBy(r=>r.material, '素材亮点'),
     topBy(r=>r.adType, '广告亮点')
@@ -5551,7 +5402,7 @@ function renderSummary(rowsFiltered) {
   summary.innerHTML = `
   ${bestDay ? `<div>最佳单日 ROAS：${bestDay.day} (${fmt(bestDay.roas,2)})。</div>` : '' }
   ${insightLines.join('')}
-  <div class="${warnDims.length ? 'warn' : 'ok'}">${warnDims.length ? ((isSubFiltered ? '细分警示：' : '警示：') + warnDims.join('，')) : '暂无明显警示'}</div>`;
+  <div class="${warnDims.length ? 'warn' : 'ok'}">${warnDims.length ? '警示：' + warnDims.join('，') : '暂无明显警示'}</div>`;
 }
 
 function updateAll(resetPage=true) {
@@ -5633,7 +5484,6 @@ if (weekBackBtn) {
 
 categorySelect.addEventListener('change', () => {
   closeAdvancedFilters();
-  syncCategoryModeWithAdvancedFilter();
   scheduleFilterHighlights();
   updateAll();
 });
@@ -5681,7 +5531,6 @@ if (categorySubChips) {
         selectedCategorySubs.clear();
       }
     }
-    syncCategoryModeWithAdvancedFilter();
     scheduleFilterHighlights();
     updateAll();
   });
@@ -5701,7 +5550,6 @@ if (weeklyNewAdsGroupModeSelect) {
   });
 }
 categoryMode.addEventListener('change', () => {
-  if (categoryMode.value !== 'subcategory') categoryModeAutoByAdvanced = false;
   scheduleFilterHighlights();
   updateAll();
 });
@@ -5818,84 +5666,24 @@ if (clearRangeBtn) {
  dayButtons.addEventListener('click', (e) => {
   if (!e.target.classList.contains('pill-btn')) return;
   dayButtons.querySelectorAll('.pill-btn').forEach(b=>b.classList.remove('active'));
- e.target.classList.add('active');
+  e.target.classList.add('active');
   updateAll();
 });
 
-const AUTH_PASSWORD = 'patpat2026';
-const AUTH_STORAGE_KEY = 'meta_dashboard_auth_v1';
-const AUTH_TTL_MS = 24 * 60 * 60 * 1000;
-let dashboardBootstrapped = false;
-
-function isAuthStillValid() {
-  try {
-    const raw = localStorage.getItem(AUTH_STORAGE_KEY);
-    if (!raw) return false;
-    const parsed = JSON.parse(raw);
-    if (!parsed || !parsed.ts) return false;
-    return (Date.now() - Number(parsed.ts)) < AUTH_TTL_MS;
-  } catch (_) {
-    return false;
-  }
-}
-
-function rememberAuthNow() {
-  localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify({ ts: Date.now() }));
-}
-
-function bootstrapDashboard() {
-  if (dashboardBootstrapped) return;
-  dashboardBootstrapped = true;
-  applyDefaultTimeForMode('month');
-  updateFilterVisibility();
-  initFilterDefaults();
-  bindDailyPager();
-  bindSortableTables();
-  bindProductTable();
-  bindURLBoard();
-  bindUrlProductPageBoard();
-  if (viewPerfBtn) viewPerfBtn.addEventListener('click', () => setDashboardView('perf'));
-  if (viewOpsBtn) viewOpsBtn.addEventListener('click', () => setDashboardView('ops'));
-  if (viewDecisionBtn) viewDecisionBtn.addEventListener('click', () => setDashboardView('decision'));
-  if (resetDashboardBtn) resetDashboardBtn.addEventListener('click', resetDashboard);
-  setDashboardView('perf');
-  updateAll();
-  document.body.classList.remove('auth-pending');
-}
-
-function initAuthGate() {
-  const gate = document.getElementById('authGate');
-  const form = document.getElementById('authForm');
-  const input = document.getElementById('authInput');
-  const error = document.getElementById('authError');
-  if (!gate || !form || !input || !error) {
-    bootstrapDashboard();
-    return;
-  }
-  if (isAuthStillValid()) {
-    gate.classList.add('hidden');
-    bootstrapDashboard();
-    return;
-  }
-  gate.classList.remove('hidden');
-  input.focus();
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const val = input.value || '';
-    if (val === AUTH_PASSWORD) {
-      rememberAuthNow();
-      error.textContent = '';
-      gate.classList.add('hidden');
-      bootstrapDashboard();
-      return;
-    }
-    error.textContent = '密码错误，请重试。';
-    input.focus();
-    input.select();
-  });
-}
-
-initAuthGate();
+applyDefaultTimeForMode('month');
+updateFilterVisibility();
+initFilterDefaults();
+bindDailyPager();
+bindSortableTables();
+bindProductTable();
+bindURLBoard();
+bindUrlProductPageBoard();
+if (viewPerfBtn) viewPerfBtn.addEventListener('click', () => setDashboardView('perf'));
+if (viewOpsBtn) viewOpsBtn.addEventListener('click', () => setDashboardView('ops'));
+if (viewDecisionBtn) viewDecisionBtn.addEventListener('click', () => setDashboardView('decision'));
+if (resetDashboardBtn) resetDashboardBtn.addEventListener('click', resetDashboard);
+setDashboardView('perf');
+updateAll();
 </script>
 </body>
 </html>
