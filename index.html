@@ -635,6 +635,17 @@ select, .pill-btn, input[type="date"] { border:1px solid var(--line); background
 .decision-native-root .decision-date-strong { color:#b3261e; font-weight:800; }
 .decision-native-root .decision-ad-controls { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:6px; }
 .decision-native-root .decision-ad-controls .small { color:var(--muted); }
+.decision-native-root #decisionCampSearch,
+.decision-native-root #decisionAdSearch {
+  width: 220px;
+  max-width: 100%;
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--text);
+  padding:6px 10px;
+  border-radius:10px;
+  font-size:12px;
+}
 .decision-native-root .decision-todo-board { display:none; }
 .decision-native-root .decision-todo-grid { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:10px; }
 .decision-native-root .decision-todo-card { border:1px solid var(--line); background:#fcfaf6; border-radius:12px; padding:10px 12px; min-width:0; }
@@ -1241,6 +1252,9 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
                 <option value="ASC">ASC</option>
                 <option value="COLD">COLD</option>
               </select>
+              <span class="badge">搜索</span>
+              <input id="decisionCampSearch" type="text" placeholder="搜索 Campaign 名称" />
+              <button id="decisionCampSearchClear" class="pill-btn sm" type="button">清空</button>
               <span class="badge" id="decisionCampFilterBadge">动作</span>
               <select id="decisionCampFilter">
                 <option value="all">全部</option>
@@ -1282,7 +1296,10 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
               <div class="decision-subline" id="decisionAdSubline">点击左侧 Campaign 行查看对应 Ad</div>
             </div>
             <div class="filter-group">
-              <span class="badge">视图</span>
+              <span class="badge">搜索</span>
+              <input id="decisionAdSearch" type="text" placeholder="搜索 Ad / Campaign 名称" />
+              <button id="decisionAdSearchClear" class="pill-btn sm" type="button">清空</button>
+              <span class="badge">动作</span>
               <select id="decisionAdFilter">
                 <option value="all">全部</option>
                 <option value="loss">优先关闭</option>
@@ -1514,6 +1531,8 @@ let decisionCampPage = 1;
 let decisionCampPageSize = 10;
 let decisionAdPage = 1;
 let decisionAdPageSize = 10;
+let decisionCampSearch = '';
+let decisionAdSearch = '';
 let decisionCampColumnMode = 'compact';
 let decisionAdColumnMode = 'compact';
 let decisionAdPanelOpen = true;
@@ -2193,6 +2212,10 @@ function renderDecisionCampaignTable() {
     (typeFilter === 'all' ? true : x.type === typeFilter)
   );
   rowsC = rowsC.filter(matchesDecisionCampaignFocus);
+  const campQ = (decisionCampSearch || '').trim().toLowerCase();
+  if (campQ) {
+    rowsC = rowsC.filter(x => String(x.camp || '').toLowerCase().includes(campQ));
+  }
   rowsC = rowsC.slice();
   rowsC.sort((a,b)=>{
     const { key, dir } = decisionCampSortState;
@@ -2336,6 +2359,14 @@ function renderDecisionAdTable() {
     : (is3DayFocus ? '当前展示全部连续3天未达标广告（非测试）；点击上方 Campaign 摘要可筛选到单个 Campaign。' : '当前为全量 Ad 决策视图（可点按钮收起）。');
   let rowsA = decisionState.ads.filter(x => !camp || x.camp === camp);
   rowsA = rowsA.filter(matchesDecisionAdFocus);
+  const adQ = (decisionAdSearch || '').trim().toLowerCase();
+  if (adQ) {
+    rowsA = rowsA.filter(x => {
+      const adName = String(x.ad || '').toLowerCase();
+      const campName = String(x.camp || '').toLowerCase();
+      return adName.includes(adQ) || campName.includes(adQ);
+    });
+  }
   rowsA = rowsA.filter(x => {
     if (filter==='all') return true;
     if (filter==='good') return x.tag==='优质素材';
@@ -2470,6 +2501,34 @@ function initDecisionSection() {
     renderDecisionKpis(); renderDecisionCampaignTable();
     renderDecisionAdTable();
   }));
+  document.getElementById('decisionCampSearch')?.addEventListener('input', (e) => {
+    decisionCampSearch = String(e.target.value || '');
+    decisionCampPage = 1;
+    if (decisionState) decisionState.selectedCamp = '';
+    renderDecisionCampaignTable();
+    renderDecisionAdTable();
+  });
+  document.getElementById('decisionCampSearchClear')?.addEventListener('click', () => {
+    decisionCampSearch = '';
+    const input = document.getElementById('decisionCampSearch');
+    if (input) input.value = '';
+    decisionCampPage = 1;
+    if (decisionState) decisionState.selectedCamp = '';
+    renderDecisionCampaignTable();
+    renderDecisionAdTable();
+  });
+  document.getElementById('decisionAdSearch')?.addEventListener('input', (e) => {
+    decisionAdSearch = String(e.target.value || '');
+    decisionAdPage = 1;
+    renderDecisionAdTable();
+  });
+  document.getElementById('decisionAdSearchClear')?.addEventListener('click', () => {
+    decisionAdSearch = '';
+    const input = document.getElementById('decisionAdSearch');
+    if (input) input.value = '';
+    decisionAdPage = 1;
+    renderDecisionAdTable();
+  });
   document.getElementById('decisionCampColumnMode')?.addEventListener('change', (e) => { decisionCampColumnMode = e.target.value || 'compact'; renderDecisionCampaignTable(); });
   document.getElementById('decisionAdColumnMode')?.addEventListener('change', (e) => { decisionAdColumnMode = e.target.value || 'compact'; renderDecisionAdTable(); });
   document.getElementById('decisionAdPageSize')?.addEventListener('change', (e) => {
@@ -2564,6 +2623,12 @@ function resetDashboard() {
     decisionCampPageSize = 10;
     decisionAdPage = 1;
     decisionAdPageSize = 10;
+    decisionCampSearch = '';
+    decisionAdSearch = '';
+    const campSearchInput = document.getElementById('decisionCampSearch');
+    const adSearchInput = document.getElementById('decisionAdSearch');
+    if (campSearchInput) campSearchInput.value = '';
+    if (adSearchInput) adSearchInput.value = '';
     if (decisionState) decisionState.selectedCamp = '';
     ['decisionCampFilter','decisionCampTypeFilter','decisionAdFilter'].forEach(id => {
       const el = document.getElementById(id);
