@@ -821,7 +821,7 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
           <select id="materialSelect"></select>
         </div>
         <div class="adv-filter-inline">
-          <span class="adv-filter-state" id="advancedFilterState">细分：全部</span>
+          <span class="adv-filter-state" id="advancedFilterState">细分：未选择</span>
           <button id="advancedFiltersBtn" class="pill-btn sm adv-filter-btn" type="button">高级筛选</button>
         </div>
       </div>
@@ -869,11 +869,6 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
       <div class="panel-head">
         <h3>品类数据</h3>
         <div class="filter-group">
-          <span class="badge">层级</span>
-          <select id="categoryMode">
-            <option value="category">一级品类</option>
-            <option value="subcategory">二级细分</option>
-          </select>
           <span class="badge" style="margin-left:8px;">环比</span>
           <select id="compareCategory">
             <option value="off">关闭</option>
@@ -1484,7 +1479,6 @@ const categorySubTitle = document.getElementById('categorySubTitle');
 const categorySubChips = document.getElementById('categorySubChips');
 const adTypeSelect = document.getElementById('adTypeSelect');
 const materialSelect = document.getElementById('materialSelect');
-const categoryMode = document.getElementById('categoryMode');
 const categoryViewHint = document.getElementById('categoryViewHint');
 const dayButtons = document.getElementById('dayButtons');
 const rangeLabel = document.getElementById('rangeLabel');
@@ -2595,11 +2589,11 @@ function resetDashboard() {
 
   categorySelect.value = 'ALL';
   selectedCategorySubs.clear();
+  categorySubSelectionMode = 'unset';
   advancedFiltersOverlay?.classList.add('hidden');
   advancedFiltersDrawer?.classList.add('hidden');
   adTypeSelect.value = 'ALL';
   materialSelect.value = 'ALL';
-  categoryMode.value = 'category';
   compareCategory.value = 'off';
   compareAudience.value = 'off';
   compareMaterial.value = 'off';
@@ -2748,7 +2742,7 @@ const categorySubOrder = {
 const categorySubGlobalOrder = ['IP亲子装', '常规亲子装', 'IP童装', '常规童装', 'Bamboo', 'Sales', 'IP其他', '其他'];
 let selectedCategorySubs = new Set();
 let categorySubOptions = [];
-let categoryModeAutoByAdvanced = false;
+let categorySubSelectionMode = 'unset'; // unset | all | custom
 const adTypeOrder = ['COLD','ASC','RT'];
 const materialOrder = ['feed','img','vid','ptn','post','other'];
 
@@ -2925,11 +2919,19 @@ function renderCategorySubFilter(categoryVal) {
     categorySubChips.innerHTML = '<span class="small">当前范围无可用细分</span>';
     return;
   }
-  if (selectedCategorySubs.size === 0 || selectedCategorySubs.size === categorySubOptions.length) {
+  if (categorySubSelectionMode === 'unset') {
     if (advancedFilterState) {
-      advancedFilterState.textContent = '细分：全部';
+      advancedFilterState.textContent = '细分：未选择';
       advancedFilterState.classList.remove('show');
     }
+  } else if (categorySubSelectionMode === 'all') {
+    if (advancedFilterState) {
+      advancedFilterState.textContent = '细分：全部';
+      advancedFilterState.classList.add('show');
+    }
+    advancedFiltersBtn.textContent = '高级筛选 · 全部';
+    advancedFiltersBtn.classList.add('active-filter');
+    advancedFilterState?.classList.add('active-filter');
   } else if (selectedCategorySubs.size === 1) {
     if (advancedFilterState) {
       advancedFilterState.textContent = `细分：${Array.from(selectedCategorySubs)[0]}`;
@@ -2947,10 +2949,10 @@ function renderCategorySubFilter(categoryVal) {
     advancedFiltersBtn.classList.add('active-filter');
     advancedFilterState?.classList.add('active-filter');
   }
-  const allActive = selectedCategorySubs.size === 0;
+  const allActive = categorySubSelectionMode === 'all';
   const allChip = `<button type="button" class="sub-chip ${allActive ? 'active' : ''}" data-sub-action="all">全部</button>`;
   const chips = categorySubOptions.map(sub => {
-    const active = selectedCategorySubs.has(sub);
+    const active = categorySubSelectionMode === 'custom' && selectedCategorySubs.has(sub);
     return `<button type="button" class="sub-chip ${active ? 'active' : ''}" data-sub="${sub}">${sub}</button>`;
   }).join('');
   categorySubChips.innerHTML = allChip + chips;
@@ -2968,24 +2970,14 @@ function closeAdvancedFilters() {
 
 function syncCategorySubOptions(rowsBase, categoryVal) {
   categorySubOptions = collectCategorySubOptions(rowsBase, categoryVal);
-  if (selectedCategorySubs.size) {
+  if (categorySubSelectionMode === 'custom' && selectedCategorySubs.size) {
     selectedCategorySubs = new Set(Array.from(selectedCategorySubs).filter(s => categorySubOptions.includes(s)));
+    if (selectedCategorySubs.size === 0) categorySubSelectionMode = 'unset';
   }
-  syncCategoryModeWithAdvancedFilter();
   renderCategorySubFilter(categoryVal);
 }
-
-function syncCategoryModeWithAdvancedFilter() {
-  if (!categoryMode) return;
-  if (selectedCategorySubs.size > 0) {
-    categoryMode.value = 'subcategory';
-    categoryModeAutoByAdvanced = true;
-    return;
-  }
-  if (categoryModeAutoByAdvanced) {
-    categoryMode.value = 'category';
-    categoryModeAutoByAdvanced = false;
-  }
+function shouldUseCategorySubLevel() {
+  return categorySubSelectionMode === 'all' || categorySubSelectionMode === 'custom';
 }
 
 function filterRows() {
@@ -2994,7 +2986,7 @@ function filterRows() {
   const cat = categorySelect.value;
   syncCategorySubOptions(base, cat);
   let filtered = cat && cat !== 'ALL' ? base.filter(r => r.category === cat) : base;
-  if (selectedCategorySubs.size) {
+  if (categorySubSelectionMode === 'custom' && selectedCategorySubs.size) {
     filtered = filtered.filter(r => selectedCategorySubs.has(String(r.categorySub || '其他').trim() || '其他'));
   }
   return filtered;
@@ -3033,7 +3025,7 @@ function filterRowsByRange(start, end) {
   const mat = materialSelect.value;
   let filtered = rows.filter(r => r._date >= start && r._date <= end);
   if (cat && cat !== 'ALL') filtered = filtered.filter(r => r.category === cat);
-  if (selectedCategorySubs.size) {
+  if (categorySubSelectionMode === 'custom' && selectedCategorySubs.size) {
     filtered = filtered.filter(r => selectedCategorySubs.has(String(r.categorySub || '其他').trim() || '其他'));
   }
   if (adt && adt !== 'ALL') filtered = filtered.filter(r => r.adType === adt);
@@ -3444,7 +3436,7 @@ function renderChart(rowsFiltered) {
     .filter(r => startLimit ? r._date >= startLimit : true)
     .filter(r => custom ? (r._date >= start && r._date <= end) : true)
     .filter(r => categorySelect.value==='ALL' ? true : r.category===categorySelect.value)
-    .filter(r => selectedCategorySubs.size ? selectedCategorySubs.has(String(r.categorySub || '其他').trim() || '其他') : true)
+    .filter(r => (categorySubSelectionMode === 'custom' && selectedCategorySubs.size) ? selectedCategorySubs.has(String(r.categorySub || '其他').trim() || '其他') : true)
     .filter(r => adTypeSelect.value==='ALL' ? true : r.adType===adTypeSelect.value)
     .filter(r => materialSelect.value==='ALL' ? true : r.material===materialSelect.value);
 
@@ -3458,7 +3450,7 @@ function renderChart(rowsFiltered) {
     .filter(r => startLimit ? r._date >= startLimit : true)
     .filter(r => custom ? (r._date >= start && r._date <= end) : true)
     .filter(r => categorySelect.value==='ALL' ? true : r.category===categorySelect.value)
-    .filter(r => selectedCategorySubs.size ? selectedCategorySubs.has(String(r.categorySub || '其他').trim() || '其他') : true)
+    .filter(r => (categorySubSelectionMode === 'custom' && selectedCategorySubs.size) ? selectedCategorySubs.has(String(r.categorySub || '其他').trim() || '其他') : true)
     .filter(r => adTypeSelect.value==='ALL' ? true : r.adType===adTypeSelect.value)
     .filter(r => materialSelect.value==='ALL' ? true : r.material===materialSelect.value);
   const weekDays = w==='ALL' ? days : (() => { const ds=[]; for (let d=new Date(rangeWeek[0]); d<=rangeWeek[1]; d.setDate(d.getDate()+1)) ds.push(new Date(d)); return ds; })();
@@ -4317,7 +4309,7 @@ function renderTables(rowsFiltered) {
   };
 
   const catFilter = categorySelect.value;
-  const detailMode = categoryMode.value === 'subcategory';
+  const detailMode = shouldUseCategorySubLevel();
   if (categoryViewHint) {
     categoryViewHint.textContent = detailMode
       ? '二级细分：Matching(IP亲子装/常规亲子装)；Children(IP童装/常规童装)；Others(IP其他/其他)；Bamboo/Sales不再细分'
@@ -5484,7 +5476,7 @@ function renderSummary(rowsFiltered) {
     return best ? `${label} ${best.k} (ROAS ${fmt(best.roas,2)})` : null;
   }
 
-  const isSubFiltered = selectedCategorySubs.size > 0;
+  const isSubFiltered = shouldUseCategorySubLevel();
   const dimLabel = '品类亮点';
   const dimKeyFn = isSubFiltered
     ? (r) => String(r.categorySub || '其他').trim() || '其他'
@@ -5633,7 +5625,6 @@ if (weekBackBtn) {
 
 categorySelect.addEventListener('change', () => {
   closeAdvancedFilters();
-  syncCategoryModeWithAdvancedFilter();
   scheduleFilterHighlights();
   updateAll();
 });
@@ -5666,22 +5657,31 @@ if (categorySubChips) {
     if (!chip) return;
     const action = chip.getAttribute('data-sub-action');
     if (action === 'all') {
-      selectedCategorySubs.clear();
+      if (categorySubSelectionMode === 'all') {
+        categorySubSelectionMode = 'unset';
+        selectedCategorySubs.clear();
+      } else {
+        categorySubSelectionMode = 'all';
+        selectedCategorySubs.clear();
+      }
     } else {
       const sub = chip.getAttribute('data-sub');
       if (!sub) return;
-      if (selectedCategorySubs.size === 0) {
-        selectedCategorySubs = new Set([sub]);
-      } else if (selectedCategorySubs.has(sub)) {
+      if (categorySubSelectionMode !== 'custom') selectedCategorySubs = new Set();
+      if (selectedCategorySubs.has(sub)) {
         selectedCategorySubs.delete(sub);
       } else {
         selectedCategorySubs.add(sub);
       }
-      if (selectedCategorySubs.size === categorySubOptions.length) {
+      if (selectedCategorySubs.size === 0) {
+        categorySubSelectionMode = 'unset';
+      } else if (selectedCategorySubs.size === categorySubOptions.length) {
+        categorySubSelectionMode = 'all';
         selectedCategorySubs.clear();
+      } else {
+        categorySubSelectionMode = 'custom';
       }
     }
-    syncCategoryModeWithAdvancedFilter();
     scheduleFilterHighlights();
     updateAll();
   });
@@ -5700,11 +5700,6 @@ if (weeklyNewAdsGroupModeSelect) {
     renderWeeklyNewAdsBoard();
   });
 }
-categoryMode.addEventListener('change', () => {
-  if (categoryMode.value !== 'subcategory') categoryModeAutoByAdvanced = false;
-  scheduleFilterHighlights();
-  updateAll();
-});
 pieMetric.addEventListener('change', () => {
   scheduleFilterHighlights();
   updateAll();
