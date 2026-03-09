@@ -2424,7 +2424,7 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
           <select id="productCategory"></select>
           <span class="badge">新老品</span>
           <select id="productNewness"></select>
-          <span class="badge">对比</span>
+          <span class="badge">环比</span>
           <select id="productCompare">
             <option value="off" selected>关闭</option>
             <option value="delta">环比</option>
@@ -4136,7 +4136,8 @@ function updateFilterHighlights() {
     const normalizedDefault = (def || '').toString().trim().toLowerCase();
     const normalizedValue = (val || '').toString().trim().toLowerCase();
     const isAllDefaultPair = normalizedDefault === '' && (normalizedValue === 'all' || normalizedValue === '全部');
-    let changed = isAllDefaultPair ? false : (val !== def);
+    const isOffDefaultPair = normalizedDefault === '' && (normalizedValue === 'off' || normalizedValue === '关闭');
+    let changed = (isAllDefaultPair || isOffDefaultPair) ? false : (val !== def);
     const timeFilterIds = new Set(['timeMode','monthSelect','weekSelect','startDate','endDate']);
     if (timeFilterIds.has(el.id)) changed = false;
     if (el.id === 'monthSelect' && timeMode.value === 'week') changed = true;
@@ -4784,7 +4785,15 @@ function displayCreativeWeekLabel(v) {
 function normalizeCreativeTitle(v) {
   let raw = String(v || '').trim();
   if (!raw) return '';
-  // Drop trailing delivery suffixes like "-IMG", "-VID-xxx", "-FEED-xxx-yyy".
+  // Keep material marker (-IMG/-VID) and only trim trailing noisy suffixes.
+  // Examples:
+  // 260306-02-3-1-IMG-Flash -> 260306-02-3-1-IMG
+  // 260306-02-3-1-VID-      -> 260306-02-3-1-VID
+  const baseWithMaterial = raw.match(/^(\d{6}-\d{2}-\d-\d)-(IMG|VID|FEED|PTN)(?:-.+)?$/i);
+  if (baseWithMaterial) {
+    return `${baseWithMaterial[1]}-${baseWithMaterial[2].toUpperCase()}`;
+  }
+  // For other formats, keep old fallback behavior.
   raw = raw.replace(/-(IMG|VID|FEED|PTN|ASC|RT|COLD)(?:-[A-Za-z0-9_\u4e00-\u9fff]+)*$/i, '');
   raw = raw.replace(/-+$/g, '');
   return raw;
@@ -5205,7 +5214,7 @@ function renderContentBoard(rowsFiltered, creativeItems, prevRowsFiltered, prevC
         <div class="filter-group content-board-filter-shell">
           <span class="badge">素材周次</span>
           <select id="contentWeekSelect"></select>
-          <span class="badge">对比</span>
+          <span class="badge">环比</span>
           <select id="contentBoardCompare">
             <option value="off" ${contentBoardCompareMode === 'off' ? 'selected' : ''}>关闭</option>
             <option value="prev" ${contentBoardCompareMode === 'prev' ? 'selected' : ''}>上期</option>
@@ -5229,9 +5238,9 @@ function renderContentBoard(rowsFiltered, creativeItems, prevRowsFiltered, prevC
         </div>
         <div class="content-board-strip">
           ${makeStripMetric('素材数', totalCreative, prevTotalCreative || 0, x => fmt(x,0))}
-          ${makeStripMetric('出单素材率', winnerRate, prevWinnerRate || 0, pct)}
           ${makeStripMetric('视频素材数', videoCount, prevVideoCount || 0, x => fmt(x,0))}
           ${makeStripMetric('图片素材数', imageCount, prevImageCount || 0, x => fmt(x,0))}
+          ${makeStripMetric('出单素材率', winnerRate, prevWinnerRate || 0, pct)}
           ${makeStripMetric('视频出单素材率', videoWinnerRate, prevVideoWinnerRate || 0, pct)}
           ${makeStripMetric('图片出单素材率', imageWinnerRate, prevImageWinnerRate || 0, pct)}
         </div>
@@ -5367,7 +5376,7 @@ function contentCurveDetailHtml(item) {
     <div class="content-curve-head">
       <div>
         <div class="title">${escapeHtml(item.displayKey || item.key)} 衰退曲线</div>
-        <div class="sub">以 25% 节点为 100% 基准，只看 25% / 50% / 75% / 95% / 100% 的后续留存。</div>
+        <div class="sub">以 3s 播放为 100% 基准，查看 25% / 50% / 75% / 95% / 100% 的后续留存。</div>
       </div>
     </div>
     <div class="content-curve-shell">
@@ -5395,10 +5404,12 @@ function renderContentCurveChart(item) {
   const ctx = document.getElementById('contentCurveCanvasInline');
   if (!(ctx instanceof HTMLCanvasElement)) return;
   if (contentCurveChart) contentCurveChart.destroy();
-  const labels = ['25%', '50%', '75%', '95%', '100%'];
+  const labels = ['3s', '25%', '50%', '75%', '95%', '100%'];
   const baseImpr = Number(item.agg.impr) || 0;
+  const base3s = Number(item.agg.video3s) || 0;
   const p25 = Number(item.agg.p25) || 0;
   const rawSharePoints = [
+    baseImpr ? base3s / baseImpr : 0,
     baseImpr ? p25 / baseImpr : 0,
     baseImpr ? (Number(item.agg.p50) || 0) / baseImpr : 0,
     baseImpr ? (Number(item.agg.p75) || 0) / baseImpr : 0,
@@ -5407,17 +5418,18 @@ function renderContentCurveChart(item) {
   ];
   const dataPoints = [
     1,
-    p25 ? (Number(item.agg.p50) || 0) / p25 : 0,
-    p25 ? (Number(item.agg.p75) || 0) / p25 : 0,
-    p25 ? (Number(item.agg.p95) || 0) / p25 : 0,
-    p25 ? (Number(item.agg.p100) || 0) / p25 : 0,
+    base3s ? p25 / base3s : 0,
+    base3s ? (Number(item.agg.p50) || 0) / base3s : 0,
+    base3s ? (Number(item.agg.p75) || 0) / base3s : 0,
+    base3s ? (Number(item.agg.p95) || 0) / base3s : 0,
+    base3s ? (Number(item.agg.p100) || 0) / base3s : 0,
   ];
   contentCurveChart = new Chart(ctx, {
     type: 'line',
     data: {
       labels,
       datasets: [{
-        label: '相对 25% 留存',
+        label: '相对 3s 留存',
         data: dataPoints,
         borderColor: '#b86c20',
         backgroundColor: 'rgba(184,108,32,.08)',
@@ -5443,7 +5455,7 @@ function renderContentCurveChart(item) {
             label(context) {
               const value = Number(context.raw) || 0;
               const rawShare = Number(rawSharePoints[context.dataIndex]) || 0;
-              return [`相对 25% 留存 ${pct(value)}`, `占展示 ${pct(rawShare)}`];
+              return [`相对 3s 留存 ${pct(value)}`, `占展示 ${pct(rawShare)}`];
             }
           }
         }
@@ -5701,8 +5713,8 @@ function renderContentAssetTable(creativeItems, totalConv) {
       <td>${hookCell}</td>
       <td>${holdCell}</td>
       <td>${formatContentCompare(item.agg.ctr, item.prevAgg?.ctr || 0, pct, contentCompareMode)}</td>
-      <td>${formatContentCompare(item.agg.purchases, item.prevAgg?.purchases || 0, x => fmt(x, 0), contentCompareMode)}</td>
       <td>${formatContentCompare(item.agg.cpa, item.prevAgg?.cpa || 0, money, contentCompareMode)}</td>
+      <td>${formatContentCompare(item.agg.purchases, item.prevAgg?.purchases || 0, x => fmt(x, 0), contentCompareMode)}</td>
     </tr>${curveRow}`;
   }).join('');
   table.innerHTML = `
@@ -5718,8 +5730,8 @@ function renderContentAssetTable(creativeItems, totalConv) {
       <th class="sortable" data-sort="hook">Hook Rate<span class="sort-ind">${sortInd('hook')}</span></th>
       <th class="sortable" data-sort="hold">Hold Rate<span class="sort-ind">${sortInd('hold')}</span></th>
       <th class="sortable" data-sort="ctr">CTR<span class="sort-ind">${sortInd('ctr')}</span></th>
-      <th class="sortable" data-sort="purchases">订单<span class="sort-ind">${sortInd('purchases')}</span></th>
       <th class="sortable" data-sort="cpa">CPA<span class="sort-ind">${sortInd('cpa')}</span></th>
+      <th class="sortable" data-sort="purchases">订单<span class="sort-ind">${sortInd('purchases')}</span></th>
     </tr>
     ${rowsHtml || `<tr><td colspan="13" class="content-empty">当前筛选范围暂无素材明细</td></tr>`}
   `;
