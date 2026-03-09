@@ -26,7 +26,6 @@
 * { box-sizing: border-box; }
 body { margin:0; font-family: 'Manrope', sans-serif; background: radial-gradient(1200px 600px at 10% -10%, #fff7ef 0%, #f6efe8 45%, #f3e9df 100%); color: var(--text); }
 .auth-pending .container { visibility:hidden; }
-.dashboard-loading { overflow:hidden; }
 .container { max-width: 1180px; margin: 28px auto 60px; padding: 0 18px; }
 .auth-gate {
   position: fixed;
@@ -43,52 +42,6 @@ body { margin:0; font-family: 'Manrope', sans-serif; background: radial-gradient
   padding: 18px;
 }
 .auth-gate.hidden { display:none !important; }
-.dashboard-loading-gate {
-  position: fixed;
-  inset: 0;
-  z-index: 1800;
-  background:
-    radial-gradient(1100px 560px at 10% 0%, rgba(255, 214, 170, .22), transparent 60%),
-    radial-gradient(900px 500px at 90% 100%, rgba(191, 130, 79, .16), transparent 60%),
-    rgba(22,16,12,.34);
-  backdrop-filter: blur(4px);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:18px;
-}
-.dashboard-loading-gate.hidden { display:none !important; }
-.dashboard-loading-card {
-  width:min(320px, 100%);
-  display:grid;
-  justify-items:center;
-  gap:10px;
-  padding:18px 20px;
-  border-radius:20px;
-  border:1px solid #efdcc7;
-  background:linear-gradient(180deg, #fff 0%, #fffaf4 100%);
-  box-shadow:0 22px 50px rgba(0,0,0,.18), 0 1px 0 rgba(255,255,255,.85) inset;
-}
-.dashboard-loading-spinner {
-  width:34px;
-  height:34px;
-  border-radius:999px;
-  border:3px solid rgba(199,106,31,.16);
-  border-top-color:#c76a1f;
-  animation:dashboardSpin .78s linear infinite;
-}
-@keyframes dashboardSpin {
-  to { transform:rotate(360deg); }
-}
-.dashboard-loading-title {
-  font-size:14px;
-  font-weight:800;
-  color:#2f271f;
-}
-.dashboard-loading-sub {
-  font-size:12px;
-  color:#7c6a58;
-}
 .auth-card {
   width: min(420px, 100%);
   background: linear-gradient(180deg, #fff 0%, #fffaf4 100%);
@@ -2157,13 +2110,6 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
     <div id="authError" class="auth-error"></div>
   </div>
 </div>
-<div id="dashboardLoadingGate" class="dashboard-loading-gate hidden">
-  <div class="dashboard-loading-card">
-    <div class="dashboard-loading-spinner"></div>
-    <div class="dashboard-loading-title">正在刷新看板</div>
-    <div class="dashboard-loading-sub">请稍等，数据和视图正在同步</div>
-  </div>
-</div>
 <div class="container">
   <div class="header">
     <div class="header-meta">
@@ -3008,9 +2954,6 @@ let contentSearch = '';
 let contentAssetPage = 1;
 let contentAssetPageSize = 10;
 let contentCurveSelection = '';
-let dashboardLoadingSeq = 0;
-let dashboardLoadingStartedAt = 0;
-let dashboardFirstPaintPending = true;
 let imageModalItems = [];
 let imageModalIndex = 0;
 
@@ -5015,25 +4958,6 @@ function boardCompareDetailHtml(prevText, delta, mode) {
   if (mode === 'prev') return `<div class="s">上期 ${prevText}</div>`;
   if (mode === 'delta') return `<div class="d ${delta.cls}">${delta.text}</div>`;
   return `<div class="s">上期 ${prevText}</div><div class="d ${delta.cls}">${delta.text}</div>`;
-}
-
-function beginDashboardLoading() {
-  const gate = document.getElementById('dashboardLoadingGate');
-  dashboardLoadingSeq += 1;
-  dashboardLoadingStartedAt = Date.now();
-  gate?.classList.remove('hidden');
-  document.body.classList.add('dashboard-loading');
-  return dashboardLoadingSeq;
-}
-
-function endDashboardLoading(seq) {
-  const gate = document.getElementById('dashboardLoadingGate');
-  const remain = Math.max(0, 260 - (Date.now() - dashboardLoadingStartedAt));
-  setTimeout(() => {
-    if (seq !== dashboardLoadingSeq) return;
-    gate?.classList.add('hidden');
-    document.body.classList.remove('dashboard-loading');
-  }, remain);
 }
 
 function contentTrendPillHtml(curr, prevVal, inverse=false) {
@@ -8511,7 +8435,6 @@ function renderSummary(rowsFiltered) {
 }
 
 function updateAll(resetPage=true) {
-  const loadingSeq = dashboardFirstPaintPending ? beginDashboardLoading() : 0;
   requestAnimationFrame(() => {
     const renderErrors = [];
     const safeRender = (label, fn) => {
@@ -8557,10 +8480,6 @@ function updateAll(resetPage=true) {
     } catch (err) {
       console.error(err);
     } finally {
-      if (dashboardFirstPaintPending) {
-        dashboardFirstPaintPending = false;
-        endDashboardLoading(loadingSeq);
-      }
       if (renderErrors.length) {
         showCopyToast(`部分模块加载失败：${renderErrors[0]}${renderErrors.length > 1 ? ` 等${renderErrors.length}项` : ''}`, 2600);
       }
