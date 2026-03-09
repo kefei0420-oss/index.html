@@ -1459,6 +1459,9 @@ select, .pill-btn, input[type="date"] { border:1px solid var(--line); background
   transform:translateY(-1px);
 }
 .asset-view-link {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
   margin-left:0 !important;
   padding:0 !important;
   width:24px;
@@ -1467,17 +1470,17 @@ select, .pill-btn, input[type="date"] { border:1px solid var(--line); background
   border-radius:7px;
   background:#fff;
   justify-content:center;
+  font-size:12px !important;
+  line-height:1 !important;
+  font-weight:700 !important;
+  text-decoration:none;
 }
 .asset-view-link::after {
-  content:'' !important;
-  margin-left:0 !important;
-  font-size:12px !important;
-  font-weight:700;
+  content:none !important;
+  display:none !important;
 }
 .asset-view-link.asset-link-video { color:#2d5ea5; }
-.asset-view-link.asset-link-video::after { content:'▶' !important; }
 .asset-view-link.asset-link-image { color:#8a5a33; }
-.asset-view-link.asset-link-image::after { content:'▣' !important; }
 .asset-view-link:hover {
   transform:translateY(-1px);
   border-color:#d8b089;
@@ -2715,14 +2718,13 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script type="module">
-const [DATA, CONTENT_DATA, PRODUCT_MAP, SHOPIFY_SALES_DAILY, URL_DATA, AD_THUMBS, AD_ASSETS] = await Promise.all([
+const [DATA, PRODUCT_MAP, SHOPIFY_SALES_DAILY, URL_DATA, AD_THUMBS, AD_ASSETS] = await Promise.all([
   fetch('./data/rows.json', { cache: 'no-store' }).then(r => { if (!r.ok) throw new Error('Failed to load rows.json: ' + r.status); return r.json(); }),
-  fetch('./data/content_rows.json', { cache: 'no-store' }).then(r => r.ok ? r.json() : []).catch(() => []),
   fetch('./data/products.json', { cache: 'no-store' }).then(r => { if (!r.ok) throw new Error('Failed to load products.json: ' + r.status); return r.json(); }),
   fetch('./data/shopify_daily.json', { cache: 'no-store' }).then(r => { if (!r.ok) throw new Error('Failed to load shopify_daily.json: ' + r.status); return r.json(); }),
   fetch('./data/urls.json', { cache: 'no-store' }).then(r => { if (!r.ok) throw new Error('Failed to load urls.json: ' + r.status); return r.json(); }),
   fetch('./data/ad_thumbs.json', { cache: 'no-store' }).then(r => r.ok ? r.json() : ({ by_ad_name:{}, by_ad_id:{} })).catch(() => ({ by_ad_name:{}, by_ad_id:{} })),
-  fetch('./data/ad_assets.json', { cache: 'no-store' }).then(r => r.ok ? r.json() : ({ by_ad_id:{} })).catch(() => ({ by_ad_id:{} })),
+  fetch('./data/ad_assets.json', { cache: 'no-store' }).then(r => r.ok ? r.json() : ({ by_ad_name:{}, by_ad_id:{} })).catch(() => ({ by_ad_name:{}, by_ad_id:{} })),
 ]);
 const DECISION_HTML = '';
 window.addEventListener('error', (e) => console.error(e.error || e.message));
@@ -2847,8 +2849,19 @@ function normalizeIP(ip) {
   const first = base.split(' ')[0];
   return 'IP-' + first;
 }
+function mapContentRows(rawRows) {
+  return (Array.isArray(rawRows) && rawRows.length ? rawRows : DATA).map(r => ({
+    ...r,
+    _date: parseDate(r.date),
+    country: extractCountry(r.campaign),
+    ipGroup: normalizeIP(r.ip),
+  }));
+}
 const rows = DATA.map(r => ({...r, _date: parseDate(r.date), country: extractCountry(r.campaign), ipGroup: normalizeIP(r.ip)}));
-const contentRowsAll = (CONTENT_DATA.length ? CONTENT_DATA : DATA).map(r => ({...r, _date: parseDate(r.date), country: extractCountry(r.campaign), ipGroup: normalizeIP(r.ip)}));
+let CONTENT_DATA = [];
+let contentRowsAll = [];
+let contentDataLoaded = false;
+let contentDataLoadingPromise = null;
 const urlRows = URL_DATA.map(r => ({...r, _date: parseDate(r.date)}));
 const dates = rows.map(r => r._date);
 const minDate = new Date(Math.min(...dates));
@@ -2938,6 +2951,7 @@ let crossSelectedDims = ['category', 'adType', 'material'];
 const crossExpandedKeys = new Set();
 const AD_THUMB_BY_NAME = (AD_THUMBS && AD_THUMBS.by_ad_name) || {};
 const AD_THUMB_BY_ID = (AD_THUMBS && AD_THUMBS.by_ad_id) || {};
+const AD_ASSET_BY_NAME = (AD_ASSETS && AD_ASSETS.by_ad_name) || {};
 const AD_ASSET_BY_ID = (AD_ASSETS && AD_ASSETS.by_ad_id) || {};
 let contentTrendChart = null;
 let contentMixChart = null;
@@ -2968,8 +2982,11 @@ function adThumbPathFor(row) {
 function adAssetFor(row) {
   if (!row) return null;
   const adId = String(row.ad_id || '').trim();
-  if (!adId) return null;
-  const asset = AD_ASSET_BY_ID[adId];
+  let asset = adId ? AD_ASSET_BY_ID[adId] : null;
+  if (!asset) {
+    const key = normalizeAdNameKey(row.ad);
+    if (key) asset = AD_ASSET_BY_NAME[key] || null;
+  }
   if (!asset) return null;
   const url = normalizeAssetUrl(asset.url || '');
   if (!url) return null;
@@ -2983,7 +3000,8 @@ function assetLinkBtnHtml(asset, baseClass='ad-main-link', extraClass='') {
   const cls = asset.type === 'video' ? 'asset-link-video' : 'asset-link-image';
   const merged = `${baseClass} ${cls} ${extraClass}`.trim();
   const title = asset.type === 'video' ? '打开视频素材' : '打开图片素材';
-  return `<a class="${merged}" href="${asset.url}" target="_blank" rel="noopener noreferrer" title="${title}"></a>`;
+  const icon = asset.type === 'video' ? '▶' : '▣';
+  return `<a class="${merged}" href="${asset.url}" target="_blank" rel="noopener noreferrer" title="${title}">${icon}</a>`;
 }
 
 function normalizeAssetUrl(raw) {
@@ -4155,6 +4173,7 @@ function setDashboardView(mode) {
   if (viewOpsBtn) viewOpsBtn.classList.toggle('active', dashboardView === 'ops');
   if (viewContentBtn) viewContentBtn.classList.toggle('active', showContent);
   if (viewDecisionBtn) viewDecisionBtn.classList.toggle('active', showDecision);
+  if (showContent) ensureContentDataLoaded();
   if (!showDecision) renderWeeklyNewAdsBoard();
 }
 
@@ -5220,7 +5239,7 @@ function renderContentBoard(rowsFiltered, creativeItems, prevRowsFiltered, prevC
       ${featuredCreative ? `
           <div class="content-board-feature">
             <div class="thumb ${featuredThumb ? '' : 'empty'}">
-              ${featuredThumb ? `<img src="${escapeHtml(featuredThumb)}" alt="${featuredTitle}">` : '暂无缩略图'}
+              ${featuredThumb ? `<img class="content-featured-thumb" src="${escapeHtml(featuredThumb)}" alt="${featuredTitle}" data-img="${escapeHtml(featuredThumb)}" data-title="${escapeHtml(featuredCreative.mainAd || featuredCreative.displayKey || '-')}">` : '暂无缩略图'}
             </div>
             <div class="copy">
               <div class="eyebrow">本期代表素材</div>
@@ -5644,7 +5663,7 @@ function renderContentAssetTable(creativeItems, totalConv) {
     ).join('');
     const productLine = productTags ? `<div class="content-product-tags">${productTags}</div>` : (productText ? `<div class="asset-sub">商品：${escapeHtml(productText)}</div>` : '');
     const assetBtn = item.asset
-      ? assetLinkBtnHtml(item.asset, 'content-action-btn url-ad-link asset-view-link')
+      ? assetLinkBtnHtml(item.asset, 'asset-view-link')
       : `<span class="content-action-slot empty">素</span>`;
     const productBtn = (item.products || []).some(p => p.image)
       ? `<button class="content-thumb-btn content-action-btn" type="button" title="查看商品图" data-product-gallery="${escapeHtml(item.key)}">品</button>`
@@ -5747,6 +5766,12 @@ function renderContentAssetTable(creativeItems, totalConv) {
 }
 
 function renderContentView(rowsFiltered) {
+  if (dashboardView !== 'content') return;
+  if (!contentDataLoaded) {
+    renderContentLoadingState();
+    ensureContentDataLoaded();
+    return;
+  }
   const contentRows = getContentRows(filterContentRows());
   const creativeItems = groupCreativeRows(contentRows);
   const [curStart, curEnd] = getDateRangeForCurrentFilter();
@@ -8764,6 +8789,11 @@ document.getElementById('contentAssetTable')?.closest('.table-scroll')?.addEvent
   if (!contentCurveSelection) return;
   syncContentCurvePosition();
 });
+document.getElementById('contentBoard')?.addEventListener('click', (e) => {
+  const img = e.target.closest('img.content-featured-thumb[data-img]');
+  if (!img) return;
+  openImageModal(img.dataset.img, img.dataset.title || '');
+});
 document.getElementById('contentLinePanel')?.addEventListener('click', (e) => {
   const toggle = e.target.closest('.toggle[data-content-toggle]');
   if (toggle) {
@@ -8861,6 +8891,50 @@ const AUTH_STORAGE_KEY = 'meta_dashboard_auth_v1';
 const AUTH_TTL_MS = 24 * 60 * 60 * 1000;
 const DASHBOARD_VIEW_STORAGE_KEY = 'meta_dashboard_view_v1';
 let dashboardBootstrapped = false;
+
+function renderContentLoadingState(message='内容侧数据加载中...') {
+  const board = document.getElementById('contentBoard');
+  if (board) {
+    board.className = 'content-board';
+    board.innerHTML = `<div class="content-board-empty">${escapeHtml(message)}</div>`;
+  }
+  const linePanel = document.getElementById('contentLinePanel');
+  if (linePanel) {
+    linePanel.className = 'content-line-panel';
+    linePanel.innerHTML = `<div class="content-empty">${escapeHtml(message)}</div>`;
+  }
+  const assetTable = document.getElementById('contentAssetTable');
+  if (assetTable) {
+    assetTable.innerHTML = `<tr><td class="muted" style="text-align:left;">${escapeHtml(message)}</td></tr>`;
+  }
+}
+
+function ensureContentDataLoaded() {
+  if (contentDataLoaded) return Promise.resolve(contentRowsAll);
+  if (contentDataLoadingPromise) return contentDataLoadingPromise;
+  renderContentLoadingState();
+  contentDataLoadingPromise = fetch('./data/content_rows.json', { cache: 'no-store' })
+    .then(r => r.ok ? r.json() : [])
+    .catch(() => [])
+    .then(raw => {
+      CONTENT_DATA = Array.isArray(raw) ? raw : [];
+      contentRowsAll = mapContentRows(CONTENT_DATA);
+      contentDataLoaded = true;
+      contentDataLoadingPromise = null;
+      if (dashboardView === 'content') updateAll(false);
+      return contentRowsAll;
+    })
+    .catch(err => {
+      console.error('[content-load]', err);
+      CONTENT_DATA = [];
+      contentRowsAll = mapContentRows([]);
+      contentDataLoaded = true;
+      contentDataLoadingPromise = null;
+      if (dashboardView === 'content') updateAll(false);
+      return contentRowsAll;
+    });
+  return contentDataLoadingPromise;
+}
 
 function isAuthStillValid() {
   try {
