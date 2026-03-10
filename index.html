@@ -4830,7 +4830,6 @@ function getContentRows(rowsFiltered) {
     out = out.filter(r =>
       normalizeCreativeTitle(contentRowKey(r)).toLowerCase().includes(q) ||
       String(r.ad || '').toLowerCase().includes(q) ||
-      String(r.campaign || '').toLowerCase().includes(q) ||
       String(r.categorySub || '').toLowerCase().includes(q) ||
       String(r.product_id || '').toLowerCase().includes(q) ||
       String(r.product_id_name || '').toLowerCase().includes(q) ||
