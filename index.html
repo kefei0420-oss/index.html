@@ -147,10 +147,16 @@ body { margin:0; font-family: 'Manrope', sans-serif; background: radial-gradient
   height:7px;
   border-radius:999px;
   background:#c76a1f;
-  box-shadow:0 0 0 4px rgba(199,106,31,0.12);
+  box-shadow:0 0 0 0 rgba(199,106,31,0.28);
+  animation: updatedDotPulse 2.7s ease-in-out infinite;
 }
 .page-updated .label { color:#9a826b; }
 .page-updated .time { color:#5e4b3a; font-weight:700; }
+@keyframes updatedDotPulse {
+  0% { transform:scale(1); box-shadow:0 0 0 0 rgba(199,106,31,0.26); opacity:.88; }
+  50% { transform:scale(1.14); box-shadow:0 0 0 7px rgba(199,106,31,0); opacity:1; }
+  100% { transform:scale(1); box-shadow:0 0 0 0 rgba(199,106,31,0); opacity:.88; }
+}
 .title { font-size: 30px; font-weight: 800; letter-spacing: .2px; line-height: 1.05; white-space: nowrap; }
 .subtitle { color: var(--muted); font-size: 13px; margin-top:4px; }
 .filters { background: var(--panel); border:1px solid var(--line); border-radius: 16px; padding: 12px 14px; display:flex; flex-wrap:wrap; gap:8px; align-items:center; box-shadow: 0 6px 18px rgba(0,0,0,0.06); width:100%; max-width:100%; }
@@ -1798,6 +1804,65 @@ select, .pill-btn, input[type="date"] { border:1px solid var(--line); background
 #urlProductPageSection .badge { font-size:12px; }
 .table th.sortable { cursor:pointer; }
 .table th.sortable .sort-ind { margin-left:6px; font-size:10px; color: var(--muted); }
+.table th.sortable,
+.content-table th.sortable,
+.decision-native-root .decision-table th.sortable { transition: background-color .18s ease, color .18s ease, box-shadow .18s ease; }
+.table th.sortable:hover,
+.content-table th.sortable:hover,
+.decision-native-root .decision-table th.sortable:hover { background:#fbf5ed; color:#6f4f32; }
+.table th.sortable.sort-active,
+.content-table th.sortable.sort-active,
+.decision-native-root .decision-table th.sortable.sort-active {
+  background:inherit;
+  color:inherit;
+  box-shadow:none;
+}
+.table td.sort-col-active,
+.content-table td.sort-col-active,
+.decision-native-root .decision-table td.sort-col-active { background:transparent; }
+.table tbody tr,
+.content-table tbody tr,
+.decision-native-root .decision-table tbody tr { transition: transform .16s ease, box-shadow .16s ease, background-color .16s ease; }
+.table tbody tr:hover td,
+.content-table tbody tr:hover td,
+.decision-native-root .decision-table tbody tr:hover td { background:#fcf7f0; }
+.table tbody tr:hover td.sort-col-active,
+.content-table tbody tr:hover td.sort-col-active,
+.decision-native-root .decision-table tbody tr:hover td.sort-col-active { background:#fcf7f0; }
+.search-hit {
+  display:inline;
+  padding:0 .15em;
+  border-radius:4px;
+  background:rgba(240, 214, 176, .72);
+  color:inherit;
+  box-shadow:0 0 0 1px rgba(198, 155, 96, .16) inset;
+}
+.asset-thumb,
+.product-thumb,
+.url-ad-thumb,
+.decision-native-root .ad-thumb,
+.content-featured-thumb {
+  transition: transform .22s ease, box-shadow .22s ease, filter .22s ease;
+  transform-origin:center;
+  cursor:zoom-in;
+}
+.asset-thumb:hover,
+.product-thumb:hover,
+.url-ad-thumb:hover,
+.decision-native-root .ad-thumb:hover,
+.content-featured-thumb:hover {
+  transform:scale(1.06);
+  box-shadow:0 10px 24px rgba(42,35,29,.14);
+  filter:saturate(1.02);
+}
+.summary-card {
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+.summary-card:hover {
+  transform:translateY(-1px);
+  box-shadow:0 8px 18px rgba(58,43,30,.08);
+  border-color:#dcc3a7;
+}
 .table-tools { display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:8px; }
 .table-tools .filter-group { gap:6px; }
 #contentSection .table-tools { align-items:flex-start; }
@@ -2308,8 +2373,8 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
       </div>
       <div class="page-updated" id="pageUpdatedPreview">
         <span class="dot"></span>
-        <span class="label">最后更新时间</span>
-        <span class="time">2026-03-12 14:41（北京时间）</span>
+        <span class="label">数据最后更新时间</span>
+        <span class="time">2026-03-12 16:17（北京时间）</span>
       </div>
     </div>
     <div class="filters">
@@ -4023,8 +4088,9 @@ function renderDecisionCampaignTable() {
     const sel = decisionState.selectedCamp === r.camp ? ' style="background:#fbf4eb;"' : '';
     const tagHtml = decisionTagCell(r.tag, hasTestingAds(r.camp) ? '测试' : '');
     const safeCamp = String(r.camp || '').replace(/"/g,'&quot;');
+    const displayCamp = highlightSearchText(r.camp, decisionCampSearch);
     const rowCompact = `<tr data-camp="${safeCamp}" class="decision-camp-row"${sel}>
-      <td>${r.camp}</td><td>${r.type}</td><td>${tagHtml}</td><td>${r.action}</td>
+      <td>${displayCamp}</td><td>${r.type}</td><td>${tagHtml}</td><td>${r.action}</td>
       <td class="${decisionConfClass(r.conf)}">${decisionConfChip(r.conf)}</td>
       <td class="${r.pri>=4?'priority-highest':(r.pri>=3?'priority-high':'')}">${decisionPriorityChip(r.pri)}</td>
       <td>${fmt(r.impactValue,0)}</td>
@@ -4032,7 +4098,7 @@ function renderDecisionCampaignTable() {
       <td>${money(r.cur.spend)}</td><td>${fmt(r.cur.roas,2)}</td><td>${fmt(r.roasD1||0,2)}</td><td>${fmt(r.roasD2||0,2)}</td><td>${fmt(r.wRoas,2)}</td><td>${fmt(r.cur.purchases,0)}</td>
     </tr>`;
     const rowFull = `<tr data-camp="${safeCamp}" class="decision-camp-row"${sel}>
-      <td>${r.camp}</td><td>${r.type}</td><td>${tagHtml}</td><td>${r.action}</td>
+      <td>${displayCamp}</td><td>${r.type}</td><td>${tagHtml}</td><td>${r.action}</td>
       <td class="${decisionConfClass(r.conf)}">${decisionConfChip(r.conf)}</td>
       <td class="${r.pri>=4?'priority-highest':(r.pri>=3?'priority-high':'')}">${decisionPriorityChip(r.pri)}</td>
       <td>${fmt(r.impactValue,0)}</td><td>${decisionReasonCell(r.reason)}</td>
@@ -4048,6 +4114,7 @@ function renderDecisionCampaignTable() {
   bindCopyHoverHint(tbl);
   tbl.classList.remove('three-day-summary');
   tbl.classList.toggle('compact-cols', compact);
+  applySortedColumnState(tbl, decisionCampSortState.key, 'data-sort');
   attachDecisionColResize('decisionCampTable', '--decision-camp-first-col', 280, 720, decisionNativeRoot, 'decision-camp-first-resize');
   applyDecisionHeaderTitles(tbl);
   bindDecisionReasonDetails(tbl);
@@ -4199,9 +4266,9 @@ function renderDecisionAdTable() {
       : `<span class="ad-thumb empty">AD</span>`;
     const safeAd = String(r.ad || '').replace(/"/g,'&quot;');
     const safeCamp = String(r.camp || '').replace(/"/g,'&quot;');
-    const adMain = `<div class="ad-main"><span class="copy-text-target" data-copy-text="${safeAd}" data-copy-success="已复制">${r.ad}</span></div>`;
+    const adMain = `<div class="ad-main"><span class="copy-text-target" data-copy-text="${safeAd}" data-copy-success="已复制">${highlightSearchText(r.ad, decisionAdSearch)}</span></div>`;
     const adText = !camp
-      ? `<div class="ad-cell-text">${adMain}<div class="ad-camp"><span class="copy-text-target" data-copy-text="${safeCamp}" data-copy-success="已复制">${r.camp}</span></div></div>`
+      ? `<div class="ad-cell-text">${adMain}<div class="ad-camp"><span class="copy-text-target" data-copy-text="${safeCamp}" data-copy-success="已复制">${highlightSearchText(r.camp, decisionAdSearch)}</span></div></div>`
       : `<div class="ad-cell-text">${adMain}</div>`;
     const adCell = `<div class="ad-cell-wrap">${thumbHtml}${adText}</div>`;
     const tagHtml = renderTagHtml(r);
@@ -4233,6 +4300,7 @@ function renderDecisionAdTable() {
   bindCopyHoverHint(adPanel);
   tbl.classList.toggle('compact-cols', compact && !is3DayFocus);
   tbl.classList.toggle('three-day-focus', is3DayFocus);
+  applySortedColumnState(tbl, decisionAdSortState.key, 'data-sort');
   attachDecisionColResize('decisionAdTable', '--decision-ad-first-col', 320, 900, decisionNativeRoot, 'decision-ad-first-resize');
   applyDecisionHeaderTitles(tbl);
   bindDecisionReasonDetails(tbl);
@@ -4909,6 +4977,36 @@ function escapeHtml(s) {
     .replace(/'/g, '&#39;');
 }
 
+function escapeRegExp(s) {
+  return String(s ?? '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function highlightSearchText(text, query) {
+  const raw = String(text ?? '');
+  const q = String(query ?? '').trim();
+  if (!q) return escapeHtml(raw);
+  const pattern = new RegExp(`(${escapeRegExp(q)})`, 'ig');
+  return escapeHtml(raw).replace(pattern, '<mark class="search-hit">$1</mark>');
+}
+
+function applySortedColumnState(table, key, attr='data-key') {
+  if (!(table instanceof HTMLElement)) return;
+  table.querySelectorAll('th.sort-active').forEach(node => node.classList.remove('sort-active'));
+  table.querySelectorAll('td.sort-col-active').forEach(node => node.classList.remove('sort-col-active'));
+  if (!key) return;
+  const header = Array.from(table.querySelectorAll(`th[${attr}]`)).find(th => th.getAttribute(attr) === String(key));
+  if (!(header instanceof HTMLTableCellElement)) return;
+  header.classList.add('sort-active');
+  const row = header.parentElement;
+  if (!(row instanceof HTMLTableRowElement)) return;
+  const colIndex = Array.from(row.children).indexOf(header);
+  if (colIndex < 0) return;
+  table.querySelectorAll('tr').forEach(tr => {
+    const cell = tr.children[colIndex];
+    if (cell instanceof HTMLTableCellElement) cell.classList.add('sort-col-active');
+  });
+}
+
 function sumMetric(rowsList, key) {
   return rowsList.reduce((sum, row) => sum + (Number(row?.[key]) || 0), 0);
 }
@@ -5482,16 +5580,16 @@ function renderContentBoard(rowsFiltered, creativeItems, prevRowsFiltered, prevC
             </div>
             <div class="stats">
               <div class="item">
-                <div class="k">GMV</div>
-                <div class="v">${money(featuredCreative.agg.conv)}</div>
+                <div class="k">花费</div>
+                <div class="v">${money(featuredCreative.agg.spend)}</div>
               </div>
               <div class="item">
                 <div class="k">ROAS</div>
                 <div class="v">${fmt(featuredCreative.agg.roas, 2)}</div>
               </div>
               <div class="item">
-                <div class="k">花费</div>
-                <div class="v">${money(featuredCreative.agg.spend)}</div>
+                <div class="k">GMV</div>
+                <div class="v">${money(featuredCreative.agg.conv)}</div>
               </div>
               <div class="item">
                 <div class="k">订单</div>
@@ -5919,8 +6017,8 @@ function renderContentAssetTable(creativeItems, totalConv) {
         <div class="asset-cell">
           ${adImg}
           <div class="asset-meta">
-            <div class="asset-title">${escapeHtml(item.displayKey || item.key)}</div>
-            <div class="asset-sub">${escapeHtml(item.mainAd)}</div>
+            <div class="asset-title">${highlightSearchText(item.displayKey || item.key, contentSearch)}</div>
+            <div class="asset-sub">${highlightSearchText(item.mainAd, contentSearch)}</div>
             <div class="asset-sub">${escapeHtml(item.category)} / ${escapeHtml(item.adType)} / ${escapeHtml(displayCreativeWeekLabel(item.week))}</div>
             ${productLine}
           </div>
@@ -5945,16 +6043,16 @@ function renderContentAssetTable(creativeItems, totalConv) {
       <th>素材</th>
       <th>查看</th>
       <th>类型</th>
-      <th class="sortable" data-sort="category">品线<span class="sort-ind">${sortInd('category')}</span></th>
-      <th class="sortable" data-sort="spend">花费<span class="sort-ind">${sortInd('spend')}</span></th>
-      <th class="sortable" data-sort="conv">转化金额<span class="sort-ind">${sortInd('conv')}</span></th>
-      <th class="sortable" data-sort="roas">ROAS<span class="sort-ind">${sortInd('roas')}</span></th>
-      <th class="sortable" data-sort="contribution">贡献率<span class="sort-ind">${sortInd('contribution')}</span></th>
-      <th class="sortable" data-sort="hook">Hook Rate<span class="sort-ind">${sortInd('hook')}</span></th>
-      <th class="sortable" data-sort="hold">Hold Rate<span class="sort-ind">${sortInd('hold')}</span></th>
-      <th class="sortable" data-sort="ctr">CTR<span class="sort-ind">${sortInd('ctr')}</span></th>
-      <th class="sortable" data-sort="cpa">CPA<span class="sort-ind">${sortInd('cpa')}</span></th>
-      <th class="sortable" data-sort="purchases">订单<span class="sort-ind">${sortInd('purchases')}</span></th>
+      <th class="sortable ${contentAssetSortState.key === 'category' ? 'sort-active' : ''}" data-sort="category">品线<span class="sort-ind">${sortInd('category')}</span></th>
+      <th class="sortable ${contentAssetSortState.key === 'spend' ? 'sort-active' : ''}" data-sort="spend">花费<span class="sort-ind">${sortInd('spend')}</span></th>
+      <th class="sortable ${contentAssetSortState.key === 'conv' ? 'sort-active' : ''}" data-sort="conv">转化金额<span class="sort-ind">${sortInd('conv')}</span></th>
+      <th class="sortable ${contentAssetSortState.key === 'roas' ? 'sort-active' : ''}" data-sort="roas">ROAS<span class="sort-ind">${sortInd('roas')}</span></th>
+      <th class="sortable ${contentAssetSortState.key === 'contribution' ? 'sort-active' : ''}" data-sort="contribution">贡献率<span class="sort-ind">${sortInd('contribution')}</span></th>
+      <th class="sortable ${contentAssetSortState.key === 'hook' ? 'sort-active' : ''}" data-sort="hook">Hook Rate<span class="sort-ind">${sortInd('hook')}</span></th>
+      <th class="sortable ${contentAssetSortState.key === 'hold' ? 'sort-active' : ''}" data-sort="hold">Hold Rate<span class="sort-ind">${sortInd('hold')}</span></th>
+      <th class="sortable ${contentAssetSortState.key === 'ctr' ? 'sort-active' : ''}" data-sort="ctr">CTR<span class="sort-ind">${sortInd('ctr')}</span></th>
+      <th class="sortable ${contentAssetSortState.key === 'cpa' ? 'sort-active' : ''}" data-sort="cpa">CPA<span class="sort-ind">${sortInd('cpa')}</span></th>
+      <th class="sortable ${contentAssetSortState.key === 'purchases' ? 'sort-active' : ''}" data-sort="purchases">订单<span class="sort-ind">${sortInd('purchases')}</span></th>
     </tr>
     ${rowsHtml || `<tr><td colspan="13" class="content-empty">当前筛选范围暂无素材明细</td></tr>`}
   `;
@@ -5972,6 +6070,7 @@ function renderContentAssetTable(creativeItems, totalConv) {
       renderContentView(filterRows());
     });
   });
+  applySortedColumnState(table, contentAssetSortState.key, 'data-sort');
   const pager = document.getElementById('contentAssetPager');
   if (pager) {
     const sizeGroup = pager.querySelector('.filter-group');
@@ -6458,8 +6557,39 @@ const futureRangePlugin = {
   }
 };
 
+const hoverGuidePlugin = {
+  id: 'hoverGuidePlugin',
+  afterDatasetsDraw(chartInstance) {
+    const active = chartInstance.tooltip?.getActiveElements?.() || [];
+    if (!active.length) return;
+    const point = active[0]?.element;
+    const area = chartInstance.chartArea;
+    if (!point || !area) return;
+    const ctx = chartInstance.ctx;
+    ctx.save();
+    ctx.setLineDash([4, 4]);
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = 'rgba(126, 96, 62, 0.32)';
+    ctx.beginPath();
+    ctx.moveTo(point.x, area.top + 4);
+    ctx.lineTo(point.x, area.bottom);
+    ctx.stroke();
+    ctx.restore();
+  }
+};
+
 function chartMetricTooltip() {
   return {
+    backgroundColor: 'rgba(47,39,31,.92)',
+    titleColor: '#fff7ef',
+    bodyColor: '#f7efe6',
+    borderColor: 'rgba(224, 196, 161, .55)',
+    borderWidth: 1,
+    displayColors: true,
+    boxPadding: 4,
+    caretPadding: 8,
+    cornerRadius: 10,
+    padding: 10,
     callbacks: {
       label(ctx) {
         const label = ctx.dataset?.label || '';
@@ -6602,7 +6732,7 @@ function renderChart(rowsFiltered) {
         y1: { beginAtZero:true, position:'right', grid:{drawOnChartArea:false} }
       }
     },
-    plugins: [roasLabelPlugin, futureRangePlugin]
+    plugins: [roasLabelPlugin, futureRangePlugin, hoverGuidePlugin]
   });
 }
 
@@ -6635,10 +6765,10 @@ function renderTable(elId, rows, columns, top=12, opts={}) {
     const isSortable = sortableTable && c.sortable !== false;
     const active = isSortable && st.key === c.key;
     const ind = active ? (st.dir === 'asc' ? '▲' : '▼') : '';
-    return `<th class="${isSortable ? 'sortable' : ''}" ${isSortable ? `data-key="${c.key}"` : ''}>${c.label}${isSortable ? `<span class="sort-ind">${ind}</span>` : ''}</th>`;
+    return `<th class="${isSortable ? 'sortable' : ''} ${active ? 'sort-active' : ''}" ${isSortable ? `data-key="${c.key}"` : ''}>${c.label}${isSortable ? `<span class="sort-ind">${ind}</span>` : ''}</th>`;
   }).join('')}</tr>`;
   const body = renderRows.slice(0, top).map(r => {
-    return `<tr>${columns.map(c => `<td>${c.format(r[c.key], r)}</td>`).join('')}</tr>`;
+    return `<tr>${columns.map(c => `<td class="${st.key === c.key ? 'sort-col-active' : ''}">${c.format(r[c.key], r)}</td>`).join('')}</tr>`;
   }).join('');
   el.innerHTML = header + body;
 }
@@ -7399,11 +7529,11 @@ function renderProductTable(rowsFiltered) {
 
   const columns = [
     {label:'图片', key:'img', sortable:false, format:(v,row)=> v ? `<img class="product-thumb" src="${v}" data-img="${v}" data-title="${String(row.title || '').replace(/"/g,'&quot;')}" />` : '<span class="muted">—</span>'},
-    {label:'商品id', key:'id', sortable:true, format:v=>v},
-    {label:'SKC', key:'skc', sortable:true, format:v=>v || '-'},
-    {label:'shopify id', key:'shopifyId', sortable:true, format:v=>v || '-'},
+    {label:'商品id', key:'id', sortable:true, format:v=>highlightSearchText(v, productSearch)},
+    {label:'SKC', key:'skc', sortable:true, format:v=>highlightSearchText(v || '-', productSearch)},
+    {label:'shopify id', key:'shopifyId', sortable:true, format:v=>highlightSearchText(v || '-', productSearch)},
     {label:'新老品', key:'newness', sortable:true, format:v=>v || '-'},
-    {label:'类目', key:'cat', sortable:true, format:v=>v||'-'},
+    {label:'类目', key:'cat', sortable:true, format:v=>highlightSearchText(v || '-', productSearch)},
     {label:'花费', key:'spend', sortable:true, format:(v,row)=>formatWithCompare(v, row.prev_spend, money)},
     {label:'转化金额', key:'conv', sortable:true, format:(v,row)=>formatWithCompare(v, row.prev_conv, money)},
     {label:'ROAS', key:'roas', sortable:true, format:(v,row)=>formatWithCompare(v, row.prev_roas, x=>fmt(x,2))},
@@ -7442,11 +7572,11 @@ function renderProductTable(rowsFiltered) {
   const header = `<tr>${columns.map(c => {
     const active = c.key === productSortKey;
     const ind = active ? (productSortDir === 'asc' ? '▲' : '▼') : '';
-    const cls = c.sortable ? 'sortable' : '';
+    const cls = `${c.sortable ? 'sortable' : ''} ${active ? 'sort-active' : ''}`.trim();
     const dataKey = c.sortable ? `data-key="${c.key}"` : '';
     return `<th class="${cls}" ${dataKey}>${c.label}${c.sortable ? `<span class="sort-ind">${ind}</span>` : ''}</th>`;
   }).join('')}</tr>`;
-  const body = pageRows.map(r => `<tr>${columns.map(c => `<td>${c.format(r[c.key], r)}</td>`).join('')}</tr>`).join('');
+  const body = pageRows.map(r => `<tr>${columns.map(c => `<td class="${productSortKey === c.key ? 'sort-col-active' : ''}">${c.format(r[c.key], r)}</td>`).join('')}</tr>`).join('');
   el.innerHTML = header + body;
 
   const pager = document.getElementById('productPager');
@@ -7760,7 +7890,7 @@ function renderTables(rowsFiltered) {
         const total = values.reduce((a,b)=>a+b,0) || 1;
         const v = ctx.parsed || 0;
         const p = (v/total*100).toFixed(1);
-        return `${ctx.label}: ${p}%`;
+        return `${p}%`;
       }
     }
   });
@@ -7862,7 +7992,7 @@ function renderCombo(rowsFiltered) {
         },
         plugins: { legend: { position:'top', labels:{font:{size:10}, boxWidth:10, boxHeight:10, padding:6} }, tooltip: chartMetricTooltip() }
       },
-      plugins: [roasLabelPlugin]
+      plugins: [roasLabelPlugin, hoverGuidePlugin]
     });
   };
 
@@ -7980,7 +8110,7 @@ function renderURLBoard(rowsFiltered) {
   if (q) urlAgg = urlAgg.filter(r => r.url.toLowerCase().includes(q));
 
   const columns = [
-    {label:'Website URL', key:'url', sortable:true, format:(v,row)=>`<span class="url-link" data-url="${v}">${v}</span>`},
+    {label:'Website URL', key:'url', sortable:true, format:(v,row)=>`<span class="url-link" data-url="${v}">${highlightSearchText(v, urlSearch)}</span>`},
     {label:'标签', key:'tag', sortable:false, format:(v,row)=> row.isWinner ? '<span class="url-tag winner">爆款</span>' : (row.isLoser ? '<span class="url-tag loser">亏损</span>' : '-')},
     {label:'花费', key:'spend', sortable:true, format:(v,row)=>formatWithCompareSimple(v,row.prev_spend,money,urlCompareMode)},
     {label:'转化金额', key:'conv', sortable:true, format:(v,row)=>formatWithCompareSimple(v,row.prev_conv,money,urlCompareMode)},
@@ -8016,9 +8146,9 @@ function renderURLBoard(rowsFiltered) {
   if (table) {
     const header = `<tr>${columns.map(c => {
       const ind = c.sortable ? ((urlSortKey===c.key)?(urlSortDir==='asc'?'▲':'▼'):'') : '';
-      return `<th class="${c.sortable?'sortable':''}" ${c.sortable?`data-key="${c.key}"`:''}>${c.label}${c.sortable?`<span class="sort-ind">${ind}</span>`:''}</th>`;
+      return `<th class="${c.sortable?'sortable':''} ${urlSortKey===c.key?'sort-active':''}" ${c.sortable?`data-key="${c.key}"`:''}>${c.label}${c.sortable?`<span class="sort-ind">${ind}</span>`:''}</th>`;
     }).join('')}</tr>`;
-    const body = pageRows.map(r => `<tr>${columns.map(c=>`<td>${c.format(r[c.key],r)}</td>`).join('')}</tr>`).join('');
+    const body = pageRows.map(r => `<tr>${columns.map(c=>`<td class="${urlSortKey===c.key?'sort-col-active':''}">${c.format(r[c.key],r)}</td>`).join('')}</tr>`).join('');
     table.innerHTML = header + body;
   }
 
@@ -8192,13 +8322,13 @@ function renderUrlProductPageBoard() {
   const header = `<tr>${cols.map(c => {
     const active = c.key === urlProdSortKey;
     const ind = active ? (urlProdSortDir === 'asc' ? '▲' : '▼') : '';
-    return `<th class="${c.sortable ? 'sortable' : ''}" ${c.sortable ? `data-key="${c.key}"` : ''}>${c.label}${c.sortable ? `<span class="sort-ind">${ind}</span>` : ''}</th>`;
+    return `<th class="${c.sortable ? 'sortable' : ''} ${active ? 'sort-active' : ''}" ${c.sortable ? `data-key="${c.key}"` : ''}>${c.label}${c.sortable ? `<span class="sort-ind">${ind}</span>` : ''}</th>`;
   }).join('')}</tr>`;
   const body = pageRows.map(r => {
     const open = urlProdExpandedUrls.has(r.url);
     const main = `<tr class="url-prod-main-row" data-url="${String(r.url).replace(/"/g,'&quot;')}">${cols.map((c, idx) => {
-      if (idx === 0) return `<td><span class="toggle">${open ? '▾' : '▸'}</span> ${c.format(r[c.key], r)}</td>`;
-      return `<td>${c.format(r[c.key], r)}</td>`;
+      if (idx === 0) return `<td class="${urlProdSortKey===c.key?'sort-col-active':''}"><span class="toggle">${open ? '▾' : '▸'}</span> ${highlightSearchText(c.format(r[c.key], r), urlProdSearch)}</td>`;
+      return `<td class="${urlProdSortKey===c.key?'sort-col-active':''}">${c.format(r[c.key], r)}</td>`;
     }).join('')}</tr>`;
     const detail = open ? `<tr class="url-prod-detail"><td colspan="${cols.length}"><div class="url-prod-detail-wrap">${r._detailHtml || '<span class="muted">无商品信息</span>'}</div></td></tr>` : '';
     return main + detail;
@@ -8272,7 +8402,7 @@ function renderURLDetail(baseRows) {
   if (urlDetailPage < 1) urlDetailPage = 1;
   const start = (urlDetailPage - 1) * (pageSize || rowsD.length);
   const pageRows = rowsD.slice(start, start + (pageSize || rowsD.length));
-  const header = `<tr>${cols.map(c=>`<th class="${c.sortable === false ? '' : 'sortable'}" ${c.sortable === false ? '' : `data-key="${c.key}"`}>${c.label}${(c.sortable === false || urlDetailSortKey!==c.key)?'':`<span class="sort-ind">${urlDetailSortDir==='asc'?'▲':'▼'}</span>`}</th>`).join('')}</tr>`;
+  const header = `<tr>${cols.map(c=>`<th class="${c.sortable === false ? '' : 'sortable'} ${urlDetailSortKey===c.key?'sort-active':''}" ${c.sortable === false ? '' : `data-key="${c.key}"`}>${c.label}${(c.sortable === false || urlDetailSortKey!==c.key)?'':`<span class="sort-ind">${urlDetailSortDir==='asc'?'▲':'▼'}</span>`}</th>`).join('')}</tr>`;
   const body = pageRows.map(r => {
     const thumbPath = adThumbPathFor(r);
     const thumb = thumbPath
@@ -8281,9 +8411,9 @@ function renderURLDetail(baseRows) {
     const adAsset = adAssetFor(r);
     const viewLink = adAsset ? assetLinkBtnHtml(adAsset, 'url-ad-link', 'asset-view-link') : '—';
     const safeAd = String(r.ad || '').replace(/"/g, '&quot;');
-    const adNameHtml = `<div class="url-ad-name"><span class="url-ad-copy-target" data-copy-ad="${safeAd}" data-copy-success="已复制">${r.ad}</span></div>`;
+    const adNameHtml = `<div class="url-ad-name"><span class="url-ad-copy-target" data-copy-ad="${safeAd}" data-copy-success="已复制">${highlightSearchText(r.ad, urlSearch)}</span></div>`;
     const adCell = `<div class="url-ad-cell">${thumb}${adNameHtml}</div>`;
-    return `<tr><td>${adCell}</td><td>${viewLink}</td><td>${money(r.spend)}</td><td>${money(r.conv)}</td><td><span class="${roasLevelClass(r.roas)}">${fmt(r.roas,2)}</span></td><td>${fmt(r.purchases,0)}</td><td>${money(r.aov)}</td><td>${money(r.cpa)}</td><td>${pct(r.ctr)}</td><td>${money(r.cpc)}</td><td>${money(r.cpm)}</td><td>${pct(r.cvr)}</td><td>${money(r.atcCost)}</td><td>${money(r.checkoutCost)}</td><td>${pct(r.atcRate)}</td><td>${pct(r.checkoutRate)}</td></tr>`;
+    return `<tr><td class="${urlDetailSortKey==='ad'?'sort-col-active':''}">${adCell}</td><td>${viewLink}</td><td class="${urlDetailSortKey==='spend'?'sort-col-active':''}">${money(r.spend)}</td><td class="${urlDetailSortKey==='conv'?'sort-col-active':''}">${money(r.conv)}</td><td class="${urlDetailSortKey==='roas'?'sort-col-active':''}"><span class="${roasLevelClass(r.roas)}">${fmt(r.roas,2)}</span></td><td class="${urlDetailSortKey==='purchases'?'sort-col-active':''}">${fmt(r.purchases,0)}</td><td>${money(r.aov)}</td><td>${money(r.cpa)}</td><td class="${urlDetailSortKey==='ctr'?'sort-col-active':''}">${pct(r.ctr)}</td><td>${money(r.cpc)}</td><td>${money(r.cpm)}</td><td class="${urlDetailSortKey==='cvr'?'sort-col-active':''}">${pct(r.cvr)}</td><td>${money(r.atcCost)}</td><td>${money(r.checkoutCost)}</td><td>${pct(r.atcRate)}</td><td>${pct(r.checkoutRate)}</td></tr>`;
   }).join('');
   table.innerHTML = header + body;
   attachTableFirstColResize('urlDetailTable', '--url-detail-first-col', 260, 760, 'url-detail-first-resize');
@@ -8381,22 +8511,22 @@ function renderURLProductDetail(baseRows) {
   if (urlProductDetailPage < 1) urlProductDetailPage = 1;
   const start = (urlProductDetailPage - 1) * (pageSize || rowsP.length);
   const pageRows = rowsP.slice(start, start + (pageSize || rowsP.length));
-  const header = `<tr>${cols.map(c=>`<th class="${c.key!=='image'?'sortable':''}" ${c.key!=='image'?`data-key="${c.key}"`:''}>${c.label}${(c.key!=='image' && urlProductDetailSortKey===c.key)?`<span class="sort-ind">${urlProductDetailSortDir==='asc'?'▲':'▼'}</span>`:''}</th>`).join('')}</tr>`;
+  const header = `<tr>${cols.map(c=>`<th class="${c.key!=='image'?'sortable':''} ${urlProductDetailSortKey===c.key?'sort-active':''}" ${c.key!=='image'?`data-key="${c.key}"`:''}>${c.label}${(c.key!=='image' && urlProductDetailSortKey===c.key)?`<span class="sort-ind">${urlProductDetailSortDir==='asc'?'▲':'▼'}</span>`:''}</th>`).join('')}</tr>`;
   const body = pageRows.map(r => {
     const img = r.image ? `<img class="product-thumb" src="${r.image}" data-img="${r.image}" data-title="${String(r.title || '').replace(/"/g,'&quot;')}" />` : '<div class="product-thumb" style="background:#faf7f2;"></div>';
     return `<tr>
       <td>${img}</td>
-      <td>${r.shopifyId}</td>
-      <td>${r.skc}</td>
+      <td class="${urlProductDetailSortKey==='shopifyId'?'sort-col-active':''}">${highlightSearchText(r.shopifyId, urlSearch)}</td>
+      <td class="${urlProductDetailSortKey==='skc'?'sort-col-active':''}">${highlightSearchText(r.skc, urlSearch)}</td>
       <td>${r.newness || '-'}</td>
       <td>${fmt(r.adCount,0)}</td>
-      <td>${money(r.spend)}</td>
-      <td>${money(r.conv)}</td>
-      <td><span class="${roasLevelClass(r.roas)}">${fmt(r.roas,2)}</span></td>
-      <td>${fmt(r.purchases,0)}</td>
+      <td class="${urlProductDetailSortKey==='spend'?'sort-col-active':''}">${money(r.spend)}</td>
+      <td class="${urlProductDetailSortKey==='conv'?'sort-col-active':''}">${money(r.conv)}</td>
+      <td class="${urlProductDetailSortKey==='roas'?'sort-col-active':''}"><span class="${roasLevelClass(r.roas)}">${fmt(r.roas,2)}</span></td>
+      <td class="${urlProductDetailSortKey==='purchases'?'sort-col-active':''}">${fmt(r.purchases,0)}</td>
       <td>${money(r.aov)}</td>
       <td>${money(r.cpa)}</td>
-      <td>${pct(r.ctr)}</td>
+      <td class="${urlProductDetailSortKey==='ctr'?'sort-col-active':''}">${pct(r.ctr)}</td>
       <td>${money(r.cpc)}</td>
     </tr>`;
   }).join('');
