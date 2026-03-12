@@ -117,7 +117,40 @@ body { margin:0; font-family: 'Manrope', sans-serif; background: radial-gradient
   background:#c96a1f;
 }
 .header { display:block; }
-.header-meta { min-width:0; padding-top:2px; margin-bottom:10px; }
+.header-meta {
+  min-width:0;
+  padding-top:2px;
+  margin-bottom:10px;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:16px;
+}
+.header-meta-main { min-width:0; }
+.page-updated {
+  flex:0 0 auto;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 12px;
+  border:1px solid #ead7c2;
+  border-radius:999px;
+  background:rgba(255,250,245,.92);
+  color:#8b6f55;
+  font-size:12px;
+  line-height:1;
+  white-space:nowrap;
+  box-shadow:0 6px 16px rgba(0,0,0,0.04);
+}
+.page-updated .dot {
+  width:7px;
+  height:7px;
+  border-radius:999px;
+  background:#c76a1f;
+  box-shadow:0 0 0 4px rgba(199,106,31,0.12);
+}
+.page-updated .label { color:#9a826b; }
+.page-updated .time { color:#5e4b3a; font-weight:700; }
 .title { font-size: 30px; font-weight: 800; letter-spacing: .2px; line-height: 1.05; white-space: nowrap; }
 .subtitle { color: var(--muted); font-size: 13px; margin-top:4px; }
 .filters { background: var(--panel); border:1px solid var(--line); border-radius: 16px; padding: 12px 14px; display:flex; flex-wrap:wrap; gap:8px; align-items:center; box-shadow: 0 6px 18px rgba(0,0,0,0.06); width:100%; max-width:100%; }
@@ -180,13 +213,74 @@ body { margin:0; font-family: 'Manrope', sans-serif; background: radial-gradient
 select, .pill-btn, input[type="date"] { border:1px solid var(--line); background:#fff; color:var(--text); padding:7px 10px; border-radius: 10px; font-size: 12px; }
 .pill-btn.active { background: var(--accent); color:white; border-color: var(--accent); }
 .changed-input {
-  border-color: #b84a00 !important;
-  box-shadow: 0 0 0 3px rgba(184,74,0,0.28) !important;
-  background: #ffd9bf !important;
-  font-weight: 700;
+  border-color: var(--line) !important;
+  box-shadow: none !important;
+  background: #fff !important;
+  font-weight: inherit;
 }
 .section { margin-top: 18px; }
 .content-shell { display:grid; gap:12px; }
+.skeleton-shimmer {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(90deg, #f5ede4 0%, #fbf6f0 50%, #f5ede4 100%);
+  background-size: 220% 100%;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+}
+.content-skeleton-board,
+.content-skeleton-lines,
+.content-skeleton-table { display:grid; gap:12px; }
+.content-skeleton-board {
+  grid-template-columns: 1.2fr 1fr;
+  align-items:stretch;
+}
+.content-skeleton-hero,
+.content-skeleton-kpis,
+.content-skeleton-table-card,
+.content-skeleton-line-card {
+  border:1px solid var(--line);
+  border-radius:18px;
+  background:linear-gradient(180deg, #fffaf5 0%, #fff 100%);
+}
+.content-skeleton-hero { padding:16px; min-height:220px; display:grid; gap:12px; }
+.content-skeleton-kpis { padding:16px; display:grid; gap:10px; align-content:start; }
+.content-skeleton-row { display:grid; gap:10px; }
+.content-skeleton-row.cols-4 { grid-template-columns:repeat(4, minmax(0, 1fr)); }
+.content-skeleton-row.cols-3 { grid-template-columns:repeat(3, minmax(0, 1fr)); }
+.content-skeleton-row.cols-2 { grid-template-columns:repeat(2, minmax(0, 1fr)); }
+.content-skeleton-table-card { padding:16px; }
+.content-skeleton-table-head { display:flex; justify-content:space-between; gap:12px; margin-bottom:14px; }
+.content-skeleton-table-rows { display:grid; gap:10px; }
+.content-skeleton-table-row {
+  display:grid;
+  grid-template-columns:320px repeat(6, minmax(70px, 1fr));
+  gap:10px;
+  align-items:center;
+}
+.content-skeleton-line-card { padding:14px 16px; min-height:96px; }
+.skeleton-block {
+  border-radius:12px;
+  background:#f3e8dc;
+}
+.skeleton-pill { height:28px; border-radius:999px; }
+.skeleton-title { height:20px; width:42%; }
+.skeleton-sub { height:12px; width:64%; }
+.skeleton-kpi { height:74px; }
+.skeleton-thumb { width:88px; height:88px; border-radius:18px; }
+.skeleton-line { height:14px; }
+.skeleton-line.short { width:38%; }
+.skeleton-line.mid { width:62%; }
+.skeleton-line.long { width:84%; }
+.skeleton-cell { height:44px; }
+.content-loading-note {
+  font-size:12px;
+  color:var(--muted);
+  margin-top:2px;
+}
+@keyframes skeleton-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -20% 0; }
+}
 .content-board-panel {
   padding: 14px 16px;
   background:
@@ -1272,6 +1366,8 @@ select, .pill-btn, input[type="date"] { border:1px solid var(--line); background
   .content-overview-hero .hero-meta,
   .content-line-card .stats { grid-template-columns: repeat(2, minmax(0,1fr)); }
   .content-kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .content-skeleton-board { grid-template-columns:1fr; }
+  .content-skeleton-table-row { grid-template-columns:1.2fr repeat(3, minmax(56px, 1fr)); }
   .content-kpi-card.feature,
   .content-kpi-card.structure { grid-column: span 2; }
   .content-kpi-card .top { flex-direction:column; }
@@ -1567,9 +1663,91 @@ select, .pill-btn, input[type="date"] { border:1px solid var(--line); background
 .panel { display:flex; flex-direction:column; }
 .panel table { width:100%; }
 .small { font-size: 11px; color: var(--muted); }
-.summary-box { background: #fff1e6; border:1px solid #ffd7b8; padding:10px; border-radius: 12px; font-size:12px; line-height:1.5; }
-.summary-box .warn { color: #b3261e; font-weight: 700; }
-.summary-box .ok { color: #0b8f5a; font-weight: 700; }
+.summary-box {
+  display:grid;
+  gap:10px;
+}
+.summary-head {
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+}
+.summary-head .title {
+  font-size:16px;
+  font-weight:800;
+  line-height:1.1;
+  white-space:normal;
+}
+.summary-head .sub {
+  margin-top:4px;
+  color:var(--muted);
+  font-size:12px;
+}
+.summary-cards {
+  display:grid;
+  gap:10px;
+}
+.summary-card {
+  border:1px solid #ecd9c4;
+  border-radius:16px;
+  padding:12px 13px;
+  background:linear-gradient(180deg, #fffaf5 0%, #fff 100%);
+  box-shadow:0 6px 16px rgba(0,0,0,0.04);
+}
+.summary-card.tone-good {
+  border-color:#d8e9dc;
+  background:linear-gradient(180deg, #fbfffc 0%, #fff 100%);
+}
+.summary-card.tone-risk {
+  border-color:#f0ddd4;
+  background:linear-gradient(180deg, #fffaf8 0%, #fff 100%);
+}
+.summary-card.tone-opportunity {
+  border-color:#eadfce;
+  background:linear-gradient(180deg, #fffbf7 0%, #fff 100%);
+}
+.summary-card-head {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-bottom:8px;
+}
+.summary-badge {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:4px 9px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:700;
+  line-height:1;
+  border:1px solid transparent;
+}
+.summary-badge.good { color:#15714a; background:#eef9f2; border-color:#cfe7d7; }
+.summary-badge.risk { color:#a04331; background:#fff1ec; border-color:#efd3c8; }
+.summary-badge.opportunity { color:#8a673f; background:#fbf3e5; border-color:#e7d5b7; }
+.summary-rank {
+  font-size:11px;
+  color:#9a846d;
+  font-weight:700;
+}
+.summary-main {
+  font-size:14px;
+  line-height:1.45;
+  color:#352c24;
+}
+.summary-main strong {
+  color:#8a5427;
+  font-weight:800;
+}
+.summary-note {
+  margin-top:7px;
+  font-size:12px;
+  color:var(--muted);
+  line-height:1.45;
+}
 .footer-note { margin-top:10px; font-size:11px; color: var(--muted); }
 .crown { margin-left:6px; font-size:12px; }
 .roas-top { color: #b3261e; font-weight: 700; }
@@ -2070,6 +2248,10 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
 .cross-row.total-row td { font-weight:800; background:#f4ecdf; }
 @media (max-width: 980px) {
   .header { display:block; }
+  .header-meta {
+    flex-direction:column;
+    align-items:flex-start;
+  }
   .kpi-grid { grid-template-columns: repeat(2, 1fr); }
   .grid-2 { grid-template-columns: 1fr; }
   .grid-3, .grid-4 { grid-template-columns: 1fr; }
@@ -2120,8 +2302,15 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
 <div class="container">
   <div class="header">
     <div class="header-meta">
-      <div class="title">Meta Ads Dashboard</div>
-      <div class="subtitle" id="rangeLabel">数据范围：</div>
+      <div class="header-meta-main">
+        <div class="title">Meta Ads Dashboard</div>
+        <div class="subtitle" id="rangeLabel">数据范围：</div>
+      </div>
+      <div class="page-updated" id="pageUpdatedPreview">
+        <span class="dot"></span>
+        <span class="label">最后更新时间</span>
+        <span class="time">2026-03-12 14:41（北京时间）</span>
+      </div>
     </div>
     <div class="filters">
       <div class="filters-row" id="timeRow">
@@ -2241,10 +2430,9 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
     <div class="panel">
       <h3>趋势</h3>
       <div class="chart-wrap"><canvas id="trendChart"></canvas></div>
-      <div class="footer-note">月度展示月内每日，周度展示周内每日，当日展示当日 vs 周均。</div>
+      <div class="footer-note" id="trendFooterNote">月度展示月内每日，周度展示周内每日，当日展示当日 vs 周均。</div>
     </div>
     <div class="panel">
-      <h3>简要分析</h3>
       <div id="summaryBox" class="summary-box"></div>
     </div>
   </div>
@@ -2592,7 +2780,6 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
       <div class="panel decision-rules-panel" style="margin-top:12px;">
         <div class="decision-head">
           <h3>判定逻辑说明</h3>
-          <div class="decision-sub" id="decisionRulesSub">数据截止：-</div>
         </div>
         <div class="decision-rules-grid">
           <div class="decision-rule-card">
@@ -2722,14 +2909,41 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script type="module">
-const [DATA, PRODUCT_MAP, SHOPIFY_SALES_DAILY, URL_DATA, AD_THUMBS, AD_ASSETS] = await Promise.all([
-  fetch('./data/rows.json', { cache: 'no-store' }).then(r => { if (!r.ok) throw new Error('Failed to load rows.json: ' + r.status); return r.json(); }),
-  fetch('./data/products.json', { cache: 'no-store' }).then(r => { if (!r.ok) throw new Error('Failed to load products.json: ' + r.status); return r.json(); }),
-  fetch('./data/shopify_daily.json', { cache: 'no-store' }).then(r => { if (!r.ok) throw new Error('Failed to load shopify_daily.json: ' + r.status); return r.json(); }),
-  fetch('./data/urls.json', { cache: 'no-store' }).then(r => { if (!r.ok) throw new Error('Failed to load urls.json: ' + r.status); return r.json(); }),
-  fetch('./data/ad_thumbs.json', { cache: 'no-store' }).then(r => r.ok ? r.json() : ({ by_ad_name:{}, by_ad_id:{} })).catch(() => ({ by_ad_name:{}, by_ad_id:{} })),
-  fetch('./data/ad_assets.json', { cache: 'no-store' }).then(r => r.ok ? r.json() : ({ by_ad_name:{}, by_ad_id:{} })).catch(() => ({ by_ad_name:{}, by_ad_id:{} })),
+const rememberedStartupView = (() => {
+  try {
+    const raw = localStorage.getItem('meta_dashboard_view_v1');
+    return (raw === 'perf' || raw === 'ops' || raw === 'content' || raw === 'decision') ? raw : 'perf';
+  } catch (_) {
+    return 'perf';
+  }
+})();
+
+function fetchJson(path, fallback, required=false) {
+  return fetch(path)
+    .then(r => {
+      if (!r.ok) {
+        if (required) throw new Error(`Failed to load ${path}: ${r.status}`);
+        return fallback;
+      }
+      return r.json();
+    })
+    .catch(err => {
+      if (required) throw err;
+      return fallback;
+    });
+}
+
+const coreResults = await Promise.all([
+  fetchJson('./data/rows.json', [], true),
+  fetchJson('./data/products.json', [], true),
+  rememberedStartupView === 'ops' ? fetchJson('./data/shopify_daily.json', {}, false) : Promise.resolve({}),
+  rememberedStartupView === 'ops' ? fetchJson('./data/urls.json', [], false) : Promise.resolve([]),
 ]);
+const [DATA, PRODUCT_MAP, INITIAL_SHOPIFY_SALES_DAILY, INITIAL_URL_DATA] = coreResults;
+let SHOPIFY_SALES_DAILY = (INITIAL_SHOPIFY_SALES_DAILY && typeof INITIAL_SHOPIFY_SALES_DAILY === 'object') ? INITIAL_SHOPIFY_SALES_DAILY : {};
+let URL_DATA = Array.isArray(INITIAL_URL_DATA) ? INITIAL_URL_DATA : [];
+let AD_THUMBS = { by_ad_name:{}, by_ad_id:{} };
+let AD_ASSETS = { by_ad_name:{}, by_ad_id:{} };
 const DECISION_HTML = '';
 window.addEventListener('error', (e) => console.error(e.error || e.message));
 
@@ -2866,7 +3080,7 @@ let CONTENT_DATA = [];
 let contentRowsAll = [];
 let contentDataLoaded = false;
 let contentDataLoadingPromise = null;
-const urlRows = URL_DATA.map(r => ({...r, _date: parseDate(r.date)}));
+let urlRows = URL_DATA.map(r => ({...r, _date: parseDate(r.date)}));
 const dates = rows.map(r => r._date);
 const minDate = new Date(Math.min(...dates));
 const maxDate = new Date(Math.max(...dates));
@@ -2953,10 +3167,10 @@ const CROSS_DIMENSIONS = [
 ];
 let crossSelectedDims = ['category', 'adType', 'material'];
 const crossExpandedKeys = new Set();
-const AD_THUMB_BY_NAME = (AD_THUMBS && AD_THUMBS.by_ad_name) || {};
-const AD_THUMB_BY_ID = (AD_THUMBS && AD_THUMBS.by_ad_id) || {};
-const AD_ASSET_BY_NAME = (AD_ASSETS && AD_ASSETS.by_ad_name) || {};
-const AD_ASSET_BY_ID = (AD_ASSETS && AD_ASSETS.by_ad_id) || {};
+let AD_THUMB_BY_NAME = (AD_THUMBS && AD_THUMBS.by_ad_name) || {};
+let AD_THUMB_BY_ID = (AD_THUMBS && AD_THUMBS.by_ad_id) || {};
+let AD_ASSET_BY_NAME = (AD_ASSETS && AD_ASSETS.by_ad_name) || {};
+let AD_ASSET_BY_ID = (AD_ASSETS && AD_ASSETS.by_ad_id) || {};
 let contentTrendChart = null;
 let contentMixChart = null;
 let contentCurveChart = null;
@@ -3555,8 +3769,6 @@ function renderDecisionKpis() {
   const s = decisionState.summary;
   const latestEl = document.getElementById('decisionLatestDate'); if (latestEl) latestEl.textContent = `最新决策日 ${decisionState.latestKey}`;
   const upEl = document.getElementById('decisionUpToDate'); if (upEl) upEl.textContent = decisionState.latestKey;
-  const rulesSub = document.getElementById('decisionRulesSub');
-  if (rulesSub) rulesSub.innerHTML = `数据截止：<span class="decision-date-strong">${decisionState.latestKey}</span>`;
   const cards = [
     { key:'camp_pause', title:'暂停队列', value:s.campPause, hint:'连续偏弱且预算已跑开' },
     { key:'camp_scale', title:'扩量队列', value:s.campScale, hint:'综合ROAS达标，可优先放量' },
@@ -4135,18 +4347,7 @@ function initFilterDefaults() {
 }
 function updateFilterHighlights() {
   document.querySelectorAll('select, input[type="date"]').forEach(el => {
-    const def = filterDefaults.get(el) ?? '';
-    const val = el.value || '';
-    const normalizedDefault = (def || '').toString().trim().toLowerCase();
-    const normalizedValue = (val || '').toString().trim().toLowerCase();
-    const isAllDefaultPair = normalizedDefault === '' && (normalizedValue === 'all' || normalizedValue === '全部');
-    const isOffDefaultPair = normalizedDefault === '' && (normalizedValue === 'off' || normalizedValue === '关闭');
-    let changed = (isAllDefaultPair || isOffDefaultPair) ? false : (val !== def);
-    const timeFilterIds = new Set(['timeMode','monthSelect','weekSelect','startDate','endDate']);
-    if (timeFilterIds.has(el.id)) changed = false;
-    if (el.id === 'monthSelect' && timeMode.value === 'week') changed = true;
-    if (timeFilterIds.has(el.id)) changed = false;
-    el.classList.toggle('changed-input', changed);
+    el.classList.remove('changed-input');
   });
 }
 
@@ -4179,6 +4380,11 @@ function setDashboardView(mode) {
   if (viewContentBtn) viewContentBtn.classList.toggle('active', showContent);
   if (viewDecisionBtn) viewDecisionBtn.classList.toggle('active', showDecision);
   if (showContent) ensureContentDataLoaded();
+  if (dashboardView === 'ops') {
+    ensureShopifyDailyLoaded();
+    ensureURLDataLoaded();
+  }
+  ensureAssetMapsLoaded();
   if (!showDecision) renderWeeklyNewAdsBoard();
 }
 
@@ -4776,8 +4982,23 @@ function filterContentRowsByRange(start, end) {
   return filtered;
 }
 
+function inferCreativeWeekFromText(value) {
+  const raw = String(value || '').trim();
+  if (!raw) return '';
+  const bracketMatch = raw.match(/[（(]\s*0?(\d+)\s*-\s*0?(\d+)\s*[)）]/);
+  if (bracketMatch) return `${Number(bracketMatch[1])}-${Number(bracketMatch[2])}`;
+  const inlineMatch = raw.match(/\b\d{4,8}-\d{2}-0?(\d+)-0?(\d+)-(?:IMG|VID|FEED|PTN)\b/i);
+  if (inlineMatch) return `${Number(inlineMatch[1])}-${Number(inlineMatch[2])}`;
+  return '';
+}
+
 function contentRowWeek(row) {
-  return String(row?.creative_week || '').trim() || '未识别';
+  return (
+    String(row?.creative_week || '').trim() ||
+    inferCreativeWeekFromText(row?.creative_key) ||
+    inferCreativeWeekFromText(row?.ad) ||
+    '未识别'
+  );
 }
 
 function displayCreativeWeekLabel(v) {
@@ -4816,8 +5037,6 @@ function contentRowIsVideo(row) {
 }
 
 function isRecognizedContentRow(row) {
-  const week = contentRowWeek(row);
-  if (!week || week === '未识别') return false;
   const key = contentRowKey(row);
   const lower = key.toLowerCase();
   if (!key || lower.startsWith('feed') || lower.startsWith('ai')) return false;
@@ -5055,7 +5274,8 @@ function getContentSortValue(item, key) {
 }
 
 function syncContentFilters(rowsFiltered) {
-  const weekOptions = ['all'].concat(Array.from(new Set(rowsFiltered.map(contentRowWeek).filter(Boolean))).filter(v => v && v !== '未识别').sort((a, b) => {
+  const hiddenContentWeeks = new Set(['12-5']);
+  const weekOptions = ['all'].concat(Array.from(new Set(rowsFiltered.map(contentRowWeek).filter(Boolean))).filter(v => v && v !== '未识别' && !hiddenContentWeeks.has(v)).sort((a, b) => {
     const [am, aw] = a.split('-').map(Number);
     const [bm, bw] = b.split('-').map(Number);
     return (am - bm) || (aw - bw);
@@ -6186,6 +6406,58 @@ const piePercentLabelPlugin = {
   }
 };
 
+const futureRangePlugin = {
+  id: 'futureRangePlugin',
+  afterDraw(chartInstance, args, pluginOptions) {
+    const startIndex = Number(pluginOptions?.startIndex);
+    if (!isFinite(startIndex) || startIndex < 0) return;
+    const xScale = chartInstance.scales?.x;
+    const chartArea = chartInstance.chartArea;
+    if (!xScale || !chartArea) return;
+    const labels = chartInstance.data?.labels || [];
+    if (!labels.length || startIndex >= labels.length) return;
+    const ctx = chartInstance.ctx;
+    const currentX = xScale.getPixelForValue(startIndex);
+    const prevX = startIndex > 0 ? xScale.getPixelForValue(startIndex - 1) : chartArea.left;
+    const nextX = startIndex < labels.length - 1 ? xScale.getPixelForValue(startIndex + 1) : chartArea.right;
+    const halfStep = startIndex > 0 ? Math.max(8, (currentX - prevX) / 2) : Math.max(8, (nextX - currentX) / 2);
+    const regionStart = Math.max(chartArea.left, currentX - halfStep);
+
+    ctx.save();
+    const fade = ctx.createLinearGradient(regionStart, 0, chartArea.right, 0);
+    fade.addColorStop(0, 'rgba(241, 228, 209, 0.10)');
+    fade.addColorStop(1, 'rgba(236, 218, 194, 0.20)');
+    ctx.fillStyle = fade;
+    ctx.fillRect(regionStart, chartArea.top, chartArea.right - regionStart, chartArea.bottom - chartArea.top);
+    ctx.strokeStyle = 'rgba(183, 146, 108, 0.58)';
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    ctx.moveTo(regionStart, chartArea.top);
+    ctx.lineTo(regionStart, chartArea.bottom);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    const label = '数据待更新';
+    ctx.font = '11px Manrope';
+    ctx.textBaseline = 'top';
+    const labelWidth = ctx.measureText(label).width;
+    const boxX = Math.min(regionStart + 8, chartArea.right - labelWidth - 18);
+    const boxY = chartArea.top + 8;
+    ctx.fillStyle = 'rgba(255, 248, 239, 0.96)';
+    ctx.strokeStyle = 'rgba(224, 205, 182, 0.95)';
+    ctx.lineWidth = 1;
+    const boxW = labelWidth + 10;
+    const boxH = 20;
+    ctx.beginPath();
+    ctx.roundRect(boxX, boxY, boxW, boxH, 10);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = '#8a6b4f';
+    ctx.textAlign = 'left';
+    ctx.fillText(label, boxX + 5, boxY + 5);
+    ctx.restore();
+  }
+};
+
 function chartMetricTooltip() {
   return {
     callbacks: {
@@ -6240,6 +6512,7 @@ function renderChart(rowsFiltered) {
     for (let d=new Date(start); d<=end; d.setDate(d.getDate()+1)) days.push(new Date(d));
   }
   const labels = days.map(d => formatDateLocal(d).slice(5,10));
+  const trendFooterNote = document.getElementById('trendFooterNote');
 
   const baseRows = rows
     .filter(r => custom ? true : (timeMode.value === 'month' ? getMonthKey(r._date)===monthSelect.value : true))
@@ -6272,17 +6545,39 @@ function renderChart(rowsFiltered) {
   const spendAvg = days.map(() => avgSpend);
   const convAvg = days.map(() => avgConv);
 
+  let pendingStartIndex = -1;
+  if (!isDay && end > maxDate) {
+    const nextPending = new Date(maxDate);
+    nextPending.setDate(nextPending.getDate() + 1);
+    pendingStartIndex = days.findIndex(d => formatDateLocal(d) === formatDateLocal(nextPending));
+    if (pendingStartIndex >= 0) {
+      if (trendFooterNote) {
+        trendFooterNote.textContent = `${formatDateLocal(maxDate)} 后数据尚未更新。`;
+      }
+    }
+  }
+  if (pendingStartIndex < 0 && trendFooterNote) {
+    trendFooterNote.textContent = '月度展示月内每日，周度展示周内每日，当日展示当日 vs 周均。';
+  }
+
+  const maskPendingSeries = (series) => series.map((value, idx) => (pendingStartIndex >= 0 && idx >= pendingStartIndex ? null : value));
+  const visibleSpend = maskPendingSeries(spend);
+  const visibleConv = maskPendingSeries(conv);
+  const visibleRoas = maskPendingSeries(roas);
+  const visibleSpendAvg = maskPendingSeries(spendAvg);
+  const visibleConvAvg = maskPendingSeries(convAvg);
+
   const ctx = document.getElementById('trendChart').getContext('2d');
   if (chart) chart.destroy();
   const datasets = isDay ? [
-    { label: '花费-当日', data: spend, backgroundColor: 'rgba(199,106,31,0.65)', borderRadius: 6 },
-    { label: '花费-周均', data: spendAvg, backgroundColor: 'rgba(199,106,31,0.25)', borderRadius: 6 },
-    { label: '转化金额-当日', data: conv, backgroundColor: 'rgba(31,122,122,0.65)', borderRadius: 6 },
-    { label: '转化金额-周均', data: convAvg, backgroundColor: 'rgba(31,122,122,0.25)', borderRadius: 6 }
+    { label: '花费-当日', data: visibleSpend, backgroundColor: 'rgba(199,106,31,0.65)', borderRadius: 6 },
+    { label: '花费-周均', data: visibleSpendAvg, backgroundColor: 'rgba(199,106,31,0.25)', borderRadius: 6 },
+    { label: '转化金额-当日', data: visibleConv, backgroundColor: 'rgba(31,122,122,0.65)', borderRadius: 6 },
+    { label: '转化金额-周均', data: visibleConvAvg, backgroundColor: 'rgba(31,122,122,0.25)', borderRadius: 6 }
   ] : [
-    { label: '花费', data: spend, backgroundColor: 'rgba(199,106,31,0.65)', borderRadius: 6 },
-    { label: '转化金额', data: conv, backgroundColor: 'rgba(31,122,122,0.65)', borderRadius: 6 },
-    { label: 'ROAS', data: roas, type: 'line', borderColor: '#2b5d9a', backgroundColor: '#2b5d9a', yAxisID:'y1', tension:0.35, pointRadius:4, pointStyle:'circle', showLabels: true }
+    { label: '花费', data: visibleSpend, backgroundColor: 'rgba(199,106,31,0.65)', borderRadius: 6 },
+    { label: '转化金额', data: visibleConv, backgroundColor: 'rgba(31,122,122,0.65)', borderRadius: 6 },
+    { label: 'ROAS', data: visibleRoas, type: 'line', borderColor: '#2b5d9a', backgroundColor: '#2b5d9a', yAxisID:'y1', tension:0.35, pointRadius:4, pointStyle:'circle', spanGaps:false, showLabels: true }
   ];
   chart = new Chart(ctx, {
     type: 'bar',
@@ -6293,13 +6588,21 @@ function renderChart(rowsFiltered) {
     options: {
       responsive:true,
       maintainAspectRatio:false,
+      animation: false,
+      transitions: {
+        active: { animation: { duration: 0 } },
+      },
+      plugins: {
+        legend: { position:'top' },
+        tooltip: chartMetricTooltip(),
+        futureRangePlugin: pendingStartIndex >= 0 ? { startIndex: pendingStartIndex } : {}
+      },
       scales: {
         y: { beginAtZero:true },
         y1: { beginAtZero:true, position:'right', grid:{drawOnChartArea:false} }
-      },
-      plugins: { legend: { position:'top' }, tooltip: chartMetricTooltip() }
+      }
     },
-    plugins: [roasLabelPlugin]
+    plugins: [roasLabelPlugin, futureRangePlugin]
   });
 }
 
@@ -6856,6 +7159,18 @@ function renderProductCategorySalesPanel() {
   const chartWrap = document.getElementById('productCategorySalesChartWrap');
   const ctx = document.getElementById('productCategorySalesPie')?.getContext('2d');
   if (!table || !chartWrap) return;
+  if (!shopifyDataLoaded) {
+    const message = shopifyDataFailed ? 'Shopify 销量数据加载失败，请重新进入运营侧重试' : 'Shopify 销量数据加载中...';
+    table.innerHTML = `<tr><th>类目</th><th>Shopify销量</th><th>占比</th></tr><tr><td colspan="3" class="muted" style="text-align:left;">${message}</td></tr>`;
+    if (productCategorySalesPie) { productCategorySalesPie.destroy(); productCategorySalesPie = null; }
+    const canvas = document.getElementById('productCategorySalesPie');
+    if (canvas) canvas.classList.add('hidden');
+    if (empty) {
+      empty.textContent = message;
+      empty.classList.remove('hidden');
+    }
+    return;
+  }
 
   const [start, end] = getDateRangeForCurrentFilter();
   const byShopify = new Map();
@@ -7020,8 +7335,8 @@ function renderProductTable(rowsFiltered) {
     row.prev_atcRate = prevAgg.atcRate || 0;
     row.prev_checkoutRate = prevAgg.checkoutRate || 0;
     row.prev_purchases = prevAgg.purchases || 0;
-    row.shopifySales = getShopifySalesInRange(row.shopifyId, curStart, curEnd);
-    row.prev_shopifySales = getShopifySalesInRange(row.shopifyId, prevStart, prevEnd);
+    row.shopifySales = shopifyDataLoaded ? getShopifySalesInRange(row.shopifyId, curStart, curEnd) : null;
+    row.prev_shopifySales = shopifyDataLoaded ? getShopifySalesInRange(row.shopifyId, prevStart, prevEnd) : null;
   }
 
   // category filter options
@@ -7058,6 +7373,9 @@ function renderProductTable(rowsFiltered) {
   }
 
   const formatWithCompare = (curr, prevVal, formatter) => {
+    if (curr === null || curr === undefined || !isFinite(curr)) {
+      return `<span class="muted">—</span>`;
+    }
     const base = formatter(curr);
     if (productCompareMode === 'off') return base;
     const p = isFinite(prevVal) ? prevVal : 0;
@@ -7169,6 +7487,9 @@ function renderTables(rowsFiltered) {
   };
 
   const formatWithCompare = (curr, prev, formatter, mode) => {
+    if (curr === null || curr === undefined || !isFinite(curr)) {
+      return `<span class="muted">—</span>`;
+    }
     const cur = formatter(curr);
     return `${cur}${compareSuffix(curr, prev, formatter, mode)}`;
   };
@@ -7737,11 +8058,8 @@ function renderUrlProductPageBoard() {
     urlProdPageFilter.value = allPages.map(String).includes(String(prevVal)) || prevVal === 'all' ? String(prevVal) : 'all';
     urlProdPageMode = urlProdPageFilter.value || 'all';
   }
-  const latest = base.length ? new Date(Math.max(...base.map(r => r._date?.getTime?.() || 0))) : null;
   if (meta) {
-    meta.innerHTML = latest
-      ? `说明：仅展示 <span class="active-mark">Active</span> 广告的 URL 商品页码映射；不受顶部时间筛选影响。<span class="date-strong">数据截止：${formatDateLocal(latest)}</span>`
-      : `说明：仅展示 <span class="active-mark">Active</span> 广告的 URL 商品页码映射；不受顶部时间筛选影响。`;
+    meta.innerHTML = `说明：仅展示 <span class="active-mark">Active</span> 广告的 URL 商品页码映射；不受顶部时间筛选影响。`;
   }
   if (!base.length) {
     table.innerHTML = '<tr><td class="muted" style="text-align:left;">暂无 Active 广告的商品页码数据（请检查 Report_URL 中 Ad Delivery 列值）。</td></tr>';
@@ -8384,6 +8702,7 @@ function renderSummary(rowsFiltered) {
   })();
 
   const summary = document.getElementById('summaryBox');
+  if (!summary) return;
   const dayBtn = dayButtons.querySelector('.pill-btn.active');
   const highlightRows = (dayBtn && dayBtn.getAttribute('data-day') !== 'ALL')
     ? rowsFiltered
@@ -8405,7 +8724,6 @@ function renderSummary(rowsFiltered) {
   }
 
   const isSubFiltered = shouldUseCategorySubLevel();
-  const dimLabel = '品类亮点';
   const dimKeyFn = isSubFiltered
     ? (r) => String(r.categorySub || '其他').trim() || '其他'
     : (r) => r.category;
@@ -8452,7 +8770,7 @@ function renderSummary(rowsFiltered) {
       const roas = v.spend ? v.conv/v.spend : 0;
       if (!best || roas > best.roas) best = {k, roas, spend:v.spend};
     }
-    return best ? `${label} ${best.k}（ROAS ${fmt(best.roas,2)}，花费 ${money(best.spend)}）` : null;
+    return best ? { label, name: best.k, roas: best.roas, spend: best.spend } : null;
   };
 
   const insights = [
@@ -8460,18 +8778,98 @@ function renderSummary(rowsFiltered) {
     topBy(r=>r.audience, '人群亮点'),
     topBy(r=>r.material, '素材亮点'),
     topBy(r=>r.adType, '广告亮点')
-  ].filter(Boolean).slice(0,3);
+  ].filter(Boolean).sort((x, y) => (y.roas * Math.log10((y.spend || 0) + 10)) - (x.roas * Math.log10((x.spend || 0) + 10)));
 
-  const insightLines = insights.map(t => {
-    const m = t.match(/^(.*)（ROAS ([0-9.]+).*$/);
-    if (m) return `<div>${m[1]}：ROAS ${m[2]}</div>`;
-    return `<div>${t}</div>`;
-  });
+  const [curStart, curEnd] = getDateRangeForCurrentFilter();
+  const [prevStart, prevEnd] = getPrevRange(curStart, curEnd);
+  const prevAgg = aggregate(filterRowsByRange(prevStart, prevEnd));
+  const spendDelta = prevAgg.spend ? (a.spend - prevAgg.spend) / prevAgg.spend : 0;
+  const convDelta = prevAgg.conv ? (a.conv - prevAgg.conv) / prevAgg.conv : 0;
 
+  const highlightCard = (() => {
+    const topInsight = insights[0];
+    if (topInsight) {
+      return {
+        badge:'亮点',
+        badgeCls:'good',
+        tone:'tone-good',
+        rank:'表现最佳',
+        main:`<strong>${escapeHtml(topInsight.label.replace('亮点', ''))} · ${escapeHtml(String(topInsight.name || '').toUpperCase())}</strong> 的 ROAS 为 <strong>${fmt(topInsight.roas, 2)}</strong>。`,
+        note:`当前花费 ${money(topInsight.spend)}，效率和体量相对更均衡。`
+      };
+    }
+    if (bestDay) {
+      return {
+        badge:'亮点',
+        badgeCls:'good',
+        tone:'tone-good',
+        rank:'单日最佳',
+        main:`最佳单日出现在 <strong>${bestDay.day}</strong>，ROAS 达到 <strong>${fmt(bestDay.roas, 2)}</strong>。`,
+        note:'当前范围缺少足够稳定的结构亮点，先参考单日表现。'
+      };
+    }
+    return {
+      badge:'亮点',
+      badgeCls:'good',
+      tone:'tone-good',
+      rank:'表现最佳',
+      main:'当前范围内暂无足够样本提炼出明确亮点。',
+      note:'建议扩大时间范围后再观察结构差异。'
+    };
+  })();
+
+  const riskPoints = [];
+  if (prevAgg.spend > 0 && spendDelta <= -0.25) riskPoints.push(`花费环比 <strong>${spendDelta >= 0 ? '+' : ''}${(spendDelta * 100).toFixed(1)}%</strong>`);
+  if (prevAgg.conv > 0 && convDelta <= -0.2) riskPoints.push(`转化金额环比 <strong>${convDelta >= 0 ? '+' : ''}${(convDelta * 100).toFixed(1)}%</strong>`);
+  if (warnDims.length) riskPoints.push(`低于目标的维度：<strong>${escapeHtml(warnDims.join('、'))}</strong>`);
+  const riskCard = {
+    badge:'风险',
+    badgeCls:'risk',
+    tone:'tone-risk',
+    rank:'当前风险',
+    main: riskPoints[0] || '当前没有明显的结构性风险。',
+    note: riskPoints.length > 1 ? riskPoints.slice(1).join('；') : (riskPoints.length ? '建议优先关注量级收缩与低于目标的维度。' : '整体效率未出现明显失控。')
+  };
+
+  const opportunity = insights.find(item => item !== insights[0] && item.roas > a.roas) || insights[1];
+  const opportunityCard = opportunity
+    ? {
+        badge:'机会',
+        badgeCls:'opportunity',
+        tone:'tone-opportunity',
+        rank:'结构机会',
+        main:`<strong>${escapeHtml(opportunity.label.replace('亮点', ''))} · ${escapeHtml(String(opportunity.name || '').toUpperCase())}</strong> 的 ROAS 为 <strong>${fmt(opportunity.roas, 2)}</strong>，高于整体 <strong>${fmt(a.roas, 2)}</strong>。`,
+        note:`当前花费 ${money(opportunity.spend)}，可以继续观察是否值得补量。`
+      }
+    : {
+        badge:'机会',
+        badgeCls:'opportunity',
+        tone:'tone-opportunity',
+        rank:'结构机会',
+        main:`当前整体 ROAS 为 <strong>${fmt(a.roas, 2)}</strong>，暂未识别出更强的第二增长点。`,
+        note:'建议继续观察人群、素材和广告类型的分化。'
+      };
+
+  const cards = [highlightCard, riskCard, opportunityCard];
   summary.innerHTML = `
-  ${bestDay ? `<div>最佳单日 ROAS：${bestDay.day} (${fmt(bestDay.roas,2)})。</div>` : '' }
-  ${insightLines.join('')}
-  <div class="${warnDims.length ? 'warn' : 'ok'}">${warnDims.length ? ((isSubFiltered ? '细分警示：' : '警示：') + warnDims.join('，')) : '暂无明显警示'}</div>`;
+    <div class="summary-head">
+      <div>
+        <div class="title">趋势观察</div>
+        <div class="sub">自动提炼 3 条重点</div>
+      </div>
+    </div>
+    <div class="summary-cards">
+      ${cards.map(card => `
+        <div class="summary-card ${card.tone}">
+          <div class="summary-card-head">
+            <span class="summary-badge ${card.badgeCls}">${card.badge}</span>
+            <span class="summary-rank">${card.rank}</span>
+          </div>
+          <div class="summary-main">${card.main}</div>
+          <div class="summary-note">${card.note}</div>
+        </div>
+      `).join('')}
+    </div>`;
 }
 
 function updateAll(resetPage=true) {
@@ -8496,26 +8894,36 @@ function updateAll(resetPage=true) {
       const end = range[1];
       rangeLabel.textContent = `数据范围：${formatDateLocal(start)} 至 ${formatDateLocal(end)}`;
       safeRender('layout', () => updateTripleCompareLayout());
-      safeRender('kpis', () => renderKPIs(rowsFiltered));
-      safeRender('chart', () => renderChart(rowsFiltered));
-      safeRender('tables', () => renderTables(rowsFiltered));
-      safeRender('cross-analysis', () => renderCrossAnalysis(rowsFiltered));
-      safeRender('weekly-new-ads', () => renderWeeklyNewAdsBoard());
-      safeRender('summary', () => renderSummary(rowsFiltered));
-      safeRender('product-category-sales', () => renderProductCategorySalesPanel());
-      safeRender('product-table', () => renderProductTable(rowsFiltered));
-      safeRender('url-board', () => renderURLBoard(rowsFiltered));
-      safeRender('url-product-board', () => renderUrlProductPageBoard());
-      safeRender('content-view', () => renderContentView(rowsFiltered));
-      if (chartMode.value === 'combo') {
+      if (dashboardView === 'perf') {
+        safeRender('kpis', () => renderKPIs(rowsFiltered));
+        safeRender('chart', () => renderChart(rowsFiltered));
+        safeRender('tables', () => renderTables(rowsFiltered));
+        safeRender('cross-analysis', () => renderCrossAnalysis(rowsFiltered));
+        safeRender('weekly-new-ads', () => renderWeeklyNewAdsBoard());
+        safeRender('summary', () => renderSummary(rowsFiltered));
+        if (chartMode.value === 'combo') {
+          piePanel.style.display = 'none';
+          pieMetricGroup.style.display = 'none';
+          comboPanel.style.display = 'block';
+          safeRender('combo-chart', () => renderCombo(rowsFiltered));
+        } else {
+          piePanel.style.display = '';
+          pieMetricGroup.style.display = '';
+          comboPanel.style.display = 'none';
+        }
+      } else {
         piePanel.style.display = 'none';
         pieMetricGroup.style.display = 'none';
-        comboPanel.style.display = 'block';
-        safeRender('combo-chart', () => renderCombo(rowsFiltered));
-      } else {
-        piePanel.style.display = '';
-        pieMetricGroup.style.display = '';
         comboPanel.style.display = 'none';
+      }
+      if (dashboardView === 'ops') {
+        safeRender('product-category-sales', () => renderProductCategorySalesPanel());
+        safeRender('product-table', () => renderProductTable(rowsFiltered));
+        safeRender('url-board', () => renderURLBoard(rowsFiltered));
+        safeRender('url-product-board', () => renderUrlProductPageBoard());
+      }
+      if (dashboardView === 'content') {
+        safeRender('content-view', () => renderContentView(rowsFiltered));
       }
     } catch (err) {
       console.error(err);
@@ -8911,16 +9319,84 @@ function renderContentLoadingState(message='内容侧数据加载中...') {
   const board = document.getElementById('contentBoard');
   if (board) {
     board.className = 'content-board';
-    board.innerHTML = `<div class="content-board-empty">${escapeHtml(message)}</div>`;
+    board.innerHTML = `
+      <div class="content-skeleton-board">
+        <div class="content-skeleton-hero">
+          <div class="skeleton-block skeleton-pill skeleton-shimmer" style="width:120px;"></div>
+          <div class="skeleton-block skeleton-title skeleton-shimmer"></div>
+          <div class="skeleton-block skeleton-line long skeleton-shimmer"></div>
+          <div class="skeleton-block skeleton-line mid skeleton-shimmer"></div>
+          <div style="display:flex; gap:12px; align-items:flex-start;">
+            <div class="skeleton-block skeleton-thumb skeleton-shimmer"></div>
+            <div style="display:grid; gap:10px; flex:1;">
+              <div class="skeleton-block skeleton-line mid skeleton-shimmer"></div>
+              <div class="skeleton-block skeleton-line long skeleton-shimmer"></div>
+              <div class="skeleton-block skeleton-line short skeleton-shimmer"></div>
+            </div>
+          </div>
+        </div>
+        <div class="content-skeleton-kpis">
+          <div class="content-skeleton-row cols-2">
+            <div class="skeleton-block skeleton-kpi skeleton-shimmer"></div>
+            <div class="skeleton-block skeleton-kpi skeleton-shimmer"></div>
+          </div>
+          <div class="content-skeleton-row cols-2">
+            <div class="skeleton-block skeleton-kpi skeleton-shimmer"></div>
+            <div class="skeleton-block skeleton-kpi skeleton-shimmer"></div>
+          </div>
+          <div class="content-skeleton-row cols-2">
+            <div class="skeleton-block skeleton-kpi skeleton-shimmer"></div>
+            <div class="skeleton-block skeleton-kpi skeleton-shimmer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="content-loading-note">${escapeHtml(message)}</div>`;
   }
   const linePanel = document.getElementById('contentLinePanel');
   if (linePanel) {
     linePanel.className = 'content-line-panel';
-    linePanel.innerHTML = `<div class="content-empty">${escapeHtml(message)}</div>`;
+    linePanel.innerHTML = `
+      <div class="content-skeleton-lines">
+        <div class="content-skeleton-line-card">
+          <div class="content-skeleton-row cols-3">
+            <div class="skeleton-block skeleton-line mid skeleton-shimmer"></div>
+            <div class="skeleton-block skeleton-line short skeleton-shimmer"></div>
+            <div class="skeleton-block skeleton-line short skeleton-shimmer"></div>
+          </div>
+          <div class="content-skeleton-row cols-4" style="margin-top:14px;">
+            <div class="skeleton-block skeleton-cell skeleton-shimmer"></div>
+            <div class="skeleton-block skeleton-cell skeleton-shimmer"></div>
+            <div class="skeleton-block skeleton-cell skeleton-shimmer"></div>
+            <div class="skeleton-block skeleton-cell skeleton-shimmer"></div>
+          </div>
+        </div>
+      </div>`;
   }
   const assetTable = document.getElementById('contentAssetTable');
   if (assetTable) {
-    assetTable.innerHTML = `<tr><td class="muted" style="text-align:left;">${escapeHtml(message)}</td></tr>`;
+    assetTable.innerHTML = `
+      <tr>
+        <th>素材</th><th>查看</th><th>类型</th><th>品线</th><th>花费</th><th>转化金额</th><th>ROAS</th>
+      </tr>
+      ${Array.from({ length: 4 }).map(() => `
+        <tr>
+          <td colspan="7"><div class="content-skeleton-table-row">
+            <div class="skeleton-block skeleton-cell skeleton-shimmer"></div>
+            <div class="skeleton-block skeleton-cell skeleton-shimmer"></div>
+            <div class="skeleton-block skeleton-cell skeleton-shimmer"></div>
+            <div class="skeleton-block skeleton-cell skeleton-shimmer"></div>
+            <div class="skeleton-block skeleton-cell skeleton-shimmer"></div>
+            <div class="skeleton-block skeleton-cell skeleton-shimmer"></div>
+            <div class="skeleton-block skeleton-cell skeleton-shimmer"></div>
+          </div></td>
+        </tr>
+      `).join('')}`;
+  }
+  const assetPager = document.getElementById('contentAssetPager');
+  if (assetPager) {
+    const sizeGroup = assetPager.querySelector('.filter-group');
+    assetPager.innerHTML = '';
+    if (sizeGroup) assetPager.appendChild(sizeGroup);
   }
 }
 
@@ -8928,8 +9404,7 @@ function ensureContentDataLoaded() {
   if (contentDataLoaded) return Promise.resolve(contentRowsAll);
   if (contentDataLoadingPromise) return contentDataLoadingPromise;
   renderContentLoadingState();
-  contentDataLoadingPromise = fetch('./data/content_rows.json', { cache: 'no-store' })
-    .then(r => r.ok ? r.json() : [])
+  contentDataLoadingPromise = fetchJson('./data/content_rows.json', [], false)
     .catch(() => [])
     .then(raw => {
       CONTENT_DATA = Array.isArray(raw) ? raw : [];
@@ -8949,6 +9424,95 @@ function ensureContentDataLoaded() {
       return contentRowsAll;
     });
   return contentDataLoadingPromise;
+}
+
+let urlDataLoaded = Array.isArray(URL_DATA) && URL_DATA.length > 0;
+let urlDataLoadingPromise = null;
+let shopifyDataLoaded = !!(SHOPIFY_SALES_DAILY && Object.keys(SHOPIFY_SALES_DAILY).length);
+let shopifyDataLoadingPromise = null;
+let shopifyDataFailed = false;
+
+function ensureShopifyDailyLoaded() {
+  if (shopifyDataLoaded) return Promise.resolve(SHOPIFY_SALES_DAILY);
+  if (shopifyDataLoadingPromise) return shopifyDataLoadingPromise;
+  shopifyDataLoadingPromise = fetch('./data/shopify_daily.json')
+    .then(r => {
+      if (!r.ok) throw new Error(`Failed to load ./data/shopify_daily.json: ${r.status}`);
+      return r.json();
+    })
+    .then(raw => {
+      SHOPIFY_SALES_DAILY = (raw && typeof raw === 'object') ? raw : {};
+      shopifyDataLoaded = true;
+      shopifyDataFailed = false;
+      shopifyDataLoadingPromise = null;
+      if (dashboardView === 'ops') updateAll(false);
+      return SHOPIFY_SALES_DAILY;
+    })
+    .catch(err => {
+      console.error('[shopify-load]', err);
+      SHOPIFY_SALES_DAILY = {};
+      shopifyDataLoaded = false;
+      shopifyDataFailed = true;
+      shopifyDataLoadingPromise = null;
+      if (dashboardView === 'ops') updateAll(false);
+      return SHOPIFY_SALES_DAILY;
+    });
+  return shopifyDataLoadingPromise;
+}
+
+function ensureURLDataLoaded() {
+  if (urlDataLoaded) return Promise.resolve(urlRows);
+  if (urlDataLoadingPromise) return urlDataLoadingPromise;
+  urlDataLoadingPromise = fetchJson('./data/urls.json', [], false)
+    .then(raw => {
+      URL_DATA = Array.isArray(raw) ? raw : [];
+      urlRows = URL_DATA.map(r => ({...r, _date: parseDate(r.date)}));
+      urlDataLoaded = true;
+      urlDataLoadingPromise = null;
+      if (dashboardView === 'ops') updateAll(false);
+      return urlRows;
+    })
+    .catch(err => {
+      console.error('[url-load]', err);
+      URL_DATA = [];
+      urlRows = [];
+      urlDataLoaded = true;
+      urlDataLoadingPromise = null;
+      if (dashboardView === 'ops') updateAll(false);
+      return urlRows;
+    });
+  return urlDataLoadingPromise;
+}
+
+let assetMapsLoaded = false;
+let assetMapsLoadingPromise = null;
+function ensureAssetMapsLoaded() {
+  if (assetMapsLoaded) return Promise.resolve();
+  if (assetMapsLoadingPromise) return assetMapsLoadingPromise;
+  assetMapsLoadingPromise = Promise.all([
+    fetchJson('./data/ad_thumbs.json', { by_ad_name:{}, by_ad_id:{} }, false),
+    fetchJson('./data/ad_assets.json', { by_ad_name:{}, by_ad_id:{} }, false),
+  ]).then(([thumbs, assets]) => {
+    AD_THUMBS = thumbs || { by_ad_name:{}, by_ad_id:{} };
+    AD_ASSETS = assets || { by_ad_name:{}, by_ad_id:{} };
+    AD_THUMB_BY_NAME = (AD_THUMBS && AD_THUMBS.by_ad_name) || {};
+    AD_THUMB_BY_ID = (AD_THUMBS && AD_THUMBS.by_ad_id) || {};
+    AD_ASSET_BY_NAME = (AD_ASSETS && AD_ASSETS.by_ad_name) || {};
+    AD_ASSET_BY_ID = (AD_ASSETS && AD_ASSETS.by_ad_id) || {};
+    assetMapsLoaded = true;
+    assetMapsLoadingPromise = null;
+    if (dashboardView === 'decision' && decisionRenderDone) {
+      renderDecisionCampaignTable();
+      renderDecisionAdTable();
+    } else {
+      updateAll(false);
+    }
+  }).catch(err => {
+    console.error('[asset-maps-load]', err);
+    assetMapsLoaded = false;
+    assetMapsLoadingPromise = null;
+  });
+  return assetMapsLoadingPromise;
 }
 
 function isAuthStillValid() {
@@ -8984,6 +9548,7 @@ function rememberDashboardView(mode) {
 function bootstrapDashboard() {
   if (dashboardBootstrapped) return;
   dashboardBootstrapped = true;
+  const initialView = loadRememberedDashboardView();
   applyDefaultTimeForMode('month');
   updateFilterVisibility();
   initFilterDefaults();
@@ -8992,14 +9557,14 @@ function bootstrapDashboard() {
   bindProductTable();
   bindURLBoard();
   bindUrlProductPageBoard();
-  if (viewPerfBtn) viewPerfBtn.addEventListener('click', () => setDashboardView('perf'));
-  if (viewOpsBtn) viewOpsBtn.addEventListener('click', () => setDashboardView('ops'));
-  if (viewContentBtn) viewContentBtn.addEventListener('click', () => setDashboardView('content'));
-  if (viewDecisionBtn) viewDecisionBtn.addEventListener('click', () => setDashboardView('decision'));
+  if (viewPerfBtn) viewPerfBtn.addEventListener('click', () => { setDashboardView('perf'); updateAll(false); });
+  if (viewOpsBtn) viewOpsBtn.addEventListener('click', () => { setDashboardView('ops'); updateAll(false); });
+  if (viewContentBtn) viewContentBtn.addEventListener('click', () => { setDashboardView('content'); updateAll(false); });
+  if (viewDecisionBtn) viewDecisionBtn.addEventListener('click', () => { setDashboardView('decision'); updateAll(false); });
   if (resetDashboardBtn) resetDashboardBtn.addEventListener('click', resetDashboard);
-  setDashboardView(loadRememberedDashboardView());
-  updateAll();
   document.body.classList.remove('auth-pending');
+  setDashboardView(initialView);
+  updateAll();
 }
 
 function initAuthGate() {
