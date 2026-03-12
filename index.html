@@ -1776,6 +1776,34 @@ select, .pill-btn, input[type="date"] { border:1px solid var(--line); background
 .roas-lv-1 { color:#b3261e; font-weight:700; }
 .panel-head { display:flex; align-items:center; justify-content:space-between; gap:10px; }
 .product-thumb { width:64px; height:64px; object-fit:cover; border-radius:10px; border:1px solid var(--line); background:#fff; cursor:zoom-in; }
+#productTable tr.await-media td {
+  color:transparent !important;
+  position:relative;
+  background-image:linear-gradient(90deg, rgba(244,236,226,.86) 0%, rgba(250,245,238,.98) 50%, rgba(244,236,226,.86) 100%);
+  background-size:200% 100%;
+  animation:productRowSkeleton 1.25s linear infinite;
+}
+#productTable tr.await-media td * {
+  color:transparent !important;
+  opacity:0;
+  pointer-events:none;
+}
+#productTable tr.await-media td:first-child::after {
+  content:'';
+  position:absolute;
+  left:8px;
+  top:50%;
+  width:64px;
+  height:64px;
+  transform:translateY(-50%);
+  border-radius:10px;
+  background:rgba(231, 220, 206, .92);
+  box-shadow:inset 0 0 0 1px rgba(214, 194, 169, .45);
+}
+@keyframes productRowSkeleton {
+  0% { background-position:200% 0; }
+  100% { background-position:-200% 0; }
+}
 #productSection .table,
 #urlSection .table,
 #urlDetailTable,
@@ -1911,8 +1939,45 @@ select, .pill-btn, input[type="date"] { border:1px solid var(--line); background
 .img-modal { position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:999; }
 .img-modal.active { display:flex; }
 .img-modal .backdrop { position:absolute; inset:0; background:rgba(0,0,0,0.65); }
-.img-modal .content { position:relative; display:flex; flex-direction:column; align-items:center; gap:10px; max-width:90vw; max-height:90vh; }
-.img-modal img { position:relative; max-width:90vw; max-height:calc(90vh - 48px); border-radius:12px; box-shadow:0 12px 40px rgba(0,0,0,0.35); background:#fff; }
+.img-modal .content { position:relative; display:flex; flex-direction:column; align-items:center; gap:10px; max-width:90vw; max-height:90vh; perspective:1600px; }
+.img-modal .img-stage {
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:18px;
+  transform-style:preserve-3d;
+}
+.img-modal .img-stage::after {
+  content:'';
+  position:absolute;
+  inset:10px;
+  border-radius:16px;
+  pointer-events:none;
+  background:linear-gradient(135deg, rgba(255,255,255,.22), rgba(255,255,255,0) 42%, rgba(255,224,194,.16) 76%, rgba(255,255,255,0) 100%);
+  opacity:var(--img-gloss, .22);
+  transform:translateZ(24px);
+  transition:opacity .18s ease;
+}
+.img-modal img {
+  position:relative;
+  max-width:90vw;
+  max-height:calc(90vh - 48px);
+  border-radius:12px;
+  box-shadow:0 16px 48px rgba(0,0,0,0.32);
+  background:#fff;
+  transform-style:preserve-3d;
+  transform:
+    rotateX(var(--img-tilt-x, 0deg))
+    rotateY(var(--img-tilt-y, 0deg))
+    scale3d(1.01, 1.01, 1.01);
+  transition:transform .18s ease, box-shadow .18s ease, filter .18s ease;
+  will-change:transform;
+}
+.img-modal.active .img-stage:hover img {
+  box-shadow:0 26px 62px rgba(0,0,0,0.38);
+  filter:saturate(1.02);
+}
 .img-modal .caption { color:#fff; font-size:13px; line-height:1.45; text-align:center; max-width:min(80vw, 560px); }
 .img-modal .gallery-nav {
   position:absolute;
@@ -2374,7 +2439,7 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
       <div class="page-updated" id="pageUpdatedPreview">
         <span class="dot"></span>
         <span class="label">数据最后更新时间</span>
-        <span class="time">2026-03-12 16:17（北京时间）</span>
+        <span class="time">2026-03-12 17:47（北京时间）</span>
       </div>
     </div>
     <div class="filters">
@@ -2964,7 +3029,9 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
   <div class="backdrop"></div>
   <div class="content">
     <button class="gallery-nav prev" id="imgModalPrev" type="button" aria-label="上一张">‹</button>
-    <img id="imgModalImg" src="" alt="product" />
+    <div class="img-stage" id="imgModalStage">
+      <img id="imgModalImg" src="" alt="product" />
+    </div>
     <button class="gallery-nav next" id="imgModalNext" type="button" aria-label="下一张">›</button>
     <div id="imgModalCaption" class="caption"></div>
     <div id="imgModalStrip" class="gallery-strip"></div>
@@ -7155,6 +7222,7 @@ function bindProductTable() {
   if (modal) {
     modal.addEventListener('click', (e) => {
       if (modalContent && modalContent.contains(e.target)) return;
+      resetImageModalTilt();
       modal.classList.remove('active');
     });
   }
@@ -7181,6 +7249,8 @@ function renderImageModal() {
   const modalCaption = document.getElementById('imgModalCaption');
   const modalStrip = document.getElementById('imgModalStrip');
   if (!modal || !modalImg) return;
+  bindImageModalTilt();
+  resetImageModalTilt();
   const item = imageModalItems[imageModalIndex] || { src:'', title:'' };
   modalImg.src = item.src || '';
   if (modalCaption) modalCaption.textContent = item.title || '';
@@ -7213,6 +7283,60 @@ function shiftImageModal(step) {
 }
 
 let copyToastTimer = null;
+function resetImageModalTilt() {
+  const stage = document.getElementById('imgModalStage');
+  if (!stage) return;
+  stage.style.setProperty('--img-tilt-x', '0deg');
+  stage.style.setProperty('--img-tilt-y', '0deg');
+  stage.style.setProperty('--img-gloss', '.22');
+}
+
+function bindImageModalTilt() {
+  const modal = document.getElementById('imgModal');
+  const stage = document.getElementById('imgModalStage');
+  if (!(modal instanceof HTMLElement) || !(stage instanceof HTMLElement) || stage.dataset.tiltBound === '1') return;
+  const supportsFinePointer = window.matchMedia ? window.matchMedia('(pointer:fine)').matches : true;
+  if (!supportsFinePointer) {
+    stage.dataset.tiltBound = '1';
+    return;
+  }
+  const handleMove = (e) => {
+    if (!modal.classList.contains('active')) return;
+    const rect = stage.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+    const px = (e.clientX - rect.left) / rect.width;
+    const py = (e.clientY - rect.top) / rect.height;
+    const rotateY = ((px - 0.5) * 10).toFixed(2);
+    const rotateX = ((0.5 - py) * 10).toFixed(2);
+    stage.style.setProperty('--img-tilt-x', `${rotateX}deg`);
+    stage.style.setProperty('--img-tilt-y', `${rotateY}deg`);
+    stage.style.setProperty('--img-gloss', `${Math.max(.16, 0.34 - py * 0.18)}`);
+  };
+  stage.addEventListener('mousemove', handleMove);
+  stage.addEventListener('mouseleave', resetImageModalTilt);
+  stage.dataset.tiltBound = '1';
+}
+
+function bindProductRowMediaReveal() {
+  const table = document.getElementById('productTable');
+  if (!(table instanceof HTMLElement)) return;
+  table.querySelectorAll('tr[data-await-media="1"]').forEach((tr) => {
+    const row = tr;
+    const img = row.querySelector('img.product-thumb');
+    if (!(img instanceof HTMLImageElement)) {
+      row.classList.remove('await-media');
+      return;
+    }
+    const reveal = () => row.classList.remove('await-media');
+    if (img.complete && img.naturalWidth > 0) {
+      reveal();
+      return;
+    }
+    img.addEventListener('load', reveal, { once:true });
+    img.addEventListener('error', reveal, { once:true });
+  });
+}
+
 function showCopyToast(message, duration=1200) {
   const el = document.getElementById('copyToast');
   if (!el) return;
@@ -7576,8 +7700,9 @@ function renderProductTable(rowsFiltered) {
     const dataKey = c.sortable ? `data-key="${c.key}"` : '';
     return `<th class="${cls}" ${dataKey}>${c.label}${c.sortable ? `<span class="sort-ind">${ind}</span>` : ''}</th>`;
   }).join('')}</tr>`;
-  const body = pageRows.map(r => `<tr>${columns.map(c => `<td class="${productSortKey === c.key ? 'sort-col-active' : ''}">${c.format(r[c.key], r)}</td>`).join('')}</tr>`).join('');
+  const body = pageRows.map(r => `<tr class="${r.img ? 'await-media' : ''}" data-await-media="${r.img ? '1' : '0'}">${columns.map(c => `<td class="${productSortKey === c.key ? 'sort-col-active' : ''}">${c.format(r[c.key], r)}</td>`).join('')}</tr>`).join('');
   el.innerHTML = header + body;
+  bindProductRowMediaReveal();
 
   const pager = document.getElementById('productPager');
   if (pager) {
