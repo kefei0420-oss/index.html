@@ -2439,7 +2439,7 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
       <div class="page-updated" id="pageUpdatedPreview">
         <span class="dot"></span>
         <span class="label">数据最后更新时间</span>
-        <span class="time">2026-03-12 17:47（北京时间）</span>
+        <span class="time">2026-03-13 09:42（北京时间）</span>
       </div>
     </div>
     <div class="filters">
@@ -5215,16 +5215,20 @@ function getContentRows(rowsFiltered) {
   if (contentTypeMode === 'image') out = out.filter(r => !contentRowIsVideo(r));
   const q = contentSearch.trim().toLowerCase();
   if (q) {
-    out = out.filter(r =>
-      normalizeCreativeTitle(contentRowKey(r)).toLowerCase().includes(q) ||
-      String(r.ad || '').toLowerCase().includes(q) ||
-      String(r.categorySub || '').toLowerCase().includes(q) ||
-      String(r.product_id || '').toLowerCase().includes(q) ||
-      String(r.product_id_name || '').toLowerCase().includes(q) ||
-      String(r.product_code || '').toLowerCase().includes(q) ||
-      String(PRODUCT_MAP[String(r.product_id || '').trim()]?.skc || '').toLowerCase().includes(q) ||
-      String(PRODUCT_MAP[String(r.product_id || '').trim()]?.title || '').toLowerCase().includes(q)
-    );
+    out = out.filter(r => {
+      const productRef = PRODUCT_MAP[String(r.product_id || '').trim()] || {};
+      if (
+        normalizeCreativeTitle(contentRowKey(r)).toLowerCase().includes(q) ||
+        String(r.ad || '').toLowerCase().includes(q) ||
+        String(r.categorySub || '').toLowerCase().includes(q) ||
+        String(r.product_id || '').toLowerCase().includes(q) ||
+        String(r.product_id_name || '').toLowerCase().includes(q) ||
+        String(r.product_code || '').toLowerCase().includes(q) ||
+        String(productRef.skc || '').toLowerCase().includes(q)
+      ) return true;
+      if (q.length < 3) return false;
+      return String(productRef.title || '').toLowerCase().includes(q);
+    });
   }
   return out;
 }
