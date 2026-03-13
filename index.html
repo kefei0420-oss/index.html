@@ -2512,7 +2512,7 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
       <div class="page-updated" id="pageUpdatedPreview">
         <span class="dot"></span>
         <span class="label">数据最后更新时间</span>
-        <span class="time">2026-03-13 14:27（北京时间）</span>
+        <span class="time">2026-03-13 15:21（北京时间）</span>
       </div>
     </div>
     <div class="filters">
@@ -8516,7 +8516,7 @@ function renderUrlProductPageBoard() {
             .filter(x => String(x.shopifyId || x.shopify_id || '').trim() === sid && (Number(x.page) || 1) === p)
             .map(x => String(x.raw_url || x.url || '').trim())
             .find(Boolean) || url;
-          return `<div class="url-prod-card" data-card="1" data-href="${escapeHtml(rawUrl)}" data-page="${p}">${img}<div class="meta"><div class="card-top"><div class="sid">${sid}</div><div class="card-actions"><a class="card-link-action" href="${escapeHtml(toExternalUrl(rawUrl))}" target="_blank" rel="noopener noreferrer">检查置顶链接</a></div></div><div class="sub">${skc || '-'}</div><div class="ads">${adList || '<div class="muted">无广告</div>'}</div></div></div>`;
+          return `<div class="url-prod-card" data-card="1" data-href="${escapeHtml(rawUrl)}" data-page="${p}">${img}<div class="meta"><div class="card-top"><div class="sid">${sid}</div><div class="card-actions"><a class="card-link-action" href="${escapeHtml(toExternalUrl(rawUrl))}" target="_blank" rel="noopener noreferrer">查看置顶链接</a></div></div><div class="sub">${skc || '-'}</div><div class="ads">${adList || '<div class="muted">无广告</div>'}</div></div></div>`;
         }).join('');
       return `<div class="url-prod-page-group"><div class="url-prod-page-title">P${p}</div><div class="url-prod-cards">${cards || '<span class="muted">—</span>'}</div></div>`;
     }).join('');
@@ -8971,6 +8971,10 @@ function bindUrlProductPageBoard() {
       }
       const actionLink = e.target.closest('.card-link-action');
       if (actionLink) {
+        e.stopPropagation();
+        return;
+      }
+      if (e.target.closest('.ads')) {
         e.stopPropagation();
         return;
       }
