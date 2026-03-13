@@ -146,16 +146,16 @@ body { margin:0; font-family: 'Manrope', sans-serif; background: radial-gradient
   width:7px;
   height:7px;
   border-radius:999px;
-  background:#c76a1f;
-  box-shadow:0 0 0 0 rgba(199,106,31,0.28);
-  animation: updatedDotPulse 2.7s ease-in-out infinite;
+  background:#13a565;
+  box-shadow:0 0 0 0 rgba(19,165,101,0.42);
+  animation: updatedDotPulse 1.8s ease-out infinite;
 }
 .page-updated .label { color:#9a826b; }
 .page-updated .time { color:#5e4b3a; font-weight:700; }
 @keyframes updatedDotPulse {
-  0% { transform:scale(1); box-shadow:0 0 0 0 rgba(199,106,31,0.26); opacity:.88; }
-  50% { transform:scale(1.14); box-shadow:0 0 0 7px rgba(199,106,31,0); opacity:1; }
-  100% { transform:scale(1); box-shadow:0 0 0 0 rgba(199,106,31,0); opacity:.88; }
+  0% { transform:scale(1); box-shadow:0 0 0 0 rgba(19,165,101,0.4); opacity:.9; }
+  45% { transform:scale(1.22); box-shadow:0 0 0 9px rgba(19,165,101,0); opacity:1; }
+  100% { transform:scale(1); box-shadow:0 0 0 0 rgba(19,165,101,0); opacity:.9; }
 }
 .title { font-size: 30px; font-weight: 800; letter-spacing: .2px; line-height: 1.05; white-space: nowrap; }
 .subtitle { color: var(--muted); font-size: 13px; margin-top:4px; }
@@ -1491,17 +1491,58 @@ select, .pill-btn, input[type="date"] { border:1px solid var(--line); background
 #urlProductPageSection .table-scroll { overflow-x: hidden; }
 #urlProductPageSection .table-scroll .table { min-width: 100% !important; }
 .url-prod-cards { display:flex; flex-wrap:wrap; gap:8px; align-items:flex-start; }
-.url-prod-card { border:1px solid var(--line); border-radius:10px; background:#fff; padding:8px; display:flex; gap:8px; align-items:flex-start; width:300px; min-width:0; cursor:pointer; transition: border-color .15s ease, box-shadow .15s ease, background .15s ease; }
+.url-prod-card { position:relative; border:1px solid var(--line); border-radius:10px; background:#fff; padding:8px; display:flex; gap:8px; align-items:flex-start; width:300px; min-width:0; cursor:pointer; transition: border-color .15s ease, box-shadow .15s ease, background .15s ease; }
 .url-prod-card:hover { border-color:#dcc4a6; background:#fffaf3; box-shadow:0 3px 10px rgba(0,0,0,.04); }
 .url-prod-card.is-open { border-color:#cda47f; background:#fff8ef; }
 .url-prod-card img { width:46px; height:46px; object-fit:cover; border-radius:8px; border:1px solid var(--line); background:#faf7f2; flex:none; cursor:zoom-in; }
-.url-prod-card .meta { min-width:0; }
+.url-prod-card .meta { min-width:0; width:100%; }
 .url-prod-card .sid { font-size:13px; font-weight:700; line-height:1.25; word-break:break-all; }
 .url-prod-card .sub { font-size:12px; color:var(--muted); line-height:1.3; margin-top:3px; word-break:break-all; }
-.url-prod-card .ads { display:none; margin-top:6px; font-size:12px; color:#5d4d3c; line-height:1.35; max-height:140px; overflow:auto; padding-top:5px; border-top:1px dashed var(--line); }
+.url-prod-card .ads { display:none; margin-top:6px; font-size:12px; color:#5d4d3c; line-height:1.35; max-height:140px; overflow:auto; padding-top:5px; border-top:1px dashed var(--line); width:100%; }
 .url-prod-card.is-open .ads { display:block; }
 .url-prod-card .ads div { margin-bottom:4px; word-break:break-all; }
 .url-prod-card .ads .ad-no { color: var(--muted); margin-right:4px; }
+.url-prod-card .card-top { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:start; gap:8px; }
+.url-prod-card .card-actions { display:flex; align-items:center; gap:6px; flex:none; }
+.url-prod-card .card-link-action {
+  flex:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:24px;
+  height:24px;
+  padding:0 8px;
+  border-radius:999px;
+  border:1px solid #d8b089;
+  background:#fff8ef;
+  color:#8a5a33;
+  font-size:11px;
+  font-weight:700;
+  line-height:1;
+  text-decoration:none;
+  transition:border-color .15s ease, background .15s ease, color .15s ease;
+}
+.url-prod-card .card-link-action:hover {
+  color:#6f4526;
+  border-color:#cb9157;
+  background:#fff2e1;
+}
+.url-jump {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  color:#2b5d9a;
+  text-decoration:none;
+  font-weight:700;
+}
+.url-jump:hover { color:#224f90; }
+.url-section-link {
+  color:#2b5d9a;
+  text-decoration:underline;
+  font-weight:700;
+}
+.url-section-link:hover { color:#224f90; }
+.url-section-link .out-arrow { margin-left:0; }
 .url-prod-main-row { cursor: pointer; }
 .url-prod-main-row td:first-child,
 .url-prod-main-row td:first-child .url-link {
@@ -1765,7 +1806,21 @@ select, .pill-btn, input[type="date"] { border:1px solid var(--line); background
 .compare-line { display:block; margin-top:2px; font-size:11px; color: var(--muted); }
 .compare-line.delta-up { color: #0b8f5a; font-weight: 700; }
 .compare-line.delta-down { color: #b3261e; font-weight: 700; }
-.url-link { color:#2b5d9a; cursor:pointer; text-decoration:underline; }
+.url-link { color:#2f271f; cursor:pointer; text-decoration:none; transition:color .15s ease, opacity .15s ease; }
+.url-link:hover { color:#6f4f32; }
+.url-main-cell {
+  cursor:pointer;
+  transition: background .15s ease, color .15s ease;
+}
+.url-main-cell:hover {
+  background:#fbf6ef;
+}
+.url-main-cell:hover .url-link {
+  color:#6f4f32;
+}
+.url-main-cell.is-open {
+  background:#f6eee2;
+}
 .url-tag { display:inline-block; padding:2px 8px; border-radius:999px; font-size:11px; border:1px solid var(--line); }
 .url-tag.winner { background:#e7f7ef; color:#0b8f5a; border-color:#bfe9d1; }
 .url-tag.loser { background:#fdecec; color:#b3261e; border-color:#f5c7c3; }
@@ -2005,6 +2060,24 @@ select, .pill-btn, input[type="date"] { border:1px solid var(--line); background
   flex-wrap:wrap;
   justify-content:center;
   max-width:min(88vw, 760px);
+}
+.img-modal .caption-link {
+  color:#fff;
+  text-decoration:none;
+  border-bottom:1px solid rgba(255,255,255,.42);
+  transition:border-color .18s ease, color .18s ease, opacity .18s ease;
+}
+.img-modal .caption-link:hover {
+  color:#fff;
+  border-color:rgba(255,255,255,.78);
+}
+.img-modal .caption-link .out-arrow {
+  display:inline-block;
+  margin-left:4px;
+  transition:transform .18s ease;
+}
+.img-modal .caption-link:hover .out-arrow {
+  transform:translateX(2px);
 }
 .img-modal.gallery-mode .gallery-strip { display:flex; }
 .img-modal .gallery-chip {
@@ -2439,7 +2512,7 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
       <div class="page-updated" id="pageUpdatedPreview">
         <span class="dot"></span>
         <span class="label">数据最后更新时间</span>
-        <span class="time">2026-03-13 09:42（北京时间）</span>
+        <span class="time">2026-03-13 14:27（北京时间）</span>
       </div>
     </div>
     <div class="filters">
@@ -3093,6 +3166,12 @@ function fmt(n, digits=2) {
 }
 function money(n) { return '$' + fmt(n, 2); }
 function pct(n) { return (n*100).toFixed(2) + '%'; }
+function toExternalUrl(url) {
+  const s = String(url || '').trim();
+  if (!s) return '';
+  if (/^https?:\/\//i.test(s)) return s;
+  return `https://${s.replace(/^\/+/, '')}`;
+}
 function weekdayCN(d) {
   const map = ['日','一','二','三','四','五','六'];
   return '周' + map[d.getDay()];
@@ -7156,7 +7235,7 @@ function bindProductTable() {
       }
       const img = e.target.closest('img.product-thumb');
       if (img && img.dataset.img) {
-        openImageModal(img.dataset.img, img.dataset.title || '');
+        openImageModal(img.dataset.img, img.dataset.title || '', img.dataset.link || '');
       }
     });
   }
@@ -7257,7 +7336,13 @@ function renderImageModal() {
   resetImageModalTilt();
   const item = imageModalItems[imageModalIndex] || { src:'', title:'' };
   modalImg.src = item.src || '';
-  if (modalCaption) modalCaption.textContent = item.title || '';
+  if (modalCaption) {
+    let href = String(item.href || '').trim();
+    if (href && !/^https?:\/\//i.test(href)) href = `https://${href.replace(/^\/+/, '')}`;
+    modalCaption.innerHTML = href
+      ? `<a class="caption-link" href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.title || '')}<span class="out-arrow">↗</span></a>`
+      : escapeHtml(item.title || '');
+  }
   modal.classList.toggle('gallery-mode', imageModalItems.length > 1);
   if (modalStrip) {
     modalStrip.innerHTML = imageModalItems.length > 1
@@ -7268,7 +7353,9 @@ function renderImageModal() {
 }
 
 function openImageModal(src, title='') {
-  imageModalItems = [{ src, title, label:title }];
+  let href = '';
+  if (arguments.length > 2) href = String(arguments[2] || '');
+  imageModalItems = [{ src, title, label:title, href }];
   imageModalIndex = 0;
   renderImageModal();
 }
@@ -7531,6 +7618,7 @@ function renderProductTable(rowsFiltered) {
       productKey,
       id: String(p.id || ''),
       img: p.image || '',
+      link: String(p.link || ''),
       cat: p.category || '',
       title: p.title || '',
       newness: p.newness || '',
@@ -7656,7 +7744,7 @@ function renderProductTable(rowsFiltered) {
   };
 
   const columns = [
-    {label:'图片', key:'img', sortable:false, format:(v,row)=> v ? `<img class="product-thumb" src="${v}" data-img="${v}" data-title="${String(row.title || '').replace(/"/g,'&quot;')}" />` : '<span class="muted">—</span>'},
+    {label:'图片', key:'img', sortable:false, format:(v,row)=> v ? `<img class="product-thumb" src="${v}" data-img="${v}" data-title="${String(row.title || '').replace(/"/g,'&quot;')}" data-link="${String(row.link || '').replace(/"/g,'&quot;')}" />` : '<span class="muted">—</span>'},
     {label:'商品id', key:'id', sortable:true, format:v=>highlightSearchText(v, productSearch)},
     {label:'SKC', key:'skc', sortable:true, format:v=>highlightSearchText(v || '-', productSearch)},
     {label:'shopify id', key:'shopifyId', sortable:true, format:v=>highlightSearchText(v || '-', productSearch)},
@@ -8277,7 +8365,7 @@ function renderURLBoard(rowsFiltered) {
       const ind = c.sortable ? ((urlSortKey===c.key)?(urlSortDir==='asc'?'▲':'▼'):'') : '';
       return `<th class="${c.sortable?'sortable':''} ${urlSortKey===c.key?'sort-active':''}" ${c.sortable?`data-key="${c.key}"`:''}>${c.label}${c.sortable?`<span class="sort-ind">${ind}</span>`:''}</th>`;
     }).join('')}</tr>`;
-    const body = pageRows.map(r => `<tr>${columns.map(c=>`<td class="${urlSortKey===c.key?'sort-col-active':''}">${c.format(r[c.key],r)}</td>`).join('')}</tr>`).join('');
+    const body = pageRows.map(r => `<tr>${columns.map((c, idx)=>`<td class="${idx===0?'url-main-cell ':''}${urlSortKey===c.key?'sort-col-active':''} ${idx===0 && selectedUrl===r.url && (urlDetailOpen || urlProductDetailOpen) ? 'is-open' : ''}">${c.format(r[c.key],r)}</td>`).join('')}</tr>`).join('');
     table.innerHTML = header + body;
   }
 
@@ -8342,6 +8430,7 @@ function renderUrlProductPageBoard() {
       ad: s.ad || '-',
       shopifyId: s.shopify_id || '-',
       url: s.url || '-',
+      raw_url: s.raw_url || s.url || '-',
       page: Number(s.page) || 1,
       category: s.category || '-',
       adType: s.adType || '-',
@@ -8420,10 +8509,14 @@ function renderUrlProductPageBoard() {
         .sort((a,b)=>a[0].localeCompare(b[0]))
         .map(([sid,v]) => {
           const prod = productByShopify.get(sid);
-          const img = prod?.image ? `<img class="product-thumb" src="${prod.image}" data-img="${prod.image}" data-title="${String(prod?.title || '').replace(/"/g,'&quot;')}" />` : `<div style="width:46px;height:46px;border:1px solid var(--line);border-radius:8px;background:#faf7f2;"></div>`;
+          const img = prod?.image ? `<img class="product-thumb" src="${prod.image}" data-img="${prod.image}" data-title="${String(prod?.title || '').replace(/"/g,'&quot;')}" data-link="${String(prod?.link || '').replace(/"/g,'&quot;')}" />` : `<div style="width:46px;height:46px;border:1px solid var(--line);border-radius:8px;background:#faf7f2;"></div>`;
           const skc = prod?.skc ? String(prod.skc) : '';
           const adList = Array.from(v.ads).filter(Boolean).sort().map((a,idx)=>`<div><span class="ad-no">${idx+1}.</span>${a}</div>`).join('');
-          return `<div class="url-prod-card" data-card="1">${img}<div class="meta"><div class="sid">${sid}</div><div class="sub">${skc || '-'}</div><div class="ads">${adList || '<div class="muted">无广告</div>'}</div></div></div>`;
+          const rawUrl = Array.from(rs)
+            .filter(x => String(x.shopifyId || x.shopify_id || '').trim() === sid && (Number(x.page) || 1) === p)
+            .map(x => String(x.raw_url || x.url || '').trim())
+            .find(Boolean) || url;
+          return `<div class="url-prod-card" data-card="1" data-href="${escapeHtml(rawUrl)}" data-page="${p}">${img}<div class="meta"><div class="card-top"><div class="sid">${sid}</div><div class="card-actions"><a class="card-link-action" href="${escapeHtml(toExternalUrl(rawUrl))}" target="_blank" rel="noopener noreferrer">检查置顶链接</a></div></div><div class="sub">${skc || '-'}</div><div class="ads">${adList || '<div class="muted">无广告</div>'}</div></div></div>`;
         }).join('');
       return `<div class="url-prod-page-group"><div class="url-prod-page-title">P${p}</div><div class="url-prod-cards">${cards || '<span class="muted">—</span>'}</div></div>`;
     }).join('');
@@ -8546,7 +8639,7 @@ function renderURLDetail(baseRows) {
   }).join('');
   table.innerHTML = header + body;
   attachTableFirstColResize('urlDetailTable', '--url-detail-first-col', 260, 760, 'url-detail-first-resize');
-  title.textContent = `广告明细 ${selectedUrl}`;
+  title.innerHTML = `广告明细 <a class="url-section-link" href="${escapeHtml(toExternalUrl(selectedUrl))}" target="_blank" rel="noopener noreferrer">${escapeHtml(selectedUrl)}<span class="out-arrow">↗</span></a>`;
   panel.classList.remove('hidden');
   if (pager) {
     const sizeGroup = pager.querySelector('#urlDetailPageSizeGroup');
@@ -8590,6 +8683,7 @@ function renderURLProductDetail(baseRows) {
       shopifyId: sid,
       skc: String(prod.skc || '-'),
       image: String(prod.image || ''),
+      link: String(prod.link || ''),
       title: String(prod.title || ''),
       newness: String(prod.newness || ''),
       adCount: adSet.size,
@@ -8642,7 +8736,7 @@ function renderURLProductDetail(baseRows) {
   const pageRows = rowsP.slice(start, start + (pageSize || rowsP.length));
   const header = `<tr>${cols.map(c=>`<th class="${c.key!=='image'?'sortable':''} ${urlProductDetailSortKey===c.key?'sort-active':''}" ${c.key!=='image'?`data-key="${c.key}"`:''}>${c.label}${(c.key!=='image' && urlProductDetailSortKey===c.key)?`<span class="sort-ind">${urlProductDetailSortDir==='asc'?'▲':'▼'}</span>`:''}</th>`).join('')}</tr>`;
   const body = pageRows.map(r => {
-    const img = r.image ? `<img class="product-thumb" src="${r.image}" data-img="${r.image}" data-title="${String(r.title || '').replace(/"/g,'&quot;')}" />` : '<div class="product-thumb" style="background:#faf7f2;"></div>';
+    const img = r.image ? `<img class="product-thumb" src="${r.image}" data-img="${r.image}" data-title="${String(r.title || '').replace(/"/g,'&quot;')}" data-link="${String(r.link || '').replace(/"/g,'&quot;')}" />` : '<div class="product-thumb" style="background:#faf7f2;"></div>';
     return `<tr>
       <td>${img}</td>
       <td class="${urlProductDetailSortKey==='shopifyId'?'sort-col-active':''}">${highlightSearchText(r.shopifyId, urlSearch)}</td>
@@ -8660,7 +8754,7 @@ function renderURLProductDetail(baseRows) {
     </tr>`;
   }).join('');
   table.innerHTML = header + body;
-  title.textContent = `商品明细 ${selectedUrl}`;
+  title.innerHTML = `商品明细 <a class="url-section-link" href="${escapeHtml(toExternalUrl(selectedUrl))}" target="_blank" rel="noopener noreferrer">${escapeHtml(selectedUrl)}<span class="out-arrow">↗</span></a>`;
   panel.classList.remove('hidden');
   if (pager) {
     const sizeGroup = pager.querySelector('#urlProductDetailPageSizeGroup');
@@ -8676,6 +8770,24 @@ function renderURLProductDetail(baseRows) {
 function bindURLBoard() {
   const table = document.getElementById('urlTable');
   if (table) {
+    const toggleUrlDetail = nextUrl => {
+      if (!nextUrl) return;
+      if (selectedUrl === nextUrl && (urlDetailOpen || urlProductDetailOpen)) {
+        urlDetailOpen = false;
+        urlProductDetailOpen = false;
+      } else {
+        selectedUrl = nextUrl;
+        urlDetailOpen = true;
+        urlProductDetailOpen = true;
+        urlDetailPage = 1;
+        urlDetailSortKey = 'spend';
+        urlDetailSortDir = 'desc';
+        urlProductDetailPage = 1;
+        urlProductDetailSortKey = 'spend';
+        urlProductDetailSortDir = 'desc';
+      }
+      updateAll(false);
+    };
     table.addEventListener('click', (e) => {
       const th = e.target.closest('th.sortable');
       if (th && th.dataset.key) {
@@ -8684,24 +8796,15 @@ function bindURLBoard() {
         updateAll(false);
         return;
       }
+      const firstCell = e.target.closest('td.url-main-cell');
+      if (firstCell) {
+        const rowLink = firstCell.querySelector('.url-link[data-url]');
+        toggleUrlDetail(rowLink?.dataset?.url || '');
+        return;
+      }
       const link = e.target.closest('.url-link');
       if (link && link.dataset.url) {
-        const nextUrl = link.dataset.url;
-        if (selectedUrl === nextUrl && (urlDetailOpen || urlProductDetailOpen)) {
-          urlDetailOpen = false;
-          urlProductDetailOpen = false;
-        } else {
-          selectedUrl = nextUrl;
-          urlDetailOpen = true;
-          urlProductDetailOpen = true;
-          urlDetailPage = 1;
-          urlDetailSortKey = 'spend';
-          urlDetailSortDir = 'desc';
-          urlProductDetailPage = 1;
-          urlProductDetailSortKey = 'spend';
-          urlProductDetailSortDir = 'desc';
-        }
-        updateAll(false);
+        toggleUrlDetail(link.dataset.url);
       }
     });
   }
@@ -8775,7 +8878,7 @@ function bindURLBoard() {
     productDetailTable.addEventListener('click', (e) => {
       const img = e.target.closest('img.product-thumb');
       if (img && img.dataset.img) {
-        openImageModal(img.dataset.img, img.dataset.title || '');
+        openImageModal(img.dataset.img, img.dataset.title || '', img.dataset.link || '');
         return;
       }
       const th = e.target.closest('th.sortable');
@@ -8863,7 +8966,12 @@ function bindUrlProductPageBoard() {
       const img = e.target.closest('img.product-thumb');
       if (img && img.dataset.img) {
         e.stopPropagation();
-        openImageModal(img.dataset.img, img.dataset.title || '');
+        openImageModal(img.dataset.img, img.dataset.title || '', img.dataset.link || '');
+        return;
+      }
+      const actionLink = e.target.closest('.card-link-action');
+      if (actionLink) {
+        e.stopPropagation();
         return;
       }
       const card = e.target.closest('.url-prod-card');
