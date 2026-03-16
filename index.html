@@ -2512,7 +2512,7 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
       <div class="page-updated" id="pageUpdatedPreview">
         <span class="dot"></span>
         <span class="label">数据最后更新时间</span>
-        <span class="time">2026-03-16 09:37（北京时间）</span>
+        <span class="time">2026-03-17 01:37（北京时间）</span>
       </div>
     </div>
     <div class="filters">
@@ -5277,6 +5277,8 @@ function contentRowKey(row) {
 }
 
 function contentRowIsVideo(row) {
+  const adText = `${String(row?.ad || '')} ${String(row?.creative_key || '')}`.toLowerCase();
+  if (adText.includes('img')) return false;
   return (Number(row?.video_3s) || 0) > 0 || !!String(row?.video_id || '').trim();
 }
 
