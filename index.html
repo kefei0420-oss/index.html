@@ -547,7 +547,7 @@ select, .pill-btn, input[type="date"] { border:1px solid var(--line); background
 .content-line-summary-head,
 .content-line-summary-row {
   display:grid;
-  grid-template-columns: minmax(180px, 1.3fr) repeat(9, minmax(74px, .68fr));
+  grid-template-columns: minmax(180px, 1.3fr) repeat(10, minmax(74px, .68fr));
   gap:0;
   align-items:center;
 }
@@ -1360,9 +1360,9 @@ select, .pill-btn, input[type="date"] { border:1px solid var(--line); background
 .content-asset-main-resize:hover::after { background:#d0b89f; width:2px; right:-1px; top:0; height:100%; }
 @media (max-width: 980px) {
   .content-line-summary-head,
-  .content-line-summary-row { grid-template-columns: minmax(150px, 1.2fr) repeat(5, minmax(68px, .7fr)); }
-  .content-line-summary-head > div:nth-child(n+7),
-  .content-line-summary-row > div:nth-child(n+7) { display:none; }
+  .content-line-summary-row { grid-template-columns: minmax(150px, 1.2fr) repeat(6, minmax(68px, .7fr)); }
+  .content-line-summary-head > div:nth-child(n+8),
+  .content-line-summary-row > div:nth-child(n+8) { display:none; }
   .content-curve-shell { grid-template-columns: 1fr; }
   .content-hero-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
   .content-overview-main,
@@ -2512,7 +2512,7 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
       <div class="page-updated" id="pageUpdatedPreview">
         <span class="dot"></span>
         <span class="label">数据最后更新时间</span>
-        <span class="time">2026-03-24 09:38（北京时间）</span>
+        <span class="time">2026-03-24 17:26（北京时间）</span>
       </div>
     </div>
     <div class="filters">
@@ -5810,6 +5810,7 @@ function renderContentLinePanel(creativeItems, prevCreativeItems, totalConv) {
       <div class="name-cell">${toggleKey ? `<span class="toggle" data-content-toggle="${escapeHtml(toggleKey)}">${(toggleKey === 'ALL' ? contentLineExpanded : contentLineExpandedCats.has(toggleKey)) ? '−' : '+'}</span>` : ''}<span>${escapeHtml(label)}</span></div>
       <div class="num">${fmt(videoCount,0)}</div>
       <div class="num">${fmt(imageCount,0)}</div>
+      <div class="num">${money(agg.spend)}</div>
       <div class="num">${money(agg.conv)}</div>
       <div class="num">${fmt(agg.roas,2)}</div>
       <div class="num">${fmt(agg.purchases,0)}</div>
@@ -5826,6 +5827,7 @@ function renderContentLinePanel(creativeItems, prevCreativeItems, totalConv) {
         <div>品线</div>
         <div style="text-align:right;">视频</div>
         <div style="text-align:right;">图片</div>
+        <div style="text-align:right;">花费</div>
         <div style="text-align:right;">转化金额</div>
         <div style="text-align:right;">ROAS</div>
         <div style="text-align:right;">订单</div>
@@ -7606,6 +7608,48 @@ function renderProductCategorySalesPanel() {
 function renderProductTable(rowsFiltered) {
   const [curStart, curEnd] = getDateRangeForCurrentFilter();
   const [prevStart, prevEnd] = getPrevRange(curStart, curEnd);
+  const buildProductOnlyRow = (productKey, p) => ({
+    productKey,
+    id: String(p.id || ''),
+    img: p.image || '',
+    link: String(p.link || ''),
+    cat: p.category || '',
+    title: p.title || '',
+    newness: p.newness || '',
+    spend: null,
+    conv: null,
+    roas: null,
+    aov: null,
+    cpa: null,
+    ctr: null,
+    cpc: null,
+    cpm: null,
+    cvr: null,
+    atcCost: null,
+    checkoutCost: null,
+    atcRate: null,
+    checkoutRate: null,
+    purchases: null,
+    skc: String(p.skc || ''),
+    shopifyId: String(p.shopify_id || ''),
+    shopifySales: 0,
+    hasAdData: false,
+    prev_spend: null,
+    prev_conv: null,
+    prev_roas: null,
+    prev_aov: null,
+    prev_cpa: null,
+    prev_ctr: null,
+    prev_cpc: null,
+    prev_cpm: null,
+    prev_cvr: null,
+    prev_atcCost: null,
+    prev_checkoutCost: null,
+    prev_atcRate: null,
+    prev_checkoutRate: null,
+    prev_purchases: null,
+    prev_shopifySales: 0,
+  });
   const byProduct = new Map();
   for (const r of rowsFiltered) {
     if (!r.product_id) continue;
@@ -7638,6 +7682,7 @@ function renderProductTable(rowsFiltered) {
       atcRate: a.atcRate,
       checkoutRate: a.checkoutRate,
       purchases: a.purchases,
+      hasAdData: true,
       skc: String(p.skc || ''),
       shopifyId: String(p.shopify_id || ''),
       shopifySales: 0,
@@ -7658,6 +7703,27 @@ function renderProductTable(rowsFiltered) {
       prev_shopifySales: 0,
     };
   });
+
+  if (shopifyDataLoaded) {
+    const byShopify = new Map();
+    Object.entries(PRODUCT_MAP || {}).forEach(([productKey, p]) => {
+      const sid = String(p?.shopify_id || '').trim();
+      if (!sid || byShopify.has(sid)) return;
+      byShopify.set(sid, { productKey, product: p });
+    });
+    const existingKeys = new Set(rows.map(r => String(r.productKey || '').trim()));
+    for (const [shopifyId, byDate] of Object.entries(SHOPIFY_SALES_DAILY || {})) {
+      if (!byDate) continue;
+      const sales = getShopifySalesInRange(shopifyId, curStart, curEnd);
+      if (!sales) continue;
+      const match = byShopify.get(String(shopifyId).trim());
+      if (!match) continue;
+      const productKey = String(match.productKey || '').trim();
+      if (!productKey || existingKeys.has(productKey)) continue;
+      rows.push(buildProductOnlyRow(productKey, match.product || {}));
+      existingKeys.add(productKey);
+    }
+  }
 
   const prevRowsBase = filterRowsByRange(prevStart, prevEnd);
   const prevMap = new Map();
@@ -7720,6 +7786,13 @@ function renderProductTable(rowsFiltered) {
     );
   }
 
+  const formatAdMetricWithCompare = (curr, prevVal, formatter, row) => {
+    if (!row?.hasAdData) {
+      return `<span class="muted">—</span>`;
+    }
+    return formatWithCompare(curr, prevVal, formatter);
+  };
+
   const formatWithCompare = (curr, prevVal, formatter) => {
     if (curr === null || curr === undefined || !isFinite(curr)) {
       return `<span class="muted">—</span>`;
@@ -7752,21 +7825,21 @@ function renderProductTable(rowsFiltered) {
     {label:'shopify id', key:'shopifyId', sortable:true, format:v=>highlightSearchText(v || '-', productSearch)},
     {label:'新老品', key:'newness', sortable:true, format:v=>v || '-'},
     {label:'类目', key:'cat', sortable:true, format:v=>highlightSearchText(v || '-', productSearch)},
-    {label:'花费', key:'spend', sortable:true, format:(v,row)=>formatWithCompare(v, row.prev_spend, money)},
-    {label:'转化金额', key:'conv', sortable:true, format:(v,row)=>formatWithCompare(v, row.prev_conv, money)},
-    {label:'ROAS', key:'roas', sortable:true, format:(v,row)=>formatWithCompare(v, row.prev_roas, x=>fmt(x,2))},
-    {label:'广告销量', key:'purchases', sortable:true, format:(v,row)=>formatWithCompare(v, row.prev_purchases, x=>fmt(x,0))},
+    {label:'花费', key:'spend', sortable:true, format:(v,row)=>formatAdMetricWithCompare(v, row.prev_spend, money, row)},
+    {label:'转化金额', key:'conv', sortable:true, format:(v,row)=>formatAdMetricWithCompare(v, row.prev_conv, money, row)},
+    {label:'ROAS', key:'roas', sortable:true, format:(v,row)=>formatAdMetricWithCompare(v, row.prev_roas, x=>fmt(x,2), row)},
+    {label:'广告销量', key:'purchases', sortable:true, format:(v,row)=>formatAdMetricWithCompare(v, row.prev_purchases, x=>fmt(x,0), row)},
     {label:'<span style="white-space:nowrap">shopify 销量</span>', key:'shopifySales', sortable:true, format:(v,row)=>formatWithCompare(v, row.prev_shopifySales, x=>fmt(x,0))},
-    {label:'客单价', key:'aov', sortable:true, format:(v,row)=>formatWithCompare(v, row.prev_aov, money)},
-    {label:'CPA', key:'cpa', sortable:true, format:(v,row)=>formatWithCompare(v, row.prev_cpa, money)},
-    {label:'CTR', key:'ctr', sortable:true, format:(v,row)=>formatWithCompare(v, row.prev_ctr, pct)},
-    {label:'CPC', key:'cpc', sortable:true, format:(v,row)=>formatWithCompare(v, row.prev_cpc, money)},
-    {label:'CPM', key:'cpm', sortable:true, format:(v,row)=>formatWithCompare(v, row.prev_cpm, money)},
-    {label:'转化率', key:'cvr', sortable:true, format:(v,row)=>formatWithCompare(v, row.prev_cvr, pct)},
-    {label:'加购成本', key:'atcCost', sortable:true, format:(v,row)=>formatWithCompare(v, row.prev_atcCost, money)},
-    {label:'结帐成本', key:'checkoutCost', sortable:true, format:(v,row)=>formatWithCompare(v, row.prev_checkoutCost, money)},
-    {label:'加购率', key:'atcRate', sortable:true, format:(v,row)=>formatWithCompare(v, row.prev_atcRate, pct)},
-    {label:'结帐率', key:'checkoutRate', sortable:true, format:(v,row)=>formatWithCompare(v, row.prev_checkoutRate, pct)}
+    {label:'客单价', key:'aov', sortable:true, format:(v,row)=>formatAdMetricWithCompare(v, row.prev_aov, money, row)},
+    {label:'CPA', key:'cpa', sortable:true, format:(v,row)=>formatAdMetricWithCompare(v, row.prev_cpa, money, row)},
+    {label:'CTR', key:'ctr', sortable:true, format:(v,row)=>formatAdMetricWithCompare(v, row.prev_ctr, pct, row)},
+    {label:'CPC', key:'cpc', sortable:true, format:(v,row)=>formatAdMetricWithCompare(v, row.prev_cpc, money, row)},
+    {label:'CPM', key:'cpm', sortable:true, format:(v,row)=>formatAdMetricWithCompare(v, row.prev_cpm, money, row)},
+    {label:'转化率', key:'cvr', sortable:true, format:(v,row)=>formatAdMetricWithCompare(v, row.prev_cvr, pct, row)},
+    {label:'加购成本', key:'atcCost', sortable:true, format:(v,row)=>formatAdMetricWithCompare(v, row.prev_atcCost, money, row)},
+    {label:'结帐成本', key:'checkoutCost', sortable:true, format:(v,row)=>formatAdMetricWithCompare(v, row.prev_checkoutCost, money, row)},
+    {label:'加购率', key:'atcRate', sortable:true, format:(v,row)=>formatAdMetricWithCompare(v, row.prev_atcRate, pct, row)},
+    {label:'结帐率', key:'checkoutRate', sortable:true, format:(v,row)=>formatAdMetricWithCompare(v, row.prev_checkoutRate, pct, row)}
   ];
 
   const col = columns.find(c => c.key === productSortKey) || columns[4];
