@@ -2428,6 +2428,73 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
 .cross-table { min-width: 980px; }
 .cross-table th, .cross-table td { padding:10px 10px; line-height:1.45; }
 .cross-table th:first-child, .cross-table td:first-child { width:280px; min-width:280px; max-width:280px; }
+.interest-board-panel { overflow: hidden; }
+.interest-board-head {
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-bottom:10px;
+}
+.interest-board-sub {
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.45;
+}
+.interest-board-scroll { overflow:auto; padding-bottom:8px; }
+.interest-board-scroll::-webkit-scrollbar { height:8px; }
+.interest-board-scroll::-webkit-scrollbar-thumb { background:#d8cab7; border-radius:999px; }
+.interest-board-scroll::-webkit-scrollbar-track { background:#f3ece2; border-radius:999px; }
+.interest-board-table { min-width:900px; }
+.interest-board-table th,
+.interest-board-table td {
+  padding:10px 12px;
+  line-height:1.35;
+  white-space:nowrap;
+  vertical-align:middle;
+}
+.interest-board-table th:not(:first-child),
+.interest-board-table td:not(:first-child) {
+  text-align:right;
+}
+.interest-board-table th:first-child,
+.interest-board-table td:first-child {
+  min-width:220px;
+  max-width:220px;
+  text-align:left;
+}
+.interest-board-table th:nth-child(2),
+.interest-board-table td:nth-child(2),
+.interest-board-table th:nth-child(3),
+.interest-board-table td:nth-child(3) {
+  min-width:74px;
+}
+.interest-chip {
+  display:inline-flex;
+  align-items:center;
+  border:1px solid #e6d7c5;
+  background:#fcf7f0;
+  color:#7a634b;
+  border-radius:999px;
+  padding:3px 9px;
+  font-size:11px;
+  font-weight:700;
+}
+.interest-keyword {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+}
+.interest-keyword-main {
+  font-weight:800;
+  color:#2f271f;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.interest-empty { padding:14px 4px 2px; font-size:12px; color:var(--muted); }
 .cross-dim-cell { text-align:left !important; }
 .cross-node { display:flex; align-items:center; gap:10px; min-width:0; max-width:100%; min-height:34px; }
 .cross-node .label { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
@@ -2512,7 +2579,7 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
       <div class="page-updated" id="pageUpdatedPreview">
         <span class="dot"></span>
         <span class="label">数据最后更新时间</span>
-        <span class="time">2026-03-26 10:17（北京时间）</span>
+        <span class="time">2026-03-26 18:28（北京时间）</span>
       </div>
     </div>
     <div class="filters">
@@ -2704,6 +2771,25 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
         </div>
       </div>
       <div class="table-scroll compact"><table class="table" id="adTypeTable"></table></div>
+    </div>
+  </div>
+
+  <div class="section" id="interestKeywordSection">
+    <div class="panel interest-board-panel">
+      <div class="interest-board-head">
+        <div>
+          <h3>兴趣词看板</h3>
+          <div class="interest-board-sub" id="interestKeywordHint">仅统计广告类型为 COLD，且 Ad Set 名包含 IN 的广告组；兴趣词取最后一个 | 后面的文本。</div>
+        </div>
+        <div class="filter-group">
+          <span class="interest-chip" id="interestKeywordMeta">当前范围</span>
+          <button class="pill-btn sm" type="button" id="interestKeywordToggle">展开全部</button>
+        </div>
+      </div>
+      <div class="interest-board-scroll">
+        <table class="table wide interest-board-table" id="interestKeywordTable"></table>
+      </div>
+      <div class="interest-empty hidden" id="interestKeywordEmpty">当前筛选范围暂无兴趣词数据</div>
     </div>
   </div>
 
@@ -3335,6 +3421,10 @@ const crossDimPicker = document.getElementById('crossDimPicker');
 const crossAnalysisMode = document.getElementById('crossAnalysisMode');
 const crossAnalysisTable = document.getElementById('crossAnalysisTable');
 const crossAnalysisEmpty = document.getElementById('crossAnalysisEmpty');
+const interestKeywordTable = document.getElementById('interestKeywordTable');
+const interestKeywordEmpty = document.getElementById('interestKeywordEmpty');
+const interestKeywordMeta = document.getElementById('interestKeywordMeta');
+const interestKeywordToggle = document.getElementById('interestKeywordToggle');
 const crossResetBtn = document.getElementById('crossResetBtn');
 const crossToggleAllBtn = document.getElementById('crossToggleAllBtn');
 const viewPerfBtn = document.getElementById('viewPerfBtn');
@@ -3370,6 +3460,7 @@ let decisionCampColumnMode = 'compact';
 let decisionAdColumnMode = 'compact';
 let decisionAdPanelOpen = true;
 let decisionKpiFocus = 'none';
+let interestKeywordExpanded = false;
 const CROSS_DIMENSIONS = [
   { key:'category', label:'品类' },
   { key:'categorySub', label:'品类细分' },
@@ -4579,7 +4670,7 @@ function setDashboardView(mode) {
   const showPerf = dashboardView === 'perf';
   const showContent = dashboardView === 'content';
   const showDecision = dashboardView === 'decision';
-  const perfIds = ['kpiGrid','trendSection','categorySection','tripleMetrics','crossAnalysisSection','chartSection','dailySection'];
+  const perfIds = ['kpiGrid','trendSection','categorySection','tripleMetrics','interestKeywordSection','crossAnalysisSection','chartSection','dailySection'];
   const opsIds = ['productCategorySalesSection','productSection','urlSection','urlProductPageSection'];
   perfIds.forEach(id => document.getElementById(id)?.classList.toggle('hidden', !showPerf));
   opsIds.forEach(id => document.getElementById(id)?.classList.toggle('hidden', showPerf || showDecision || showContent));
@@ -6501,6 +6592,113 @@ function renderCrossAnalysis(rowsFiltered) {
   crossAnalysisTable.innerHTML = header + body + totalRow;
 }
 
+function extractInterestKeyword(adSet) {
+  const raw = String(adSet || '').trim();
+  if (!raw) return '';
+  if (!/\bIN\b/i.test(raw)) return '';
+  const parts = raw.split('|').map(x => String(x || '').trim()).filter(Boolean);
+  if (!parts.length) return '';
+  const tail = parts[parts.length - 1];
+  return tail || '';
+}
+
+function renderInterestKeywordBoard(rowsFiltered) {
+  const section = document.getElementById('interestKeywordSection');
+  if (!section || !interestKeywordTable || !interestKeywordEmpty) return;
+  const filtered = (rowsFiltered || []).filter(r => String(r.adType || '').toUpperCase() === 'COLD');
+  const interestRows = filtered
+    .map(r => ({ ...r, interestKeyword: extractInterestKeyword(r.ad_set) }))
+    .filter(r => r.interestKeyword);
+
+  const [start, end] = getDateRangeForCurrentFilter();
+  if (interestKeywordMeta) interestKeywordMeta.textContent = `${formatDateLocal(start)} 至 ${formatDateLocal(end)}`;
+
+  const columns = [
+    { label:'兴趣词', key:'keyword', format:v => `
+      <div class="interest-keyword">
+        <div><div class="interest-keyword-main">${escapeHtml(v)}</div></div>
+      </div>` },
+    { label:'广告组数', key:'adSetCount', format:v => fmt(v,0) },
+    { label:'广告数', key:'adCount', format:v => fmt(v,0) },
+    { label:'花费', key:'spend', format:v => money(v) },
+    { label:'转化金额', key:'conv', format:v => money(v) },
+    { label:'ROAS', key:'roas', format:v => fmt(v,2) },
+    { label:'订单', key:'purchases', format:v => fmt(v,0) },
+    { label:'展示', key:'impr', format:v => fmt(v,0) },
+    { label:'点击', key:'clicks', format:v => fmt(v,0) },
+    { label:'CTR', key:'ctr', format:v => pct(v) },
+    { label:'CPC', key:'cpc', format:v => money(v) },
+    { label:'CPM', key:'cpm', format:v => money(v) },
+    { label:'转化率', key:'cvr', format:v => pct(v) },
+  ];
+  const sortKey = tableSortState['interestKeywordTable']?.key || 'spend';
+  const sortDir = tableSortState['interestKeywordTable']?.dir || 'desc';
+  const sortInd = key => (sortKey === key ? (sortDir === 'asc' ? '▲' : '▼') : '');
+  const header = `<tr>${columns.map(c => `<th class="sortable ${sortKey===c.key?'sort-active':''}" data-key="${c.key}">${c.label}<span class="sort-ind">${sortInd(c.key)}</span></th>`).join('')}</tr>`;
+
+  if (!interestRows.length) {
+    section.classList.add('hidden');
+    interestKeywordTable.innerHTML = header;
+    interestKeywordEmpty.classList.add('hidden');
+    return;
+  }
+
+  const byKeyword = groupBy(interestRows, r => r.interestKeyword);
+  let rows = Array.from(byKeyword.entries()).map(([keyword, rs]) => {
+    const agg = aggregate(rs);
+    const adSetCount = new Set(rs.map(r => String(r.ad_set || '').trim()).filter(Boolean)).size;
+    const adCount = new Set(rs.map(r => String(r.ad_id || r.ad || '').trim()).filter(Boolean)).size;
+    return {
+      keyword,
+      adSetCount,
+      adCount,
+      spend: agg.spend,
+      conv: agg.conv,
+      roas: agg.roas,
+      purchases: agg.purchases,
+      impr: agg.impr,
+      clicks: agg.clicks,
+      ctr: agg.ctr,
+      cpc: agg.cpc,
+      cpm: agg.cpm,
+      cvr: agg.cvr,
+    };
+  });
+  rows = getSortedRows('interestKeywordTable', rows, columns);
+  const displayRows = interestKeywordExpanded ? rows : rows.slice(0, 10);
+  const totals = aggregate(interestRows);
+  const totalAdSetCount = rows.reduce((s, r) => s + (r.adSetCount || 0), 0);
+  const totalAdCount = rows.reduce((s, r) => s + (r.adCount || 0), 0);
+  if (interestKeywordToggle) {
+    interestKeywordToggle.textContent = interestKeywordExpanded ? '收起' : `展开全部 (${fmt(rows.length,0)})`;
+    interestKeywordToggle.classList.toggle('hidden', rows.length <= 10);
+  }
+
+  interestKeywordTable.innerHTML = header + displayRows.map(r => `
+    <tr>
+      ${columns.map(c => `<td>${c.format(r[c.key], r)}</td>`).join('')}
+    </tr>
+  `).join('') + `
+    <tr class="total-row">
+      <td>总计</td>
+      <td>${fmt(totalAdSetCount,0)}</td>
+      <td>${fmt(totalAdCount,0)}</td>
+      <td>${money(totals.spend)}</td>
+      <td>${money(totals.conv)}</td>
+      <td>${fmt(totals.roas,2)}</td>
+      <td>${fmt(totals.purchases,0)}</td>
+      <td>${fmt(totals.impr,0)}</td>
+      <td>${fmt(totals.clicks,0)}</td>
+      <td>${pct(totals.ctr)}</td>
+      <td>${money(totals.cpc)}</td>
+      <td>${money(totals.cpm)}</td>
+      <td>${pct(totals.cvr)}</td>
+    </tr>
+  `;
+  section.classList.remove('hidden');
+  interestKeywordEmpty.classList.add('hidden');
+}
+
 let chart = null;
 let adTypePie = null;
 let audiencePie = null;
@@ -6890,7 +7088,7 @@ function renderChart(rowsFiltered) {
   });
 }
 
-const SORTABLE_TABLE_IDS = new Set(['categoryTable','audienceTable','materialTable','adTypeTable','dailyTable','weeklyNewAdsTable','urlTable','urlDetailTable','productCategorySalesTable']);
+const SORTABLE_TABLE_IDS = new Set(['categoryTable','audienceTable','materialTable','adTypeTable','dailyTable','weeklyNewAdsTable','urlTable','urlDetailTable','productCategorySalesTable','interestKeywordTable']);
 const tableSortState = {};
 
 function getSortedRows(elId, rows, columns) {
@@ -9344,6 +9542,7 @@ function updateAll(resetPage=true) {
         safeRender('kpis', () => renderKPIs(rowsFiltered));
         safeRender('chart', () => renderChart(rowsFiltered));
         safeRender('tables', () => renderTables(rowsFiltered));
+        safeRender('interest-keyword', () => renderInterestKeywordBoard(rowsFiltered));
         safeRender('cross-analysis', () => renderCrossAnalysis(rowsFiltered));
         safeRender('weekly-new-ads', () => renderWeeklyNewAdsBoard());
         safeRender('summary', () => renderSummary(rowsFiltered));
@@ -9553,6 +9752,12 @@ if (crossAnalysisTable) {
     if (!key) return;
     if (crossExpandedKeys.has(key)) crossExpandedKeys.delete(key);
     else crossExpandedKeys.add(key);
+    updateAll(false);
+  });
+}
+if (interestKeywordToggle) {
+  interestKeywordToggle.addEventListener('click', () => {
+    interestKeywordExpanded = !interestKeywordExpanded;
     updateAll(false);
   });
 }
