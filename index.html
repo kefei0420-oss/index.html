@@ -2579,7 +2579,7 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
       <div class="page-updated" id="pageUpdatedPreview">
         <span class="dot"></span>
         <span class="label">数据最后更新时间</span>
-        <span class="time">2026-03-27 09:54（北京时间）</span>
+        <span class="time">2026-03-27 16:29（北京时间）</span>
       </div>
     </div>
     <div class="filters">
@@ -7806,6 +7806,11 @@ function renderProductCategorySalesPanel() {
 function renderProductTable(rowsFiltered) {
   const [curStart, curEnd] = getDateRangeForCurrentFilter();
   const [prevStart, prevEnd] = getPrevRange(curStart, curEnd);
+  const hasTopAdFilters =
+    (categorySelect?.value && categorySelect.value !== 'ALL') ||
+    (adTypeSelect?.value && adTypeSelect.value !== 'ALL') ||
+    (materialSelect?.value && materialSelect.value !== 'ALL') ||
+    (categorySubSelectionMode === 'custom' && selectedCategorySubs.size > 0);
   const buildProductOnlyRow = (productKey, p) => ({
     productKey,
     id: String(p.id || ''),
@@ -7902,7 +7907,7 @@ function renderProductTable(rowsFiltered) {
     };
   });
 
-  if (shopifyDataLoaded) {
+  if (shopifyDataLoaded && !hasTopAdFilters) {
     const byShopify = new Map();
     Object.entries(PRODUCT_MAP || {}).forEach(([productKey, p]) => {
       const sid = String(p?.shopify_id || '').trim();
