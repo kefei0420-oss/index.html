@@ -2579,7 +2579,7 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
       <div class="page-updated" id="pageUpdatedPreview">
         <span class="dot"></span>
         <span class="label">数据最后更新时间</span>
-        <span class="time">2026-03-30 09:41（北京时间）</span>
+        <span class="time">2026-03-30 14:10（北京时间）</span>
       </div>
     </div>
     <div class="filters">
@@ -3508,7 +3508,7 @@ function adAssetFor(row) {
     if (key) asset = AD_ASSET_BY_NAME[key] || null;
   }
   if (!asset) return null;
-  const url = normalizeAssetUrl(asset.url || '');
+  const url = assetStableUrl(asset);
   if (!url) return null;
   const type = String(asset.type || '').toLowerCase();
   if (!isAssetClickableForRow(row, type, url)) return null;
@@ -3516,12 +3516,24 @@ function adAssetFor(row) {
 }
 
 function assetLinkBtnHtml(asset, baseClass='ad-main-link', extraClass='') {
-  if (!asset || !asset.url) return '';
+  if (!asset) return '';
+  const finalUrl = assetStableUrl(asset);
+  if (!finalUrl) return '';
   const cls = asset.type === 'video' ? 'asset-link-video' : 'asset-link-image';
   const merged = `${baseClass} ${cls} ${extraClass}`.trim();
   const title = asset.type === 'video' ? '打开视频素材' : '打开图片素材';
   const icon = asset.type === 'video' ? '▶' : '▣';
-  return `<a class="${merged}" href="${asset.url}" target="_blank" rel="noopener noreferrer" title="${title}">${icon}</a>`;
+  return `<a class="${merged}" href="${finalUrl}" target="_blank" rel="noopener noreferrer" title="${title}">${icon}</a>`;
+}
+
+function assetStableUrl(asset) {
+  if (!asset) return '';
+  const type = String(asset.type || '').toLowerCase();
+  const videoId = String(asset.video_id || '').trim();
+  if (type === 'video' && videoId) {
+    return `https://www.facebook.com/watch/?v=${videoId}`;
+  }
+  return normalizeAssetUrl(asset.url || '');
 }
 
 function normalizeAssetUrl(raw) {
@@ -3540,6 +3552,7 @@ function isVideoUrl(url) {
   if (!s) return false;
   if (/\.mp4(\?|$)/.test(s)) return true;
   if (s.includes('facebook.com') && s.includes('/videos/')) return true;
+  if (s.includes('facebook.com') && (s.includes('watch/?v=') || s.includes('watch?v='))) return true;
   return false;
 }
 
