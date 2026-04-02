@@ -1226,6 +1226,25 @@ select, .pill-btn, input[type="date"] { border:1px solid var(--line); background
 .content-shell .panel { min-width:0; max-width:100%; }
 .content-stack { display:grid; gap:12px; min-width:0; }
 .content-chart-wrap { height:240px; }
+.content-freshness-panel { display:grid; gap:14px; }
+.content-freshness-panel.hidden { display:none; }
+.content-freshness-head { display:flex; align-items:flex-end; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+.content-freshness-head h3 { margin:0; }
+.content-freshness-head .sub { color:var(--muted); font-size:12px; }
+.content-freshness-legend { display:grid; gap:6px; margin-top:8px; }
+.content-freshness-legend .row { display:flex; align-items:center; justify-content:space-between; gap:12px; font-size:11px; }
+.content-freshness-legend .label { display:inline-flex; align-items:center; gap:8px; color:#4b4035; }
+.content-freshness-legend .dot { width:10px; height:10px; border-radius:999px; display:inline-block; }
+.content-freshness-legend .value { color:#6b5c4c; white-space:nowrap; }
+.content-freshness-top-legend { display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin:0 0 8px; font-size:11px; color:#6f6255; }
+.content-freshness-top-legend .item { display:inline-flex; align-items:center; gap:6px; }
+.content-freshness-top-legend .dot { width:10px; height:10px; border-radius:999px; display:inline-block; }
+.content-freshness-grid { display:grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap:12px; }
+.content-freshness-card { border:1px solid var(--line); border-radius:16px; background:#fffdfa; padding:14px; min-width:0; }
+.content-freshness-card .title { font-size:14px; font-weight:800; color:#3f3428; margin:0 0 10px; }
+.content-freshness-chart { height:240px; }
+.content-freshness-note { color:var(--muted); font-size:11px; margin-top:6px; line-height:1.35; }
+.content-freshness-empty { border:1px dashed #e4d4c1; border-radius:14px; background:#fffaf4; color:var(--muted); font-size:12px; padding:18px; text-align:center; }
 .content-summary-list {
   display:grid;
   gap:8px;
@@ -1372,6 +1391,7 @@ select, .pill-btn, input[type="date"] { border:1px solid var(--line); background
   .content-overview-hero .hero-meta,
   .content-line-card .stats { grid-template-columns: repeat(2, minmax(0,1fr)); }
   .content-kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .content-freshness-grid { grid-template-columns: 1fr; }
   .content-skeleton-board { grid-template-columns:1fr; }
   .content-skeleton-table-row { grid-template-columns:1.2fr repeat(3, minmax(56px, 1fr)); }
   .content-kpi-card.feature,
@@ -2579,7 +2599,7 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
       <div class="page-updated" id="pageUpdatedPreview">
         <span class="dot"></span>
         <span class="label">数据最后更新时间</span>
-        <span class="time">2026-04-02 09:37（北京时间）</span>
+        <span class="time">2026-04-02 11:41（北京时间）</span>
       </div>
     </div>
     <div class="filters">
@@ -2656,6 +2676,37 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
       </div>
 
       <div class="panel">
+        <div class="content-freshness-panel hidden" id="contentFreshnessPanel">
+          <div class="content-freshness-head">
+            <div>
+              <h3>新老素材概览</h3>
+              <div class="sub" id="contentFreshnessSub">仅在月维度展示，按素材命名前缀日期判断新老。</div>
+            </div>
+          </div>
+          <div class="content-freshness-grid">
+            <div class="content-freshness-card">
+              <div class="title">当月新老素材占比</div>
+              <div class="content-freshness-top-legend" id="contentFreshnessShareLegend"></div>
+              <div class="content-freshness-chart"><canvas id="contentFreshnessShareChart"></canvas></div>
+              <div class="content-freshness-note">按素材数统计，新素材 = 素材日期标签属于当前月份。</div>
+            </div>
+            <div class="content-freshness-card">
+              <div class="title">当月新老素材 GMV</div>
+              <div class="content-freshness-top-legend" id="contentFreshnessGmvLegend"></div>
+              <div class="content-freshness-chart"><canvas id="contentFreshnessGmvChart"></canvas></div>
+              <div class="content-freshness-note">按当前筛选范围内素材聚合后的 GMV 统计。</div>
+            </div>
+            <div class="content-freshness-card">
+              <div class="title">分品类新老素材 GMV</div>
+              <div class="content-freshness-top-legend" id="contentFreshnessCategoryLegend"></div>
+              <div class="content-freshness-chart"><canvas id="contentFreshnessCategoryChart"></canvas></div>
+              <div class="content-freshness-note">点击柱子可直接联动到上方品类与下方素材明细。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
         <div class="table-tools">
           <h3>素材明细</h3>
           <div class="filter-group" id="contentAssetFilterGroup">
@@ -2664,6 +2715,13 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
               <option value="all" selected>全部</option>
               <option value="video">视频</option>
               <option value="image">图片</option>
+            </select>
+            <span class="badge">新老</span>
+            <select id="contentFreshnessFilter">
+              <option value="all" selected>全部</option>
+              <option value="新素材">新素材</option>
+              <option value="老素材">老素材</option>
+              <option value="未识别">未识别</option>
             </select>
             <span class="badge">环比</span>
             <select id="contentCompare">
@@ -3210,7 +3268,8 @@ const rememberedStartupView = (() => {
 })();
 
 function fetchJson(path, fallback, required=false) {
-  return fetch(path)
+  const url = `${path}${path.includes('?') ? '&' : '?'}v=${Date.now()}`;
+  return fetch(url, { cache: 'no-store' })
     .then(r => {
       if (!r.ok) {
         if (required) throw new Error(`Failed to load ${path}: ${r.status}`);
@@ -3434,6 +3493,7 @@ const viewDecisionBtn = document.getElementById('viewDecisionBtn');
 const resetDashboardBtn = document.getElementById('resetDashboardBtn');
 const decisionNativeRoot = document.getElementById('decisionNativeRoot');
 const contentTypeFilterSelect = document.getElementById('contentTypeFilter');
+const contentFreshnessFilterSelect = document.getElementById('contentFreshnessFilter');
 const contentCompareSelect = document.getElementById('contentCompare');
 const contentSearchInput = document.getElementById('contentSearch');
 const contentSearchClearBtn = document.getElementById('contentSearchClear');
@@ -3476,6 +3536,11 @@ let AD_ASSET_BY_ID = (AD_ASSETS && AD_ASSETS.by_ad_id) || {};
 let contentTrendChart = null;
 let contentMixChart = null;
 let contentCurveChart = null;
+let contentFreshnessShareChart = null;
+let contentFreshnessGmvChart = null;
+let contentFreshnessCategoryChart = null;
+let contentFreshnessFilter = 'all';
+let contentFreshnessCategoryFilter = 'all';
 let contentWeekMode = 'all';
 let contentTypeMode = 'all';
 let contentBoardCompareMode = 'off';
@@ -4846,6 +4911,9 @@ function resetDashboard() {
   if (getContentWeekSelect()) getContentWeekSelect().value = 'all';
   if (getContentBoardCompareSelect()) getContentBoardCompareSelect().value = 'off';
   if (contentTypeFilterSelect) contentTypeFilterSelect.value = 'all';
+  contentFreshnessFilter = 'all';
+  contentFreshnessCategoryFilter = 'all';
+  if (contentFreshnessFilterSelect) contentFreshnessFilterSelect.value = 'all';
   if (contentCompareSelect) contentCompareSelect.value = 'off';
   if (contentSearchInput) contentSearchInput.value = '';
   if (contentAssetPageSizeSelect) contentAssetPageSizeSelect.value = '10';
@@ -5374,6 +5442,213 @@ function normalizeCreativeTitle(v) {
 
 function contentRowOwner(row) {
   return String(row?.creator_bucket || '').trim() || 'Other';
+}
+
+function extractCreativeDateFromText(value) {
+  const raw = String(value || '').trim();
+  const m = raw.match(/^(\d{2})(\d{2})(\d{2})-/);
+  if (!m) return null;
+  const year = 2000 + Number(m[1]);
+  const month = Number(m[2]);
+  const day = Number(m[3]);
+  if (!year || month < 1 || month > 12 || day < 1 || day > 31) return null;
+  const d = new Date(year, month - 1, day);
+  if (Number.isNaN(d.getTime())) return null;
+  return d;
+}
+
+function contentCreativeDate(item) {
+  return (
+    extractCreativeDateFromText(item?.displayKey) ||
+    extractCreativeDateFromText(item?.key) ||
+    extractCreativeDateFromText(item?.mainAd) ||
+    null
+  );
+}
+
+function getContentFreshnessBucket(item, monthKey) {
+  const d = contentCreativeDate(item);
+  if (!d) return '未识别';
+  const monthStart = parseDate(`${monthKey}-01`);
+  const mk = getMonthKey(d);
+  if (mk === monthKey) return '新素材';
+  if (d < monthStart) return '老素材';
+  return '未识别';
+}
+
+function destroyContentFreshnessCharts() {
+  if (contentFreshnessShareChart) { contentFreshnessShareChart.destroy(); contentFreshnessShareChart = null; }
+  if (contentFreshnessGmvChart) { contentFreshnessGmvChart.destroy(); contentFreshnessGmvChart = null; }
+  if (contentFreshnessCategoryChart) { contentFreshnessCategoryChart.destroy(); contentFreshnessCategoryChart = null; }
+}
+
+function renderContentFreshnessPanel(creativeItems) {
+  const panel = document.getElementById('contentFreshnessPanel');
+  const sub = document.getElementById('contentFreshnessSub');
+  const shareLegend = document.getElementById('contentFreshnessShareLegend');
+  const gmvLegend = document.getElementById('contentFreshnessGmvLegend');
+  const categoryLegend = document.getElementById('contentFreshnessCategoryLegend');
+  const shareCanvas = document.getElementById('contentFreshnessShareChart');
+  const gmvCanvas = document.getElementById('contentFreshnessGmvChart');
+  const categoryCanvas = document.getElementById('contentFreshnessCategoryChart');
+  if (!panel || !shareCanvas || !gmvCanvas || !categoryCanvas) return;
+  const monthMode = timeMode?.value === 'month';
+  if (!monthMode) {
+    contentFreshnessFilter = 'all';
+    contentFreshnessCategoryFilter = 'all';
+    if (contentFreshnessFilterSelect) contentFreshnessFilterSelect.value = 'all';
+    panel.classList.add('hidden');
+    destroyContentFreshnessCharts();
+    return;
+  }
+  const monthKey = String(monthSelect?.value || '').trim();
+  if (!monthKey) {
+    panel.classList.add('hidden');
+    destroyContentFreshnessCharts();
+    return;
+  }
+  const monthStart = parseDate(`${monthKey}-01`);
+  const bucketOf = (item) => getContentFreshnessBucket(item, monthKey);
+  const stats = {
+    '新素材': { count: 0, conv: 0, spend: 0 },
+    '老素材': { count: 0, conv: 0, spend: 0 },
+    '未识别': { count: 0, conv: 0, spend: 0 },
+  };
+  const categoryMap = new Map();
+  creativeItems.forEach(item => {
+    const bucket = bucketOf(item);
+    stats[bucket].count += 1;
+    stats[bucket].conv += Number(item?.agg?.conv) || 0;
+    stats[bucket].spend += Number(item?.agg?.spend) || 0;
+    if (bucket === '未识别') return;
+    const cat = String(item?.category || 'Others').trim() || 'Others';
+    if (!categoryMap.has(cat)) categoryMap.set(cat, { '新素材': { conv: 0 }, '老素材': { conv: 0 } });
+    categoryMap.get(cat)[bucket].conv += Number(item?.agg?.conv) || 0;
+  });
+  const totalCount = stats['新素材'].count + stats['老素材'].count + stats['未识别'].count;
+  if (!totalCount) {
+    panel.classList.remove('hidden');
+    destroyContentFreshnessCharts();
+    panel.querySelector('.content-freshness-grid').innerHTML = `<div class="content-freshness-empty">当前月份暂无可识别素材样本。</div>`;
+    if (sub) sub.textContent = `当前月份 ${monthKey} 暂无可展示的新老素材样本。`;
+    return;
+  }
+  const originalGrid = `
+            <div class="content-freshness-card">
+              <div class="title">当月新老素材占比</div>
+              <div class="content-freshness-chart"><canvas id="contentFreshnessShareChart"></canvas></div>
+              <div class="content-freshness-note">按素材数统计，新素材 = 素材日期标签属于当前月份。</div>
+            </div>
+            <div class="content-freshness-card">
+              <div class="title">当月新老素材 GMV</div>
+              <div class="content-freshness-chart"><canvas id="contentFreshnessGmvChart"></canvas></div>
+              <div class="content-freshness-note">按当前筛选范围内素材聚合后的 GMV 统计。</div>
+            </div>
+            <div class="content-freshness-card">
+              <div class="title">分品类新老素材 GMV</div>
+              <div class="content-freshness-chart"><canvas id="contentFreshnessCategoryChart"></canvas></div>
+              <div class="content-freshness-note">仅展示当前范围内有 GMV 的主要品类。</div>
+            </div>`;
+  const grid = panel.querySelector('.content-freshness-grid');
+  if (grid && !grid.querySelector('#contentFreshnessShareChart')) grid.innerHTML = originalGrid;
+  const shareCtx = document.getElementById('contentFreshnessShareChart');
+  const gmvCtx = document.getElementById('contentFreshnessGmvChart');
+  const categoryCtx = document.getElementById('contentFreshnessCategoryChart');
+  if (!(shareCtx && gmvCtx && categoryCtx)) return;
+  panel.classList.remove('hidden');
+  if (sub) sub.textContent = `${monthKey} 月视角：素材日期标签属于当月为新素材，早于当月为老素材。`;
+  if (shareLegend) {
+    shareLegend.innerHTML = `
+      <span class="item"><span class="dot" style="background:#2f6fec"></span>新素材</span>
+      <span class="item"><span class="dot" style="background:#22b8b0"></span>老素材</span>
+      <span class="item"><span class="dot" style="background:#ffbf43"></span>未识别</span>
+    `;
+  }
+  if (gmvLegend) {
+    gmvLegend.innerHTML = `
+      <span class="item"><span class="dot" style="background:#2f6fec"></span>新素材</span>
+      <span class="item"><span class="dot" style="background:#22b8b0"></span>老素材</span>
+    `;
+  }
+  if (categoryLegend) {
+    categoryLegend.innerHTML = `
+      <span class="item"><span class="dot" style="background:#2f6fec"></span>当月新素材</span>
+      <span class="item"><span class="dot" style="background:#22b8b0"></span>老素材</span>
+    `;
+  }
+  destroyContentFreshnessCharts();
+  const shareLabels = ['新素材', '老素材', '未识别'];
+  const shareValues = shareLabels.map(k => stats[k].count);
+  const shareColors = ['#2f6fec', '#22b8b0', '#ffbf43'];
+  contentFreshnessShareChart = new Chart(shareCtx, {
+    type: 'doughnut',
+    data: {
+      labels: shareLabels,
+      datasets: [{ data: shareValues, backgroundColor: shareColors, borderColor: '#fffaf4', borderWidth: 2, hoverOffset: 6 }]
+    },
+    options: {
+      maintainAspectRatio: false,
+      cutout: '58%',
+      onClick: (_evt, elements) => {
+        if (!elements?.length) return;
+        const idx = elements[0].index;
+        const next = shareLabels[idx] || 'all';
+        contentFreshnessFilter = contentFreshnessFilter === next ? 'all' : next;
+        contentFreshnessCategoryFilter = 'all';
+        if (contentFreshnessFilterSelect) contentFreshnessFilterSelect.value = contentFreshnessFilter;
+        contentAssetPage = 1;
+        updateAll(false);
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: (ctx) => `${ctx.label}: ${fmt(ctx.raw, 0)} 个 (${((ctx.raw / totalCount) * 100).toFixed(2)}%)` } }
+      }
+    }
+  });
+  contentFreshnessGmvChart = new Chart(gmvCtx, {
+    type: 'bar',
+    data: {
+      labels: ['新素材', '老素材'],
+      datasets: [{
+        label: 'GMV',
+        data: [stats['新素材'].conv, stats['老素材'].conv],
+        backgroundColor: ['#2f6fec', '#22b8b0'],
+        borderRadius: 8,
+        maxBarThickness: 44,
+      }]
+    },
+    options: {
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { ticks: { callback: (v) => fmt(v, 0) } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+  const categoryRows = Array.from(categoryMap.entries())
+    .map(([category, vals]) => ({ category, newConv: vals['新素材']?.conv || 0, oldConv: vals['老素材']?.conv || 0, total: (vals['新素材']?.conv || 0) + (vals['老素材']?.conv || 0) }))
+    .filter(r => r.total > 0)
+    .sort((a, b) => b.total - a.total)
+    .slice(0, 6);
+  contentFreshnessCategoryChart = new Chart(categoryCtx, {
+    type: 'bar',
+    data: {
+      labels: categoryRows.map(r => r.category),
+      datasets: [
+        { label: '当月新素材', data: categoryRows.map(r => r.newConv), backgroundColor: '#2f6fec', borderRadius: 6, maxBarThickness: 18 },
+        { label: '老素材', data: categoryRows.map(r => r.oldConv), backgroundColor: '#22b8b0', borderRadius: 6, maxBarThickness: 18 }
+      ]
+    },
+    options: {
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { ticks: { callback: (v) => fmt(v, 0) } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
 }
 
 function contentRowKey(row) {
@@ -6385,11 +6660,35 @@ function renderContentView(rowsFiltered) {
           return creativeItems.filter(item => item.category === cat && item.categorySub === sub);
         })()
       : creativeItems.filter(item => item.category === contentLineBoardSelection);
-  const assetTotalConv = assetItems.reduce((sum, item) => sum + (item.agg.conv || 0), 0);
+  const monthKey = String(monthSelect?.value || '').trim();
+  const freshnessFilterFn = (item) => {
+    if (timeMode?.value !== 'month') return true;
+    if (contentFreshnessFilter !== 'all') {
+      if (getContentFreshnessBucket(item, monthKey) !== contentFreshnessFilter) return false;
+    }
+    if (contentFreshnessCategoryFilter !== 'all') {
+      if (String(item.category || 'Others') !== contentFreshnessCategoryFilter) return false;
+    }
+    return true;
+  };
+  const creativeItemsFiltered = creativeItems.filter(freshnessFilterFn);
+  const prevCreativeItemsFiltered = prevCreativeItems.filter(item => {
+    if (timeMode?.value !== 'month') return true;
+    if (contentFreshnessFilter !== 'all') {
+      if (getContentFreshnessBucket(item, monthKey) !== contentFreshnessFilter) return false;
+    }
+    if (contentFreshnessCategoryFilter !== 'all') {
+      if (String(item.category || 'Others') !== contentFreshnessCategoryFilter) return false;
+    }
+    return true;
+  });
+  const assetItemsFiltered = assetItems.filter(freshnessFilterFn);
+  const assetTotalConv = assetItemsFiltered.reduce((sum, item) => sum + (item.agg.conv || 0), 0);
   renderContentBoard(contentRows, creativeItems, prevContentRows, prevCreativeItems, totalConv);
   syncContentFilters(filterContentRowsBase(false));
-  renderContentLinePanel(creativeItems, prevCreativeItems, totalConv);
-  renderContentAssetTable(assetItems, assetTotalConv);
+  renderContentLinePanel(creativeItemsFiltered, prevCreativeItemsFiltered, assetTotalConv);
+  renderContentAssetTable(assetItemsFiltered, assetTotalConv);
+  renderContentFreshnessPanel(creativeItems);
   revealOpenContentCurve();
 }
 
@@ -9818,6 +10117,14 @@ if (contentTypeFilterSelect) {
     updateAll(false);
   });
 }
+if (contentFreshnessFilterSelect) {
+  contentFreshnessFilterSelect.addEventListener('change', () => {
+    contentFreshnessFilter = contentFreshnessFilterSelect.value || 'all';
+    contentFreshnessCategoryFilter = 'all';
+    contentAssetPage = 1;
+    updateAll(false);
+  });
+}
 if (contentSearchInput) {
   contentSearchInput.addEventListener('input', () => {
     contentSearch = contentSearchInput.value || '';
@@ -10104,7 +10411,8 @@ let shopifyDataFailed = false;
 function ensureShopifyDailyLoaded() {
   if (shopifyDataLoaded) return Promise.resolve(SHOPIFY_SALES_DAILY);
   if (shopifyDataLoadingPromise) return shopifyDataLoadingPromise;
-  shopifyDataLoadingPromise = fetch('./data/shopify_daily.json')
+  const url = `./data/shopify_daily.json?v=${Date.now()}`;
+  shopifyDataLoadingPromise = fetch(url, { cache: 'no-store' })
     .then(r => {
       if (!r.ok) throw new Error(`Failed to load ./data/shopify_daily.json: ${r.status}`);
       return r.json();
