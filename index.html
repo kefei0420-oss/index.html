@@ -2599,7 +2599,7 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
       <div class="page-updated" id="pageUpdatedPreview">
         <span class="dot"></span>
         <span class="label">数据最后更新时间</span>
-        <span class="time">2026-04-02 11:41（北京时间）</span>
+        <span class="time">2026-04-02 12:06（北京时间）</span>
       </div>
     </div>
     <div class="filters">
@@ -2675,7 +2675,7 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
         <div id="contentBoard"></div>
       </div>
 
-      <div class="panel">
+      <div class="panel hidden" id="contentFreshnessWrap">
         <div class="content-freshness-panel hidden" id="contentFreshnessPanel">
           <div class="content-freshness-head">
             <div>
@@ -5483,6 +5483,7 @@ function destroyContentFreshnessCharts() {
 }
 
 function renderContentFreshnessPanel(creativeItems) {
+  const wrap = document.getElementById('contentFreshnessWrap');
   const panel = document.getElementById('contentFreshnessPanel');
   const sub = document.getElementById('contentFreshnessSub');
   const shareLegend = document.getElementById('contentFreshnessShareLegend');
@@ -5491,18 +5492,20 @@ function renderContentFreshnessPanel(creativeItems) {
   const shareCanvas = document.getElementById('contentFreshnessShareChart');
   const gmvCanvas = document.getElementById('contentFreshnessGmvChart');
   const categoryCanvas = document.getElementById('contentFreshnessCategoryChart');
-  if (!panel || !shareCanvas || !gmvCanvas || !categoryCanvas) return;
+  if (!wrap || !panel || !shareCanvas || !gmvCanvas || !categoryCanvas) return;
   const monthMode = timeMode?.value === 'month';
   if (!monthMode) {
     contentFreshnessFilter = 'all';
     contentFreshnessCategoryFilter = 'all';
     if (contentFreshnessFilterSelect) contentFreshnessFilterSelect.value = 'all';
+    wrap.classList.add('hidden');
     panel.classList.add('hidden');
     destroyContentFreshnessCharts();
     return;
   }
   const monthKey = String(monthSelect?.value || '').trim();
   if (!monthKey) {
+    wrap.classList.add('hidden');
     panel.classList.add('hidden');
     destroyContentFreshnessCharts();
     return;
@@ -5527,6 +5530,7 @@ function renderContentFreshnessPanel(creativeItems) {
   });
   const totalCount = stats['新素材'].count + stats['老素材'].count + stats['未识别'].count;
   if (!totalCount) {
+    wrap.classList.remove('hidden');
     panel.classList.remove('hidden');
     destroyContentFreshnessCharts();
     panel.querySelector('.content-freshness-grid').innerHTML = `<div class="content-freshness-empty">当前月份暂无可识别素材样本。</div>`;
@@ -5536,16 +5540,19 @@ function renderContentFreshnessPanel(creativeItems) {
   const originalGrid = `
             <div class="content-freshness-card">
               <div class="title">当月新老素材占比</div>
+              <div class="content-freshness-top-legend" id="contentFreshnessShareLegend"></div>
               <div class="content-freshness-chart"><canvas id="contentFreshnessShareChart"></canvas></div>
               <div class="content-freshness-note">按素材数统计，新素材 = 素材日期标签属于当前月份。</div>
             </div>
             <div class="content-freshness-card">
               <div class="title">当月新老素材 GMV</div>
+              <div class="content-freshness-top-legend" id="contentFreshnessGmvLegend"></div>
               <div class="content-freshness-chart"><canvas id="contentFreshnessGmvChart"></canvas></div>
               <div class="content-freshness-note">按当前筛选范围内素材聚合后的 GMV 统计。</div>
             </div>
             <div class="content-freshness-card">
               <div class="title">分品类新老素材 GMV</div>
+              <div class="content-freshness-top-legend" id="contentFreshnessCategoryLegend"></div>
               <div class="content-freshness-chart"><canvas id="contentFreshnessCategoryChart"></canvas></div>
               <div class="content-freshness-note">仅展示当前范围内有 GMV 的主要品类。</div>
             </div>`;
@@ -5555,6 +5562,7 @@ function renderContentFreshnessPanel(creativeItems) {
   const gmvCtx = document.getElementById('contentFreshnessGmvChart');
   const categoryCtx = document.getElementById('contentFreshnessCategoryChart');
   if (!(shareCtx && gmvCtx && categoryCtx)) return;
+  wrap.classList.remove('hidden');
   panel.classList.remove('hidden');
   if (sub) sub.textContent = `${monthKey} 月视角：素材日期标签属于当月为新素材，早于当月为老素材。`;
   if (shareLegend) {
