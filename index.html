@@ -2599,7 +2599,7 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
       <div class="page-updated" id="pageUpdatedPreview">
         <span class="dot"></span>
         <span class="label">数据最后更新时间</span>
-        <span class="time">2026-04-02 12:06（北京时间）</span>
+        <span class="time">2026-04-02 13:46（北京时间）</span>
       </div>
     </div>
     <div class="filters">
@@ -2688,7 +2688,7 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
               <div class="title">当月新老素材占比</div>
               <div class="content-freshness-top-legend" id="contentFreshnessShareLegend"></div>
               <div class="content-freshness-chart"><canvas id="contentFreshnessShareChart"></canvas></div>
-              <div class="content-freshness-note">按素材数统计，新素材 = 素材日期标签属于当前月份。</div>
+              <div class="content-freshness-note">按素材数统计，当月新素材 = 素材日期标签属于当前月份。</div>
             </div>
             <div class="content-freshness-card">
               <div class="title">当月新老素材 GMV</div>
@@ -2700,7 +2700,7 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
               <div class="title">分品类新老素材 GMV</div>
               <div class="content-freshness-top-legend" id="contentFreshnessCategoryLegend"></div>
               <div class="content-freshness-chart"><canvas id="contentFreshnessCategoryChart"></canvas></div>
-              <div class="content-freshness-note">点击柱子可直接联动到上方品类与下方素材明细。</div>
+              <div class="content-freshness-note">仅展示当前范围内有 GMV 的主要品类新老素材对比。</div>
             </div>
           </div>
         </div>
@@ -2719,7 +2719,7 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
             <span class="badge">新老</span>
             <select id="contentFreshnessFilter">
               <option value="all" selected>全部</option>
-              <option value="新素材">新素材</option>
+              <option value="新素材">当月新素材</option>
               <option value="老素材">老素材</option>
               <option value="未识别">未识别</option>
             </select>
@@ -5542,7 +5542,7 @@ function renderContentFreshnessPanel(creativeItems) {
               <div class="title">当月新老素材占比</div>
               <div class="content-freshness-top-legend" id="contentFreshnessShareLegend"></div>
               <div class="content-freshness-chart"><canvas id="contentFreshnessShareChart"></canvas></div>
-              <div class="content-freshness-note">按素材数统计，新素材 = 素材日期标签属于当前月份。</div>
+              <div class="content-freshness-note">按素材数统计，当月新素材 = 素材日期标签属于当前月份。</div>
             </div>
             <div class="content-freshness-card">
               <div class="title">当月新老素材 GMV</div>
@@ -5564,17 +5564,17 @@ function renderContentFreshnessPanel(creativeItems) {
   if (!(shareCtx && gmvCtx && categoryCtx)) return;
   wrap.classList.remove('hidden');
   panel.classList.remove('hidden');
-  if (sub) sub.textContent = `${monthKey} 月视角：素材日期标签属于当月为新素材，早于当月为老素材。`;
+  if (sub) sub.textContent = `${monthKey} 月视角：素材日期标签属于当月为当月新素材，早于当月为老素材。`;
   if (shareLegend) {
     shareLegend.innerHTML = `
-      <span class="item"><span class="dot" style="background:#2f6fec"></span>新素材</span>
+      <span class="item"><span class="dot" style="background:#2f6fec"></span>当月新素材</span>
       <span class="item"><span class="dot" style="background:#22b8b0"></span>老素材</span>
       <span class="item"><span class="dot" style="background:#ffbf43"></span>未识别</span>
     `;
   }
   if (gmvLegend) {
     gmvLegend.innerHTML = `
-      <span class="item"><span class="dot" style="background:#2f6fec"></span>新素材</span>
+      <span class="item"><span class="dot" style="background:#2f6fec"></span>当月新素材</span>
       <span class="item"><span class="dot" style="background:#22b8b0"></span>老素材</span>
     `;
   }
@@ -5585,8 +5585,9 @@ function renderContentFreshnessPanel(creativeItems) {
     `;
   }
   destroyContentFreshnessCharts();
-  const shareLabels = ['新素材', '老素材', '未识别'];
-  const shareValues = shareLabels.map(k => stats[k].count);
+  const shareKeys = ['新素材', '老素材', '未识别'];
+  const shareLabels = ['当月新素材', '老素材', '未识别'];
+  const shareValues = shareKeys.map(k => stats[k].count);
   const shareColors = ['#2f6fec', '#22b8b0', '#ffbf43'];
   contentFreshnessShareChart = new Chart(shareCtx, {
     type: 'doughnut',
@@ -5600,7 +5601,7 @@ function renderContentFreshnessPanel(creativeItems) {
       onClick: (_evt, elements) => {
         if (!elements?.length) return;
         const idx = elements[0].index;
-        const next = shareLabels[idx] || 'all';
+        const next = shareKeys[idx] || 'all';
         contentFreshnessFilter = contentFreshnessFilter === next ? 'all' : next;
         contentFreshnessCategoryFilter = 'all';
         if (contentFreshnessFilterSelect) contentFreshnessFilterSelect.value = contentFreshnessFilter;
@@ -5616,7 +5617,7 @@ function renderContentFreshnessPanel(creativeItems) {
   contentFreshnessGmvChart = new Chart(gmvCtx, {
     type: 'bar',
     data: {
-      labels: ['新素材', '老素材'],
+      labels: ['当月新素材', '老素材'],
       datasets: [{
         label: 'GMV',
         data: [stats['新素材'].conv, stats['老素材'].conv],
