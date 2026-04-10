@@ -22,6 +22,7 @@
   --bad: #b3261e;
   --content-asset-first-col: 360px;
   --content-asset-main-col: 340px;
+  --campaign-structure-name-col: 420px;
 }
 * { box-sizing: border-box; }
 body { margin:0; font-family: 'Manrope', sans-serif; background: radial-gradient(1200px 600px at 10% -10%, #fff7ef 0%, #f6efe8 45%, #f3e9df 100%); color: var(--text); }
@@ -2490,6 +2491,344 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
 .interest-board-table td:nth-child(3) {
   min-width:74px;
 }
+.campaign-structure-shell { display:grid; gap:14px; align-items:start; }
+.campaign-structure-head { display:none; }
+.campaign-structure-head-top {
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:14px;
+  flex-wrap:wrap;
+}
+.campaign-structure-head h3 { margin:0; font-size:18px; letter-spacing:-0.01em; }
+.campaign-structure-head .sub { color:var(--muted); font-size:12px; margin-top:4px; line-height:1.5; }
+.campaign-structure-status {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.campaign-structure-selection {
+  display:inline-flex;
+  align-items:center;
+  min-height:34px;
+  padding:0 12px;
+  border-radius:999px;
+  border:1px solid var(--line);
+  background:#fff8f1;
+  color:#8f6a42;
+  font-size:12px;
+  font-weight:700;
+  max-width:640px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.campaign-structure-toolbar {
+  display:grid;
+  gap:10px;
+}
+.campaign-structure-searches { display:flex; gap:8px; flex-wrap:wrap; }
+.campaign-structure-searches input {
+  width:200px;
+  height:36px;
+  border-radius:12px;
+  border:1px solid var(--line);
+  background:#fffdfa;
+  padding:0 12px;
+  font-size:13px;
+}
+.campaign-structure-metric-tabs {
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  align-items:center;
+  margin-top:4px;
+  margin-bottom:10px;
+}
+.campaign-structure-metric-tabs .pill-btn {
+  min-height:34px;
+  border-radius:999px;
+  transition:all .18s ease;
+}
+.campaign-structure-metric-tabs .pill-btn.active {
+  background:var(--accent);
+  color:#fff;
+  border-color:var(--accent);
+  box-shadow:0 6px 14px rgba(214,123,35,0.16);
+}
+.campaign-structure-summary {
+  display:grid;
+  grid-template-columns:repeat(6,minmax(130px,1fr));
+  gap:8px;
+  margin-bottom:10px;
+}
+.campaign-structure-stat {
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:#fffdfa;
+  padding:10px 12px;
+  box-shadow:0 6px 18px rgba(125,97,60,0.04);
+}
+.campaign-structure-stat .label {
+  font-size:12px;
+  color:#8f7964;
+  margin-bottom:4px;
+}
+.campaign-structure-stat .value {
+  font-size:24px;
+  font-weight:800;
+  color:#3b3128;
+  letter-spacing:-0.02em;
+}
+.campaign-structure-chart-panel {
+  border:1px solid var(--line);
+  border-radius:20px;
+  background:#fffdfa;
+  padding:18px 18px 14px;
+  box-shadow:0 10px 26px rgba(125,97,60,0.05);
+}
+.campaign-structure-chart-head {
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:12px;
+  flex-wrap:wrap;
+}
+.campaign-structure-chart-title { display:block; }
+.campaign-structure-chart-head { display:flex; }
+.campaign-structure-chart-top {
+  display:grid;
+  gap:12px;
+  margin-bottom:12px;
+}
+.campaign-structure-chart-topbar {
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.campaign-structure-chart-title h3 {
+  margin:0;
+  font-size:18px;
+  letter-spacing:-0.01em;
+}
+.campaign-structure-chart-title .sub {
+  color:var(--muted);
+  font-size:12px;
+  margin-top:4px;
+  line-height:1.5;
+}
+.campaign-structure-chart-grid {
+  display:grid;
+  grid-template-columns:1fr;
+  gap:8px;
+}
+.campaign-structure-chart-card {
+  border:1px solid #eedfcc;
+  border-radius:16px;
+  background:linear-gradient(180deg,#fffdf9 0%,#fff9f1 100%);
+  padding:10px 12px 8px;
+}
+.campaign-structure-chart-card.hidden { display:none; }
+.campaign-structure-chart-card-title {
+  margin:0 0 6px 0;
+  font-size:14px;
+  font-weight:700;
+  color:#5c4631;
+}
+.campaign-structure-chart-wrap { height:300px; }
+.campaign-structure-meta { color:var(--muted); font-size:12px; margin-top:4px; line-height:1.45; }
+.campaign-structure-table-panel {
+  border:1px solid var(--line);
+  border-radius:20px;
+  background:#fffdfa;
+  padding:16px 16px 10px;
+  min-width:0;
+  box-shadow:0 10px 26px rgba(125,97,60,0.05);
+}
+.campaign-structure-table-head {
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  gap:12px;
+  margin-bottom:10px;
+  flex-wrap:wrap;
+}
+.campaign-structure-table-status {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.campaign-structure-tools {
+  display:grid;
+  gap:10px;
+  justify-items:start;
+  width:100%;
+}
+.campaign-structure-level-tabs {
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.campaign-structure-level-tabs .pill-btn {
+  min-height:32px;
+  border-radius:999px;
+}
+.campaign-structure-first-resize { position: relative; }
+.campaign-structure-first-resize .col-handle {
+  position:absolute;
+  right:-4px;
+  top:0;
+  width:8px;
+  height:100%;
+  cursor:col-resize;
+  z-index:6;
+  touch-action:none;
+  display:block;
+}
+.campaign-structure-first-resize::after {
+  content:none;
+}
+.campaign-structure-first-resize:hover::after {
+  content:none;
+}
+.campaign-structure-table-wrap {
+  overflow:auto;
+  padding-bottom:8px;
+}
+.campaign-structure-table-wrap::-webkit-scrollbar { height:8px; }
+.campaign-structure-table-wrap::-webkit-scrollbar-thumb { background:#d8cab7; border-radius:999px; }
+.campaign-structure-table-wrap::-webkit-scrollbar-track { background:#f3ece2; border-radius:999px; }
+.campaign-structure-table { min-width:1700px; table-layout:auto; }
+.campaign-structure-table th {
+  position:relative;
+  background:transparent;
+  box-shadow:none;
+  white-space:nowrap;
+  overflow:visible;
+}
+.campaign-structure-table th.sort-active { background:transparent; }
+.campaign-structure-table .sort-col-active { background:inherit !important; }
+.campaign-structure-table td { white-space:nowrap; }
+.campaign-structure-table .name-cell { width:var(--campaign-structure-name-col); min-width:var(--campaign-structure-name-col); max-width:var(--campaign-structure-name-col); text-align:left !important; }
+.campaign-structure-table th:not(.name-cell), .campaign-structure-table td:not(.name-cell) { min-width:92px; }
+.campaign-structure-table .name-cell .cs-resizer {
+  position:absolute;
+  top:0;
+  right:-4px;
+  width:8px;
+  height:100%;
+  cursor:col-resize;
+  z-index:6;
+  touch-action:none;
+}
+.campaign-structure-table .name-wrap { display:flex; align-items:center; gap:8px; min-width:0; }
+.campaign-structure-table .name-wrap.simple { gap:6px; }
+.campaign-structure-table .node-btn { width:22px; height:22px; border-radius:999px; border:1px solid var(--line); background:#fffaf4; color:#9b6b39; font-weight:700; cursor:pointer; flex:0 0 auto; transition:all .16s ease; }
+.campaign-structure-table .node-btn:hover { background:#fff2e4; border-color:#d7b189; }
+.campaign-structure-table .node-btn.empty { visibility:hidden; }
+.campaign-structure-table .node-label { display:inline-block; flex:1 1 auto; min-width:0; max-width:none; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; cursor:pointer; }
+.campaign-structure-table .ad-thumb {
+  width:26px;
+  height:26px;
+  border-radius:7px;
+  border:1px solid #e8d8c4;
+  object-fit:cover;
+  flex:0 0 auto;
+  background:#f6ece0;
+}
+.campaign-structure-table .ad-thumb-placeholder {
+  width:26px;
+  height:26px;
+  border-radius:7px;
+  border:1px solid #e8d8c4;
+  background:#f6ece0;
+  color:#9f8a74;
+  font-size:9px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 0 auto;
+}
+.campaign-structure-table tr td { transition:background-color .16s ease; }
+.campaign-structure-table tr:hover td { background:#fdf6ed; }
+.campaign-structure-table tr.node-selected td { background:#fff2e3; }
+.campaign-structure-table tr.node-level-1 .name-cell { padding-left:18px; }
+.campaign-structure-table tr.node-level-2 .name-cell { padding-left:36px; }
+.campaign-structure-table .level-pill { display:inline-flex; align-items:center; justify-content:center; min-width:46px; height:20px; padding:0 8px; border-radius:999px; border:1px solid #edd6bc; background:#fff8ef; color:#9a6a38; font-size:11px; font-weight:700; }
+.campaign-structure-note {
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:0 10px;
+  min-height:30px;
+  border-radius:999px;
+  background:#f8efe4;
+  color:#8d6a46;
+  font-size:12px;
+  font-weight:700;
+}
+.campaign-structure-note.info {
+  background:#f6f1e8;
+  color:#86684b;
+}
+.campaign-structure-empty { border:1px dashed #e4d4c1; border-radius:14px; background:#fffaf4; color:var(--muted); font-size:12px; padding:18px; text-align:center; }
+.campaign-structure-page { display:grid; gap:14px; }
+.campaign-structure-page .panel { overflow:hidden; }
+.campaign-structure-chart-legend {
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin:2px 0 10px;
+  padding:2px 0;
+}
+.campaign-legend-chip {
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  min-height:28px;
+  padding:0 10px;
+  border-radius:999px;
+  border:1px solid var(--line);
+  background:#fffaf4;
+  color:#76583b;
+  font-size:12px;
+  font-weight:700;
+}
+.campaign-legend-chip .dot {
+  width:8px;
+  height:8px;
+  border-radius:999px;
+  flex:0 0 auto;
+}
+.campaign-structure-table-head h3 {
+  margin:0;
+  font-size:17px;
+  letter-spacing:-0.01em;
+}
+.campaign-structure-pager {
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+  gap:8px;
+  margin-top:8px;
+}
+.campaign-structure-pager .small {
+  color:var(--muted);
+  font-size:12px;
+}
+@media (max-width: 1100px) {
+  .campaign-structure-summary { grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .campaign-structure-tools { justify-items:stretch; width:100%; }
+  .campaign-structure-searches input { width: 170px; }
+}
+@media (max-width: 760px) {
+  .campaign-structure-summary { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
 .interest-chip {
   display:inline-flex;
   align-items:center;
@@ -2599,7 +2938,7 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
       <div class="page-updated" id="pageUpdatedPreview">
         <span class="dot"></span>
         <span class="label">数据最后更新时间</span>
-        <span class="time">2026-04-10 09:34（北京时间）</span>
+        <span class="time">2026-04-10 14:27（北京时间）</span>
       </div>
     </div>
     <div class="filters">
@@ -2664,6 +3003,7 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
       <button class="pill-btn" id="viewOpsBtn" type="button">运营侧</button>
       <button class="pill-btn" id="viewContentBtn" type="button">内容侧</button>
       <button class="pill-btn" id="viewDecisionBtn" type="button">决策页</button>
+      <button class="pill-btn" id="viewDetailBtn" type="button">明细表</button>
       <span class="spacer"></span>
       <button class="pill-btn" id="resetDashboardBtn" type="button">清除</button>
     </div>
@@ -3240,6 +3580,87 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
       </div>
     </div>
   </div>
+
+  <div class="section hidden campaign-structure-page" id="detailSection">
+    <div class="panel">
+      <div class="campaign-structure-shell">
+        <div class="campaign-structure-empty hidden" id="campaignTrendEmpty">当前筛选范围暂无可展示的结构数据。</div>
+
+        <div class="campaign-structure-chart-panel">
+          <div class="campaign-structure-chart-top">
+            <div class="campaign-structure-chart-topbar">
+              <div class="campaign-structure-chart-title">
+                <h3 id="campaignTrendTitle">趋势图</h3>
+                <div class="sub" id="campaignTrendSub">默认显示全局 Campaign 汇总；点击表格行可切换到对应 Campaign / Ad set / Ad，再点一次可回到全局。</div>
+              </div>
+            </div>
+            <div class="campaign-structure-metric-tabs" id="campaignMetricTabs">
+              <button class="pill-btn sm active" type="button" data-campaign-key="spend">花费</button>
+              <button class="pill-btn sm active" type="button" data-campaign-key="conv">转化金额</button>
+              <button class="pill-btn sm" type="button" data-campaign-key="roas">ROAS</button>
+              <button class="pill-btn sm" type="button" data-campaign-key="aov">客单价</button>
+              <button class="pill-btn sm" type="button" data-campaign-key="cvr">CVR</button>
+            </div>
+          </div>
+
+          <div class="campaign-structure-summary" id="campaignSummaryStrip"></div>
+
+          <div class="campaign-structure-chart-grid" id="campaignTrendGrid">
+            <div class="campaign-structure-chart-card" id="campaignTrendPrimaryCard">
+              <h4 class="campaign-structure-chart-card-title" id="campaignTrendPrimaryTitle">趋势图</h4>
+              <div class="chart-wrap campaign-structure-chart-wrap"><canvas id="campaignTrendChart"></canvas></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="campaign-structure-table-panel">
+          <div class="campaign-structure-table-head">
+            <div>
+              <h3>Campaign / Ad set / Ad 明细表</h3>
+              <div class="campaign-structure-meta" id="campaignStructureMeta">默认显示 Campaign（仅展示当期花费 > 0），点击可逐层展开 Ad set 与 Ad name。</div>
+            </div>
+            <div class="campaign-structure-table-status">
+              <div class="campaign-structure-status">
+                <div class="campaign-structure-selection" id="campaignSelectionState">当前：全局</div>
+                <button class="pill-btn sm" type="button" id="campaignSelectionClear">回到全局</button>
+              </div>
+            </div>
+            <div class="campaign-structure-tools">
+              <div class="campaign-structure-level-tabs" id="campaignStructureLevelTabs">
+                <button class="pill-btn sm active" type="button" data-cs-level="all">全部</button>
+                <button class="pill-btn sm" type="button" data-cs-level="campaign">仅Campaign</button>
+                <button class="pill-btn sm" type="button" data-cs-level="adset">仅Ad set</button>
+                <button class="pill-btn sm" type="button" data-cs-level="ad">仅Ad</button>
+              </div>
+              <div class="campaign-structure-searches">
+                <input id="campaignSearchInput" type="text" placeholder="搜 Campaign" />
+                <input id="adSetSearchInput" type="text" placeholder="搜 Ad set" />
+                <input id="adNameSearchInput" type="text" placeholder="搜 Ad name" />
+                <button class="pill-btn sm" type="button" id="campaignExpandAllBtn">展开全部</button>
+                <button class="pill-btn sm" type="button" id="campaignCollapseAllBtn">收起全部</button>
+              </div>
+            </div>
+          </div>
+          <div class="campaign-structure-table-wrap">
+            <table class="table wide campaign-structure-table" id="campaignStructureTable"></table>
+          </div>
+          <div class="campaign-structure-pager" id="campaignStructurePager">
+            <div class="filter-group">
+              <span class="badge">每页</span>
+              <select id="campaignStructurePageSize">
+                <option value="15">15</option>
+                <option value="20" selected>20</option>
+                <option value="30">30</option>
+              </select>
+            </div>
+            <span class="small" id="campaignStructurePageInfo">第1/1页</span>
+            <button class="pill-btn sm" type="button" id="campaignStructurePrev">上一页</button>
+            <button class="pill-btn sm" type="button" id="campaignStructureNext">下一页</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="img-modal" id="imgModal">
@@ -3261,7 +3682,7 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
 const rememberedStartupView = (() => {
   try {
     const raw = localStorage.getItem('meta_dashboard_view_v1');
-    return (raw === 'perf' || raw === 'ops' || raw === 'content' || raw === 'decision') ? raw : 'perf';
+    return (raw === 'perf' || raw === 'ops' || raw === 'content' || raw === 'decision' || raw === 'detail') ? raw : 'perf';
   } catch (_) {
     return 'perf';
   }
@@ -3484,12 +3905,37 @@ const interestKeywordTable = document.getElementById('interestKeywordTable');
 const interestKeywordEmpty = document.getElementById('interestKeywordEmpty');
 const interestKeywordMeta = document.getElementById('interestKeywordMeta');
 const interestKeywordToggle = document.getElementById('interestKeywordToggle');
+const campaignStructureTable = document.getElementById('campaignStructureTable');
+const campaignStructureMeta = document.getElementById('campaignStructureMeta');
+const campaignStructureLevelTabs = document.getElementById('campaignStructureLevelTabs');
+const campaignSearchInput = document.getElementById('campaignSearchInput');
+const adSetSearchInput = document.getElementById('adSetSearchInput');
+const adNameSearchInput = document.getElementById('adNameSearchInput');
+const campaignMetricTabs = document.getElementById('campaignMetricTabs');
+const campaignSelectionState = document.getElementById('campaignSelectionState');
+const campaignSelectionClear = document.getElementById('campaignSelectionClear');
+const campaignExpandAllBtn = document.getElementById('campaignExpandAllBtn');
+const campaignCollapseAllBtn = document.getElementById('campaignCollapseAllBtn');
+const campaignSummaryStrip = document.getElementById('campaignSummaryStrip');
+const campaignTrendTitle = document.getElementById('campaignTrendTitle');
+const campaignTrendSub = document.getElementById('campaignTrendSub');
+const campaignTrendEmpty = document.getElementById('campaignTrendEmpty');
+const campaignTrendCanvas = document.getElementById('campaignTrendChart');
+const campaignTrendGrid = document.getElementById('campaignTrendGrid');
+const campaignTrendPrimaryCard = document.getElementById('campaignTrendPrimaryCard');
+const campaignTrendPrimaryTitle = document.getElementById('campaignTrendPrimaryTitle');
+const campaignStructurePager = document.getElementById('campaignStructurePager');
+const campaignStructurePageInfo = document.getElementById('campaignStructurePageInfo');
+const campaignStructurePrev = document.getElementById('campaignStructurePrev');
+const campaignStructureNext = document.getElementById('campaignStructureNext');
+const campaignStructurePageSize = document.getElementById('campaignStructurePageSize');
 const crossResetBtn = document.getElementById('crossResetBtn');
 const crossToggleAllBtn = document.getElementById('crossToggleAllBtn');
 const viewPerfBtn = document.getElementById('viewPerfBtn');
 const viewOpsBtn = document.getElementById('viewOpsBtn');
 const viewContentBtn = document.getElementById('viewContentBtn');
 const viewDecisionBtn = document.getElementById('viewDecisionBtn');
+const viewDetailBtn = document.getElementById('viewDetailBtn');
 const resetDashboardBtn = document.getElementById('resetDashboardBtn');
 const decisionNativeRoot = document.getElementById('decisionNativeRoot');
 const contentTypeFilterSelect = document.getElementById('contentTypeFilter');
@@ -3521,6 +3967,17 @@ let decisionAdColumnMode = 'compact';
 let decisionAdPanelOpen = true;
 let decisionKpiFocus = 'none';
 let interestKeywordExpanded = false;
+let campaignStructureExpanded = new Set();
+let campaignStructureSelected = null;
+let campaignStructureSearch = { campaign: '', adset: '', ad: '' };
+let campaignStructureLevel = 'all';
+let campaignTrendCharts = {};
+let campaignTrendMode = 'money';
+let campaignMoneySelection = new Set(['spend', 'conv']);
+let campaignColResizeActive = false;
+let campaignColResizeIgnoreClickUntil = 0;
+let campaignStructurePage = 1;
+let campaignStructurePageSizeValue = 20;
 const CROSS_DIMENSIONS = [
   { key:'category', label:'品类' },
   { key:'categorySub', label:'品类细分' },
@@ -3887,28 +4344,43 @@ function attachTableFirstColResize(tableId, cssVarName, minW, maxW, clsName) {
   if (!table) return;
   const firstTh = table.querySelector('th:first-child');
   if (!firstTh || firstTh.querySelector('.col-handle')) return;
+  const root = document.documentElement;
+  const saved = parseInt(localStorage.getItem(`colw:${tableId}:${cssVarName}`) || '', 10);
+  if (Number.isFinite(saved) && saved >= minW && saved <= maxW) {
+    root.style.setProperty(cssVarName, `${saved}px`);
+  }
   firstTh.classList.add(clsName || 'resize-col');
   const handle = document.createElement('span');
   handle.className = 'col-handle';
   firstTh.appendChild(handle);
+  const stop = (e) => { e.preventDefault(); e.stopPropagation(); };
+  handle.addEventListener('click', stop);
   handle.addEventListener('dblclick', (e) => {
     e.preventDefault(); e.stopPropagation();
-    document.documentElement.style.setProperty(cssVarName, `${minW}px`);
+    root.style.setProperty(cssVarName, `${minW}px`);
+    try { localStorage.setItem(`colw:${tableId}:${cssVarName}`, String(minW)); } catch (_) {}
   });
-  handle.addEventListener('mousedown', (e) => {
+  handle.addEventListener('pointerdown', (e) => {
     e.preventDefault();
+    e.stopPropagation();
+    handle.setPointerCapture?.(e.pointerId);
     const startX = e.clientX;
-    const startW = parseInt(getComputedStyle(document.documentElement).getPropertyValue(cssVarName), 10) || minW;
+    const startW = parseInt(getComputedStyle(root).getPropertyValue(cssVarName), 10) || minW;
     function onMove(ev) {
       const next = Math.max(minW, Math.min(maxW, startW + (ev.clientX - startX)));
-      document.documentElement.style.setProperty(cssVarName, `${next}px`);
+      root.style.setProperty(cssVarName, `${next}px`);
     }
-    function onUp() {
-      window.removeEventListener('mousemove', onMove);
-      window.removeEventListener('mouseup', onUp);
+    function onUp(ev) {
+      const next = parseInt(getComputedStyle(root).getPropertyValue(cssVarName), 10);
+      if (Number.isFinite(next)) {
+        try { localStorage.setItem(`colw:${tableId}:${cssVarName}`, String(next)); } catch (_) {}
+      }
+      handle.releasePointerCapture?.(ev.pointerId);
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', onUp);
     }
-    window.addEventListener('mousemove', onMove);
-    window.addEventListener('mouseup', onUp);
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', onUp);
   });
 }
 function attachTableColResize(tableId, colIndex, cssVarName, minW, maxW, clsName) {
@@ -4743,18 +5215,20 @@ function updateTripleCompareLayout() {
 }
 
 function setDashboardView(mode) {
-  dashboardView = (mode === 'ops' || mode === 'decision' || mode === 'content') ? mode : 'perf';
+  dashboardView = (mode === 'ops' || mode === 'decision' || mode === 'content' || mode === 'detail') ? mode : 'perf';
   rememberDashboardView(dashboardView);
   const showPerf = dashboardView === 'perf';
   const showContent = dashboardView === 'content';
   const showDecision = dashboardView === 'decision';
+  const showDetail = dashboardView === 'detail';
   const perfIds = ['kpiGrid','trendSection','categorySection','tripleMetrics','interestKeywordSection','crossAnalysisSection','chartSection','dailySection'];
   const opsIds = ['productCategorySalesSection','productSection','urlSection','urlProductPageSection'];
   perfIds.forEach(id => document.getElementById(id)?.classList.toggle('hidden', !showPerf));
-  opsIds.forEach(id => document.getElementById(id)?.classList.toggle('hidden', showPerf || showDecision || showContent));
+  opsIds.forEach(id => document.getElementById(id)?.classList.toggle('hidden', showPerf || showDecision || showContent || showDetail));
   document.getElementById('contentSection')?.classList.toggle('hidden', !showContent);
   document.getElementById('weeklyNewAdsSection')?.classList.add('hidden');
   document.getElementById('decisionSection')?.classList.toggle('hidden', !showDecision);
+  document.getElementById('detailSection')?.classList.toggle('hidden', !showDetail);
   if (showDecision) initDecisionSection();
   document.querySelector('.header .filters')?.classList.toggle('hidden', showDecision);
   document.getElementById('rangeLabel')?.classList.toggle('hidden', showDecision);
@@ -4762,6 +5236,7 @@ function setDashboardView(mode) {
   if (viewOpsBtn) viewOpsBtn.classList.toggle('active', dashboardView === 'ops');
   if (viewContentBtn) viewContentBtn.classList.toggle('active', showContent);
   if (viewDecisionBtn) viewDecisionBtn.classList.toggle('active', showDecision);
+  if (viewDetailBtn) viewDetailBtn.classList.toggle('active', showDetail);
   if (showContent) ensureContentDataLoaded();
   if (dashboardView === 'ops') {
     ensureShopifyDailyLoaded();
@@ -7018,6 +7493,477 @@ function renderInterestKeywordBoard(rowsFiltered) {
   `;
   section.classList.remove('hidden');
   interestKeywordEmpty.classList.add('hidden');
+}
+
+function destroyCampaignTrendChart() {
+  Object.values(campaignTrendCharts || {}).forEach(chart => {
+    if (chart && typeof chart.destroy === 'function') chart.destroy();
+  });
+  campaignTrendCharts = {};
+}
+
+function getCampaignStructureColumns() {
+  return [
+    { label:'名称', key:'name', render:(v,row) => {
+      const simpleView = campaignStructureLevel !== 'all';
+      const hasChildren = row.childCount > 0;
+      const expanded = row.expanded;
+      let thumb = '';
+      if (!simpleView && row.type === 'ad') {
+        thumb = row.previewThumb
+          ? `<img class="ad-thumb" src="${escapeHtml(row.previewThumb)}" alt="thumb" />`
+          : `<span class="ad-thumb-placeholder">N/A</span>`;
+      } else if (simpleView && campaignStructureLevel === 'ad') {
+        thumb = row.previewThumb
+          ? `<img class="ad-thumb" src="${escapeHtml(row.previewThumb)}" alt="thumb" />`
+          : `<span class="ad-thumb-placeholder">N/A</span>`;
+      }
+      const toggle = simpleView ? '' : `<button type="button" class="node-btn ${hasChildren ? '' : 'empty'}" ${hasChildren ? `data-cs-toggle="${row.key}"` : 'tabindex="-1"'}>${hasChildren ? (expanded ? '−' : '+') : '+'}</button>`;
+      const pill = simpleView ? '' : `<span class="level-pill">${row.levelLabel}</span>`;
+      return `<div class="name-wrap ${simpleView ? 'simple' : ''}">
+        ${toggle}
+        ${pill}
+        ${thumb}
+        <span class="node-label" data-cs-select="${row.key}" title="${escapeHtml(v)}">${escapeHtml(v)}</span>
+      </div>`;
+    }},
+    { label:'花费', key:'spend', render:v => money(v) },
+    { label:'转化金额', key:'conv', render:v => money(v) },
+    { label:'ROAS', key:'roas', render:v => fmt(v,2) },
+    { label:'订单', key:'purchases', render:v => fmt(v,0) },
+    { label:'客单价', key:'aov', render:v => money(v) },
+    { label:'CVR', key:'cvr', render:v => pct(v) },
+    { label:'CTR', key:'ctr', render:v => pct(v) },
+    { label:'CPC', key:'cpc', render:v => money(v) },
+    { label:'CPM', key:'cpm', render:v => money(v) },
+    { label:'展示', key:'impr', render:v => fmt(v,0) },
+    { label:'点击', key:'clicks', render:v => fmt(v,0) },
+    { label:'加购', key:'add', render:v => fmt(v,0) },
+    { label:'结账', key:'chk', render:v => fmt(v,0) },
+    { label:'CPA', key:'cpa', render:v => money(v) },
+  ];
+}
+
+function getCampaignMiniMetricDefs() {
+  return [
+    { key:'spend', label:'花费', format:v => money(v), color:'#c97a2b', axis:'money', group:'money' },
+    { key:'conv', label:'转化金额', format:v => money(v), color:'#22b8b0', axis:'money', group:'money' },
+    { key:'roas', label:'ROAS', format:v => fmt(v,2), color:'#2f6fec', axis:'ratio', group:'efficiency' },
+    { key:'aov', label:'客单价', format:v => money(v), color:'#9b59b6', axis:'money', group:'efficiency' },
+    { key:'cvr', label:'CVR', format:v => pct(v), color:'#ef8f16', axis:'ratio', group:'efficiency' },
+  ];
+}
+
+function buildCampaignStructureTree(rowsFiltered) {
+  const campaignMap = new Map();
+  (rowsFiltered || []).forEach(r => {
+    const campaign = String(r.campaign || '未命名 Campaign').trim() || '未命名 Campaign';
+    const adSet = String(r.ad_set || '未命名 Ad set').trim() || '未命名 Ad set';
+    const ad = String(r.ad || '未命名 Ad').trim() || '未命名 Ad';
+    if (!campaignMap.has(campaign)) campaignMap.set(campaign, { name: campaign, rows: [], adsets: new Map() });
+    const campNode = campaignMap.get(campaign);
+    campNode.rows.push(r);
+    if (!campNode.adsets.has(adSet)) campNode.adsets.set(adSet, { name: adSet, rows: [], ads: new Map() });
+    const adSetNode = campNode.adsets.get(adSet);
+    adSetNode.rows.push(r);
+    if (!adSetNode.ads.has(ad)) adSetNode.ads.set(ad, { name: ad, rows: [] });
+    adSetNode.ads.get(ad).rows.push(r);
+  });
+  const sortNodesBySpend = (nodes) => nodes.sort((a, b) => aggregate(b.rows || []).spend - aggregate(a.rows || []).spend);
+  return sortNodesBySpend(Array.from(campaignMap.values()).map(camp => ({
+    key: `campaign::${camp.name}`,
+    type: 'campaign',
+    name: camp.name,
+    rows: camp.rows,
+    children: sortNodesBySpend(Array.from(camp.adsets.values()).map(adSet => ({
+      key: `adset::${camp.name}::${adSet.name}`,
+      type: 'adset',
+      name: adSet.name,
+      rows: adSet.rows,
+      parentKey: `campaign::${camp.name}`,
+      children: sortNodesBySpend(Array.from(adSet.ads.values()).map(ad => ({
+        key: `ad::${camp.name}::${adSet.name}::${ad.name}`,
+        type: 'ad',
+        name: ad.name,
+        rows: ad.rows,
+        parentKey: `adset::${camp.name}::${adSet.name}`,
+        children: []
+      })))
+    })))
+  })));
+}
+
+function filterCampaignRowsBySearch(rowsList) {
+  const cq = campaignStructureSearch.campaign.trim().toLowerCase();
+  const sq = campaignStructureSearch.adset.trim().toLowerCase();
+  const aq = campaignStructureSearch.ad.trim().toLowerCase();
+  if (!cq && !sq && !aq) return rowsList || [];
+  return (rowsList || []).filter(r => {
+    const campaign = String(r?.campaign || '').toLowerCase();
+    const adSet = String(r?.ad_set || '').toLowerCase();
+    const ad = String(r?.ad || '').toLowerCase();
+    return (!cq || campaign.includes(cq))
+      && (!sq || adSet.includes(sq))
+      && (!aq || ad.includes(aq));
+  });
+}
+
+function flattenCampaignStructure(nodes, level=0, out=[]) {
+  (nodes || []).forEach(node => {
+    const agg = aggregate(node.rows || []);
+    const levelLabel = level === 0 ? 'Campaign' : (level === 1 ? 'Ad set' : 'Ad');
+    const expanded = campaignStructureExpanded.has(node.key);
+    const childCount = (node.children || []).length;
+    out.push({
+      key: node.key,
+      type: node.type,
+      name: node.name,
+      rows: node.rows,
+      previewThumb: adThumbPathFor((node.rows || [])[0]),
+      level,
+      levelLabel,
+      expanded,
+      childCount,
+      ...agg
+    });
+    if (childCount && expanded) flattenCampaignStructure(node.children, level + 1, out);
+  });
+  return out;
+}
+
+function flattenCampaignStructureAll(nodes, level=0, out=[]) {
+  (nodes || []).forEach(node => {
+    const agg = aggregate(node.rows || []);
+    const levelLabel = level === 0 ? 'Campaign' : (level === 1 ? 'Ad set' : 'Ad');
+    const childCount = (node.children || []).length;
+    out.push({
+      key: node.key,
+      type: node.type,
+      name: node.name,
+      rows: node.rows,
+      previewThumb: adThumbPathFor((node.rows || [])[0]),
+      level,
+      levelLabel,
+      expanded: campaignStructureExpanded.has(node.key),
+      childCount,
+      ...agg
+    });
+    if (childCount) flattenCampaignStructureAll(node.children, level + 1, out);
+  });
+  return out;
+}
+
+function sortCampaignStructureTree(nodes, sortKey='spend', sortDir='desc') {
+  const dir = sortDir === 'asc' ? 1 : -1;
+  const sorted = (nodes || []).slice().sort((a, b) => {
+    const vaAgg = aggregate(a.rows || []);
+    const vbAgg = aggregate(b.rows || []);
+    const va = Number(vaAgg?.[sortKey]) || 0;
+    const vb = Number(vbAgg?.[sortKey]) || 0;
+    return (va - vb) * dir;
+  });
+  return sorted.map(node => ({
+    ...node,
+    children: sortCampaignStructureTree(node.children || [], sortKey, sortDir),
+  }));
+}
+
+function findCampaignStructureNode(nodes, key) {
+  for (const node of nodes || []) {
+    if (node.key === key) return node;
+    const found = findCampaignStructureNode(node.children || [], key);
+    if (found) return found;
+  }
+  return null;
+}
+
+function getCampaignRangeLabels() {
+  const [start, end] = getDateRangeForCurrentFilter();
+  const labels = [];
+  if (!(start && end)) return labels;
+  const cursor = new Date(start.getTime());
+  while (cursor <= end) {
+    labels.push(formatDateLocal(cursor));
+    cursor.setDate(cursor.getDate() + 1);
+  }
+  return labels;
+}
+
+const campaignHoverGuidePlugin = {
+  id: 'campaignHoverGuide',
+  afterDatasetsDraw(chart) {
+    const tooltip = chart.tooltip;
+    if (!tooltip || !tooltip.getActiveElements || !tooltip.getActiveElements().length) return;
+    const active = tooltip.getActiveElements()[0];
+    const x = active?.element?.x;
+    if (!isFinite(x)) return;
+    const { ctx, chartArea } = chart;
+    if (!chartArea) return;
+    ctx.save();
+    ctx.beginPath();
+    ctx.setLineDash([5, 4]);
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = 'rgba(160, 126, 90, 0.45)';
+    ctx.moveTo(x, chartArea.top);
+    ctx.lineTo(x, chartArea.bottom);
+    ctx.stroke();
+    ctx.restore();
+  }
+};
+
+function createCampaignTrendChart(canvas, labels, defs, seriesByKey) {
+  if (!(canvas instanceof HTMLCanvasElement)) return null;
+  const validDefs = (defs || []).filter(Boolean);
+  if (!validDefs.length) return null;
+  const hasRatio = validDefs.some(def => def.axis === 'ratio');
+  const hasMoney = validDefs.some(def => def.axis !== 'ratio');
+  const datasets = validDefs.map(def => ({
+    label: def.label,
+    data: (seriesByKey?.[def.key] || []).map(v => Number(v) || 0),
+    borderColor: def.color,
+    backgroundColor: def.color,
+    borderWidth: 2.6,
+    tension: 0.34,
+    cubicInterpolationMode: 'monotone',
+    pointRadius: 0,
+    pointHoverRadius: 4,
+    pointHitRadius: 18,
+    pointBackgroundColor: def.color,
+    fill: false,
+    yAxisID: def.axis === 'ratio' ? 'yRatio' : 'yMoney',
+    metaKey: def.key,
+  }));
+  return new Chart(canvas.getContext('2d'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets
+    },
+    options: {
+      maintainAspectRatio: false,
+      animation: {
+        duration: 380,
+        easing: 'easeOutQuart'
+      },
+      interaction: {
+        mode: 'index',
+        intersect: false
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          enabled: true,
+          backgroundColor: 'rgba(59, 45, 31, 0.92)',
+          titleColor: '#fff7ee',
+          bodyColor: '#fff7ee',
+          borderColor: 'rgba(233, 208, 178, 0.9)',
+          borderWidth: 1,
+          padding: 10,
+          displayColors: true,
+          usePointStyle: true,
+          titleFont: { size: 12, weight: '700' },
+          bodyFont: { size: 12, weight: '600' },
+          callbacks: {
+            label: (ctx) => {
+              const def = validDefs.find(d => d.key === ctx.dataset.metaKey || d.label === ctx.dataset.label);
+              const val = Number(ctx.raw) || 0;
+              return `${ctx.dataset.label}：${def ? def.format(val) : val}`;
+            }
+          }
+        }
+      },
+      hover: {
+        mode: 'index',
+        intersect: false,
+      },
+      scales: {
+        yMoney: {
+          beginAtZero: true,
+          display: hasMoney,
+          position: 'left',
+          ticks: {
+            maxTicksLimit: 6,
+            callback: (v) => money(v)
+          },
+          grid: { color: 'rgba(139, 110, 81, 0.11)' }
+        },
+        yRatio: {
+          beginAtZero: true,
+          display: hasRatio,
+          position: hasMoney ? 'right' : 'left',
+          suggestedMax: validDefs.some(d => d.key === 'cvr') && !validDefs.some(d => d.key === 'roas') ? 0.08 : undefined,
+          ticks: {
+            maxTicksLimit: 6,
+            callback: (v) => validDefs.some(d => d.key === 'cvr') && !validDefs.some(d => d.key === 'roas')
+              ? pct(v)
+              : fmt(v, 2)
+          },
+          grid: { drawOnChartArea: !hasMoney }
+        },
+        x: {
+          grid: { display: false, drawBorder: false },
+          ticks: {
+            autoSkip: true,
+            maxTicksLimit: 9,
+            maxRotation: 0,
+            minRotation: 0
+          }
+        }
+      }
+    },
+    plugins: [campaignHoverGuidePlugin]
+  });
+}
+
+function renderCampaignStructureBoard(rowsFiltered) {
+  const section = document.getElementById('detailSection');
+  if (!section || !campaignStructureTable || !campaignTrendTitle || !campaignTrendSub || !campaignTrendEmpty || !campaignTrendCanvas) return;
+  const columns = getCampaignStructureColumns();
+  const searchedRows = filterCampaignRowsBySearch(rowsFiltered);
+  let tree = buildCampaignStructureTree(searchedRows);
+  if (campaignExpandAllBtn) campaignExpandAllBtn.style.display = campaignStructureLevel === 'all' ? '' : 'none';
+  if (campaignCollapseAllBtn) campaignCollapseAllBtn.style.display = campaignStructureLevel === 'all' ? '' : 'none';
+  if (campaignStructureLevelTabs) {
+    campaignStructureLevelTabs.querySelectorAll('[data-cs-level]').forEach(btn => {
+      btn.classList.toggle('active', (btn.getAttribute('data-cs-level') || 'all') === campaignStructureLevel);
+    });
+  }
+  if (campaignStructureMeta) {
+    const levelLabel = campaignStructureLevel === 'campaign'
+      ? '仅Campaign视图'
+      : campaignStructureLevel === 'adset'
+        ? '仅Ad set视图'
+        : campaignStructureLevel === 'ad'
+          ? '仅Ad视图'
+          : '层级展开视图';
+    campaignStructureMeta.textContent = `当前范围 Campaign ${fmt(tree.length,0)} 个；${levelLabel}（仅展示当期花费 > 0）。`;
+  }
+  const sortState = tableSortState['campaignStructureTable'] || { key:'spend', dir:'desc' };
+  const sortKey = sortState.key || 'spend';
+  const sortDir = sortState.dir || 'desc';
+  const allowGlobalSort = true;
+  const sortInd = key => (sortKey === key ? (sortDir === 'asc' ? '▲' : '▼') : '');
+  const header = `<tr>${columns.map((c, idx) => {
+    const sortableCls = allowGlobalSort ? 'sortable' : '';
+    const activeCls = allowGlobalSort && sortKey===c.key ? 'sort-active' : '';
+    const dataKey = allowGlobalSort ? `data-key="${c.key}"` : '';
+    const indicator = allowGlobalSort ? `<span class="sort-ind">${sortInd(c.key)}</span>` : '';
+    const resizer = idx===0 ? '<span class="cs-resizer" data-cs-resizer></span>' : '';
+    return `<th class="${idx===0?'name-cell ':''}${sortableCls} ${activeCls}" ${dataKey}>${c.label}${indicator}${resizer}</th>`;
+  }).join('')}</tr>`;
+  if (campaignStructureLevel === 'all') {
+    tree = sortCampaignStructureTree(tree, sortKey, sortDir);
+  }
+  let flat = campaignStructureLevel === 'all'
+    ? flattenCampaignStructure(tree)
+    : flattenCampaignStructureAll(tree).filter(row => row.type === campaignStructureLevel);
+  if (campaignStructureLevel !== 'all') {
+    flat = flat.map(row => ({ ...row, level: 0, childCount: 0, expanded: false }));
+    flat = getSortedRows('campaignStructureTable', flat, columns);
+  }
+  flat = flat.filter(row => Number(row.spend || 0) > 0);
+  if (!flat.length) {
+    campaignStructureTable.innerHTML = header + `<tr><td colspan="${columns.length}"><div class="campaign-structure-empty">当前筛选范围暂无 Campaign 结构数据。</div></td></tr>`;
+    campaignTrendTitle.textContent = '趋势图';
+    campaignTrendSub.textContent = '当前筛选范围暂无可展示对象。';
+    destroyCampaignTrendChart();
+    if (campaignSummaryStrip) campaignSummaryStrip.innerHTML = '';
+    if (campaignSelectionState) campaignSelectionState.textContent = '当前：全局';
+    if (campaignStructurePageInfo) campaignStructurePageInfo.textContent = '第1/1页';
+    if (campaignStructurePrev) campaignStructurePrev.disabled = true;
+    if (campaignStructureNext) campaignStructureNext.disabled = true;
+    campaignTrendEmpty.classList.remove('hidden');
+    section.classList.remove('hidden');
+    return;
+  }
+  const size = campaignStructurePageSizeValue || 20;
+  const totalPages = Math.max(1, Math.ceil(flat.length / size));
+  campaignStructurePage = Math.min(Math.max(1, campaignStructurePage), totalPages);
+  const start = (campaignStructurePage - 1) * size;
+  const pageRows = flat.slice(start, start + size);
+  if (campaignStructurePageInfo) campaignStructurePageInfo.textContent = `第${campaignStructurePage}/${totalPages}页`;
+  if (campaignStructurePrev) campaignStructurePrev.disabled = campaignStructurePage <= 1;
+  if (campaignStructureNext) campaignStructureNext.disabled = campaignStructurePage >= totalPages;
+  campaignStructureTable.innerHTML = header + pageRows.map(row => {
+    return `<tr class="node-level-${row.level} ${campaignStructureSelected===row.key?'node-selected':''}" data-cs-row="${escapeHtml(row.key)}">
+      ${columns.map((c, idx) => `<td class="${idx===0?'name-cell ':''}">${c.render(row[c.key], row)}</td>`).join('')}
+    </tr>`;
+  }).join('');
+  let selectedNode = campaignStructureSelected
+    ? findCampaignStructureNode(tree, campaignStructureSelected)
+    : null;
+  if (campaignStructureSelected && !selectedNode) {
+    campaignStructureSelected = null;
+    selectedNode = null;
+  }
+  const selectedRows = selectedNode?.rows || searchedRows || [];
+  const agg = aggregate(selectedRows);
+  const typeLabel = selectedNode?.type === 'campaign' ? 'Campaign' : selectedNode?.type === 'adset' ? 'Ad set' : 'Ad';
+  campaignTrendTitle.textContent = '趋势图';
+  campaignTrendSub.textContent = selectedNode ? `${typeLabel}：${selectedNode.name}` : '当前为全局视角；点击表格行可切到对应 Campaign / Ad set / Ad，再点一次可取消。';
+  if (campaignSelectionState) campaignSelectionState.textContent = selectedNode ? `当前：${typeLabel} / ${selectedNode.name}` : '当前：全局';
+  const labels = getCampaignRangeLabels();
+  const byDay = groupBy(selectedRows, r => r.date);
+  const metricDefs = getCampaignMiniMetricDefs();
+  destroyCampaignTrendChart();
+  if (campaignSummaryStrip) {
+    const statDefs = [
+      { label:'花费', value: money(agg.spend) },
+      { label:'转化金额', value: money(agg.conv) },
+      { label:'ROAS', value: fmt(agg.roas, 2) },
+      { label:'订单', value: fmt(agg.purchases, 0) },
+      { label:'客单价', value: money(agg.aov) },
+      { label:'CVR', value: pct(agg.cvr) },
+    ];
+    campaignSummaryStrip.innerHTML = statDefs.map(item => `
+      <div class="campaign-structure-stat">
+        <div class="label">${item.label}</div>
+        <div class="value">${item.value}</div>
+      </div>
+    `).join('');
+  }
+  const activeKeys = campaignTrendMode === 'money'
+    ? Array.from(campaignMoneySelection.values())
+    : [campaignTrendMode];
+  let defs = metricDefs.filter(item => activeKeys.includes(item.key));
+  if (!defs.length) {
+    campaignTrendMode = 'money';
+    campaignMoneySelection = new Set(['spend']);
+    defs = metricDefs.filter(item => item.key === 'spend');
+  }
+  if (campaignMetricTabs) {
+    campaignMetricTabs.querySelectorAll('[data-campaign-key]').forEach(btn => {
+      const key = btn.getAttribute('data-campaign-key') || '';
+      const isMoneyKey = key === 'spend' || key === 'conv';
+      const active = isMoneyKey
+        ? (campaignTrendMode === 'money' && campaignMoneySelection.has(key))
+        : campaignTrendMode === key;
+      btn.classList.toggle('active', active);
+    });
+  }
+  if (campaignTrendPrimaryCard) campaignTrendPrimaryCard.classList.remove('hidden');
+  if (campaignTrendGrid) campaignTrendGrid.classList.remove('split');
+
+  const seriesByKey = {};
+  metricDefs.forEach(def => {
+    seriesByKey[def.key] = labels.map(day => {
+      const a = aggregate(byDay.get(day) || []);
+      return Number(a[def.key]) || 0;
+    });
+  });
+
+  let trendTitle = '趋势图';
+  if (campaignTrendMode === 'money') {
+    const hasSpend = campaignMoneySelection.has('spend');
+    const hasConv = campaignMoneySelection.has('conv');
+    trendTitle = hasSpend && hasConv ? '花费 + 转化金额曲线' : (hasSpend ? '花费曲线' : '转化金额曲线');
+  } else if (campaignTrendMode === 'roas') trendTitle = 'ROAS曲线';
+  else if (campaignTrendMode === 'aov') trendTitle = '客单价曲线';
+  else if (campaignTrendMode === 'cvr') trendTitle = 'CVR曲线';
+  if (campaignTrendPrimaryTitle) campaignTrendPrimaryTitle.textContent = trendTitle;
+  campaignTrendCharts.primary = createCampaignTrendChart(campaignTrendCanvas, labels, defs, seriesByKey);
+  campaignTrendEmpty.classList.add('hidden');
+  section.classList.remove('hidden');
 }
 
 let chart = null;
@@ -9887,6 +10833,9 @@ function updateAll(resetPage=true) {
         pieMetricGroup.style.display = 'none';
         comboPanel.style.display = 'none';
       }
+      if (dashboardView === 'detail') {
+        safeRender('campaign-structure', () => renderCampaignStructureBoard(rowsFiltered));
+      }
       if (dashboardView === 'ops') {
         safeRender('product-category-sales', () => renderProductCategorySalesPanel());
         safeRender('product-table', () => renderProductTable(rowsFiltered));
@@ -10085,6 +11034,187 @@ if (interestKeywordToggle) {
   interestKeywordToggle.addEventListener('click', () => {
     interestKeywordExpanded = !interestKeywordExpanded;
     updateAll(false);
+  });
+}
+if (campaignSearchInput) {
+  campaignSearchInput.addEventListener('input', () => {
+    campaignStructureSearch.campaign = campaignSearchInput.value || '';
+    campaignStructurePage = 1;
+    updateAll(false);
+  });
+}
+if (campaignStructureLevelTabs) {
+  campaignStructureLevelTabs.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-cs-level]');
+    if (!btn) return;
+    campaignStructureLevel = btn.getAttribute('data-cs-level') || 'all';
+    campaignStructurePage = 1;
+    updateAll(false);
+  });
+}
+if (adSetSearchInput) {
+  adSetSearchInput.addEventListener('input', () => {
+    campaignStructureSearch.adset = adSetSearchInput.value || '';
+    campaignStructurePage = 1;
+    updateAll(false);
+  });
+}
+if (adNameSearchInput) {
+  adNameSearchInput.addEventListener('input', () => {
+    campaignStructureSearch.ad = adNameSearchInput.value || '';
+    campaignStructurePage = 1;
+    updateAll(false);
+  });
+}
+if (campaignMetricTabs) {
+  campaignMetricTabs.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-campaign-key]');
+    if (!btn) return;
+    const key = btn.getAttribute('data-campaign-key') || '';
+    if (!key) return;
+    if (key === 'spend' || key === 'conv') {
+      if (campaignTrendMode !== 'money') {
+        campaignTrendMode = 'money';
+        campaignMoneySelection = new Set([key]);
+      } else if (campaignMoneySelection.has(key)) {
+        if (campaignMoneySelection.size > 1) campaignMoneySelection.delete(key);
+      } else {
+        campaignMoneySelection.add(key);
+      }
+    } else {
+      campaignTrendMode = key;
+    }
+    updateAll(false);
+  });
+}
+if (campaignSelectionClear) {
+  campaignSelectionClear.addEventListener('click', () => {
+    campaignStructureSelected = null;
+    updateAll(false);
+  });
+}
+if (campaignExpandAllBtn) {
+  campaignExpandAllBtn.addEventListener('click', () => {
+    const tree = buildCampaignStructureTree(filterCampaignRowsBySearch(filterRows()));
+    const next = new Set();
+    const walk = (nodes) => {
+      (nodes || []).forEach(node => {
+        if ((node.children || []).length) next.add(node.key);
+        walk(node.children || []);
+      });
+    };
+    walk(tree);
+    campaignStructureExpanded = next;
+    campaignStructurePage = 1;
+    updateAll(false);
+  });
+}
+if (campaignCollapseAllBtn) {
+  campaignCollapseAllBtn.addEventListener('click', () => {
+    campaignStructureExpanded = new Set();
+    campaignStructurePage = 1;
+    updateAll(false);
+  });
+}
+if (campaignStructurePageSize) {
+  campaignStructurePageSize.addEventListener('change', () => {
+    campaignStructurePageSizeValue = parseInt(campaignStructurePageSize.value, 10) || 20;
+    campaignStructurePage = 1;
+    updateAll(false);
+  });
+}
+if (campaignStructurePrev) {
+  campaignStructurePrev.addEventListener('click', () => {
+    campaignStructurePage = Math.max(1, campaignStructurePage - 1);
+    updateAll(false);
+  });
+}
+if (campaignStructureNext) {
+  campaignStructureNext.addEventListener('click', () => {
+    campaignStructurePage += 1;
+    updateAll(false);
+  });
+}
+if (campaignStructureTable) {
+  try { localStorage.removeItem('colw:campaignStructure'); } catch (_) {}
+  const startCampaignColResize = (startX) => {
+    campaignColResizeActive = true;
+    const root = document.documentElement;
+    const minW = 300;
+    const maxW = 760;
+    const startW = parseInt(getComputedStyle(root).getPropertyValue('--campaign-structure-name-col'), 10) || 340;
+    const onMove = (ev) => {
+      const next = Math.max(minW, Math.min(maxW, startW + (ev.clientX - startX)));
+      root.style.setProperty('--campaign-structure-name-col', `${next}px`);
+    };
+    const onUp = () => {
+      campaignColResizeActive = false;
+      campaignColResizeIgnoreClickUntil = Date.now() + 220;
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseup', onUp);
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', onUp);
+    };
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', onUp);
+  };
+  campaignStructureTable.addEventListener('mousedown', (e) => {
+    if (!e.target.closest('[data-cs-resizer]')) return;
+    e.preventDefault();
+    e.stopPropagation();
+    startCampaignColResize(e.clientX);
+  });
+  campaignStructureTable.addEventListener('pointerdown', (e) => {
+    if (!e.target.closest('[data-cs-resizer]')) return;
+    e.preventDefault();
+    e.stopPropagation();
+    startCampaignColResize(e.clientX);
+  });
+  campaignStructureTable.addEventListener('click', (e) => {
+    if (campaignColResizeActive || Date.now() < campaignColResizeIgnoreClickUntil) return;
+    if (e.target.closest('.col-handle') || e.target.closest('[data-cs-resizer]')) return;
+    const th = e.target.closest('th.sortable');
+    if (th) {
+      const key = th.getAttribute('data-key') || '';
+      if (key) {
+        const cur = tableSortState['campaignStructureTable'] || { key:null, dir:'desc' };
+        if (cur.key === key) cur.dir = cur.dir === 'desc' ? 'asc' : 'desc';
+        else { cur.key = key; cur.dir = 'desc'; }
+        tableSortState['campaignStructureTable'] = cur;
+        campaignStructurePage = 1;
+        updateAll(false);
+      }
+      return;
+    }
+    const toggle = e.target.closest('[data-cs-toggle]');
+    if (toggle) {
+      const key = toggle.getAttribute('data-cs-toggle') || '';
+      if (key) {
+        if (campaignStructureExpanded.has(key)) campaignStructureExpanded.delete(key);
+        else campaignStructureExpanded.add(key);
+        updateAll(false);
+      }
+      return;
+    }
+    const sel = e.target.closest('[data-cs-select]');
+    if (sel) {
+      const key = sel.getAttribute('data-cs-select') || '';
+      if (key) {
+        campaignStructureSelected = campaignStructureSelected === key ? null : key;
+        updateAll(false);
+      }
+      return;
+    }
+    const row = e.target.closest('tr[data-cs-row]');
+    if (row) {
+      const key = row.getAttribute('data-cs-row') || '';
+      if (key) {
+        campaignStructureSelected = campaignStructureSelected === key ? null : key;
+        updateAll(false);
+      }
+    }
   });
 }
 if (crossResetBtn) {
@@ -10520,7 +11650,7 @@ function rememberAuthNow() {
 function loadRememberedDashboardView() {
   try {
     const raw = localStorage.getItem(DASHBOARD_VIEW_STORAGE_KEY);
-    if (raw === 'perf' || raw === 'ops' || raw === 'content' || raw === 'decision') return raw;
+    if (raw === 'perf' || raw === 'ops' || raw === 'content' || raw === 'decision' || raw === 'detail') return raw;
   } catch (_) {}
   return 'perf';
 }
@@ -10547,6 +11677,7 @@ function bootstrapDashboard() {
   if (viewOpsBtn) viewOpsBtn.addEventListener('click', () => { setDashboardView('ops'); updateAll(false); });
   if (viewContentBtn) viewContentBtn.addEventListener('click', () => { setDashboardView('content'); updateAll(false); });
   if (viewDecisionBtn) viewDecisionBtn.addEventListener('click', () => { setDashboardView('decision'); updateAll(false); });
+  if (viewDetailBtn) viewDetailBtn.addEventListener('click', () => { setDashboardView('detail'); updateAll(false); });
   if (resetDashboardBtn) resetDashboardBtn.addEventListener('click', resetDashboard);
   document.body.classList.remove('auth-pending');
   setDashboardView(initialView);
