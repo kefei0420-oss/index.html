@@ -2938,7 +2938,7 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
       <div class="page-updated" id="pageUpdatedPreview">
         <span class="dot"></span>
         <span class="label">数据最后更新时间</span>
-        <span class="time">2026-04-13 09:56（北京时间）</span>
+        <span class="time">2026-04-13 18:46（北京时间）</span>
       </div>
     </div>
     <div class="filters">
@@ -3056,12 +3056,11 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
               <option value="video">视频</option>
               <option value="image">图片</option>
             </select>
-            <span class="badge">新老</span>
+            <span class="badge" id="contentFreshnessFilterBadge">新老</span>
             <select id="contentFreshnessFilter">
               <option value="all" selected>全部</option>
               <option value="新素材">当月新素材</option>
               <option value="老素材">老素材</option>
-              <option value="未识别">未识别</option>
             </select>
             <span class="badge">环比</span>
             <select id="contentCompare">
@@ -3940,6 +3939,7 @@ const resetDashboardBtn = document.getElementById('resetDashboardBtn');
 const decisionNativeRoot = document.getElementById('decisionNativeRoot');
 const contentTypeFilterSelect = document.getElementById('contentTypeFilter');
 const contentFreshnessFilterSelect = document.getElementById('contentFreshnessFilter');
+const contentFreshnessFilterBadge = document.getElementById('contentFreshnessFilterBadge');
 const contentCompareSelect = document.getElementById('contentCompare');
 const contentSearchInput = document.getElementById('contentSearch');
 const contentSearchClearBtn = document.getElementById('contentSearchClear');
@@ -5990,20 +5990,19 @@ function renderContentFreshnessPanel(creativeItems) {
   const stats = {
     '新素材': { count: 0, conv: 0, spend: 0 },
     '老素材': { count: 0, conv: 0, spend: 0 },
-    '未识别': { count: 0, conv: 0, spend: 0 },
   };
   const categoryMap = new Map();
   creativeItems.forEach(item => {
     const bucket = bucketOf(item);
+    if (!stats[bucket]) return;
     stats[bucket].count += 1;
     stats[bucket].conv += Number(item?.agg?.conv) || 0;
     stats[bucket].spend += Number(item?.agg?.spend) || 0;
-    if (bucket === '未识别') return;
     const cat = String(item?.category || 'Others').trim() || 'Others';
     if (!categoryMap.has(cat)) categoryMap.set(cat, { '新素材': { conv: 0 }, '老素材': { conv: 0 } });
     categoryMap.get(cat)[bucket].conv += Number(item?.agg?.conv) || 0;
   });
-  const totalCount = stats['新素材'].count + stats['老素材'].count + stats['未识别'].count;
+  const totalCount = stats['新素材'].count + stats['老素材'].count;
   if (!totalCount) {
     wrap.classList.remove('hidden');
     panel.classList.remove('hidden');
@@ -6044,7 +6043,6 @@ function renderContentFreshnessPanel(creativeItems) {
     shareLegend.innerHTML = `
       <span class="item"><span class="dot" style="background:#2f6fec"></span>当月新素材</span>
       <span class="item"><span class="dot" style="background:#22b8b0"></span>老素材</span>
-      <span class="item"><span class="dot" style="background:#ffbf43"></span>未识别</span>
     `;
   }
   if (gmvLegend) {
@@ -6060,10 +6058,10 @@ function renderContentFreshnessPanel(creativeItems) {
     `;
   }
   destroyContentFreshnessCharts();
-  const shareKeys = ['新素材', '老素材', '未识别'];
-  const shareLabels = ['当月新素材', '老素材', '未识别'];
+  const shareKeys = ['新素材', '老素材'];
+  const shareLabels = ['当月新素材', '老素材'];
   const shareValues = shareKeys.map(k => stats[k].count);
-  const shareColors = ['#2f6fec', '#22b8b0', '#ffbf43'];
+  const shareColors = ['#2f6fec', '#22b8b0'];
   contentFreshnessShareChart = new Chart(shareCtx, {
     type: 'doughnut',
     data: {
@@ -6399,6 +6397,13 @@ function syncContentFilters(rowsFiltered) {
     contentWeekSelect.innerHTML = weekOptions.map(v => `<option value="${v}">${v === 'all' ? '全部' : displayCreativeWeekLabel(v)}</option>`).join('');
     contentWeekSelect.value = contentWeekMode;
   }
+  const showFreshnessFilter = timeMode?.value === 'month';
+  if (!showFreshnessFilter) {
+    contentFreshnessFilter = 'all';
+    if (contentFreshnessFilterSelect) contentFreshnessFilterSelect.value = 'all';
+  }
+  if (contentFreshnessFilterBadge) contentFreshnessFilterBadge.classList.toggle('hidden', !showFreshnessFilter);
+  if (contentFreshnessFilterSelect) contentFreshnessFilterSelect.classList.toggle('hidden', !showFreshnessFilter);
 }
 
 function renderContentOverview(rowsFiltered, creativeItems, prevRowsFiltered, prevCreativeItems) {
