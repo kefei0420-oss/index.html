@@ -2560,23 +2560,23 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
 .campaign-structure-summary {
   display:grid;
   grid-template-columns:repeat(6,minmax(130px,1fr));
-  gap:8px;
-  margin-bottom:10px;
+  gap:6px;
+  margin-bottom:8px;
 }
 .campaign-structure-stat {
   border:1px solid var(--line);
   border-radius:14px;
   background:#fffdfa;
-  padding:10px 12px;
+  padding:8px 11px;
   box-shadow:0 6px 18px rgba(125,97,60,0.04);
 }
 .campaign-structure-stat .label {
-  font-size:12px;
+  font-size:11px;
   color:#8f7964;
-  margin-bottom:4px;
+  margin-bottom:2px;
 }
 .campaign-structure-stat .value {
-  font-size:24px;
+  font-size:18px;
   font-weight:800;
   color:#3b3128;
   letter-spacing:-0.02em;
@@ -2585,7 +2585,7 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
   border:1px solid var(--line);
   border-radius:20px;
   background:#fffdfa;
-  padding:18px 18px 14px;
+  padding:14px 14px 10px;
   box-shadow:0 10px 26px rgba(125,97,60,0.05);
 }
 .campaign-structure-chart-head {
@@ -2600,8 +2600,8 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
 .campaign-structure-chart-head { display:flex; }
 .campaign-structure-chart-top {
   display:grid;
-  gap:12px;
-  margin-bottom:12px;
+  gap:8px;
+  margin-bottom:8px;
 }
 .campaign-structure-chart-topbar {
   display:flex;
@@ -2612,14 +2612,14 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
 }
 .campaign-structure-chart-title h3 {
   margin:0;
-  font-size:18px;
+  font-size:16px;
   letter-spacing:-0.01em;
 }
 .campaign-structure-chart-title .sub {
   color:var(--muted);
-  font-size:12px;
-  margin-top:4px;
-  line-height:1.5;
+  font-size:11px;
+  margin-top:2px;
+  line-height:1.35;
 }
 .campaign-structure-chart-grid {
   display:grid;
@@ -2630,16 +2630,16 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
   border:1px solid #eedfcc;
   border-radius:16px;
   background:linear-gradient(180deg,#fffdf9 0%,#fff9f1 100%);
-  padding:10px 12px 8px;
+  padding:8px 10px 6px;
 }
 .campaign-structure-chart-card.hidden { display:none; }
 .campaign-structure-chart-card-title {
-  margin:0 0 6px 0;
-  font-size:14px;
+  margin:0 0 4px 0;
+  font-size:13px;
   font-weight:700;
   color:#5c4631;
 }
-.campaign-structure-chart-wrap { height:300px; }
+.campaign-structure-chart-wrap { height:250px; }
 .campaign-structure-meta { color:var(--muted); font-size:12px; margin-top:4px; line-height:1.45; }
 .campaign-structure-table-panel {
   border:1px solid var(--line);
@@ -2778,7 +2778,7 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
 }
 .campaign-structure-empty { border:1px dashed #e4d4c1; border-radius:14px; background:#fffaf4; color:var(--muted); font-size:12px; padding:18px; text-align:center; }
 .campaign-structure-page { display:grid; gap:14px; }
-.campaign-structure-page .panel { overflow:hidden; }
+.campaign-structure-page .panel { overflow:visible; }
 .campaign-structure-chart-legend {
   display:flex;
   gap:8px;
@@ -2820,6 +2820,17 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
 .campaign-structure-pager .small {
   color:var(--muted);
   font-size:12px;
+}
+@media (min-width: 1280px) {
+  .campaign-structure-chart-panel {
+    position: sticky;
+    top: 14px;
+    z-index: 8;
+    box-shadow: 0 16px 34px rgba(125,97,60,0.10);
+  }
+  .campaign-structure-chart-wrap {
+    height: 280px;
+  }
 }
 @media (max-width: 1100px) {
   .campaign-structure-summary { grid-template-columns:repeat(3,minmax(0,1fr)); }
@@ -2938,7 +2949,7 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
       <div class="page-updated" id="pageUpdatedPreview">
         <span class="dot"></span>
         <span class="label">数据最后更新时间</span>
-        <span class="time">2026-04-14 10:04（北京时间）</span>
+        <span class="time">2026-04-15 01:27（北京时间）</span>
       </div>
     </div>
     <div class="filters">
@@ -3020,24 +3031,24 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
           <div class="content-freshness-head">
             <div>
               <h3>新老素材概览</h3>
-              <div class="sub" id="contentFreshnessSub">仅在月维度展示，按素材命名前缀日期判断新老。</div>
+              <div class="sub" id="contentFreshnessSub">仅在月度或周度展示，按素材命名前缀日期判断新老。</div>
             </div>
           </div>
           <div class="content-freshness-grid">
             <div class="content-freshness-card">
-              <div class="title">当月新老素材占比</div>
+              <div class="title">当前周期新老素材占比</div>
               <div class="content-freshness-top-legend" id="contentFreshnessShareLegend"></div>
               <div class="content-freshness-chart"><canvas id="contentFreshnessShareChart"></canvas></div>
-              <div class="content-freshness-note">按素材数统计，当月新素材 = 素材日期标签属于当前月份。</div>
+              <div class="content-freshness-note">按素材数统计，当前周期新素材 = 素材日期标签落在当前周期。</div>
             </div>
             <div class="content-freshness-card">
-              <div class="title">当月新老素材 GMV</div>
+              <div class="title">当前周期新老素材 GMV</div>
               <div class="content-freshness-top-legend" id="contentFreshnessGmvLegend"></div>
               <div class="content-freshness-chart"><canvas id="contentFreshnessGmvChart"></canvas></div>
               <div class="content-freshness-note">按当前筛选范围内素材聚合后的 GMV 统计。</div>
             </div>
             <div class="content-freshness-card">
-              <div class="title">分品类新老素材 GMV</div>
+              <div class="title">分品类当前周期新老素材 GMV</div>
               <div class="content-freshness-top-legend" id="contentFreshnessCategoryLegend"></div>
               <div class="content-freshness-chart"><canvas id="contentFreshnessCategoryChart"></canvas></div>
               <div class="content-freshness-note">仅展示当前范围内有 GMV 的主要品类新老素材对比。</div>
@@ -3059,7 +3070,7 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
             <span class="badge" id="contentFreshnessFilterBadge">新老</span>
             <select id="contentFreshnessFilter">
               <option value="all" selected>全部</option>
-              <option value="新素材">当月新素材</option>
+              <option value="新素材">当前周期新素材</option>
               <option value="老素材">老素材</option>
             </select>
             <span class="badge">环比</span>
@@ -3269,7 +3280,7 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
   <div class="section hidden" id="weeklyNewAdsSection">
     <div class="panel">
       <div class="panel-head">
-        <h3>当周新广告</h3>
+        <h3 id="weeklyNewAdsTitle">当周新广告</h3>
         <div id="weeklyNewAdsStats" class="small"></div>
       </div>
       <div id="weeklyNewAdsSummaryBar" class="weekly-summary-bar"></div>
@@ -3675,7 +3686,6 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
   </div>
 </div>
 <div id="copyToast" class="copy-toast" aria-live="polite"></div>
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script type="module">
 const rememberedStartupView = (() => {
@@ -3923,6 +3933,8 @@ const campaignTrendCanvas = document.getElementById('campaignTrendChart');
 const campaignTrendGrid = document.getElementById('campaignTrendGrid');
 const campaignTrendPrimaryCard = document.getElementById('campaignTrendPrimaryCard');
 const campaignTrendPrimaryTitle = document.getElementById('campaignTrendPrimaryTitle');
+const campaignChartPanel = document.querySelector('.campaign-structure-chart-panel');
+const campaignTablePanel = document.querySelector('.campaign-structure-table-panel');
 const campaignStructurePager = document.getElementById('campaignStructurePager');
 const campaignStructurePageInfo = document.getElementById('campaignStructurePageInfo');
 const campaignStructurePrev = document.getElementById('campaignStructurePrev');
@@ -3972,8 +3984,7 @@ let campaignStructureSelected = null;
 let campaignStructureSearch = { campaign: '', adset: '', ad: '' };
 let campaignStructureLevel = 'all';
 let campaignTrendCharts = {};
-let campaignTrendMode = 'money';
-let campaignMoneySelection = new Set(['spend', 'conv']);
+let campaignSelectedMetricKeys = new Set(['spend', 'conv', 'roas']);
 let campaignColResizeActive = false;
 let campaignColResizeIgnoreClickUntil = 0;
 let campaignStructurePage = 1;
@@ -5941,14 +5952,44 @@ function contentCreativeDate(item) {
   );
 }
 
-function getContentFreshnessBucket(item, monthKey) {
+function getContentFreshnessScope() {
+  if (timeMode?.value === 'week') {
+    const weekKey = String(weekSelect?.value || '').trim();
+    if (!weekKey || weekKey === 'MONTH') return null;
+    const [start, end] = weekRangeFromKey(weekKey);
+    return {
+      mode: 'week',
+      start,
+      end,
+      labelPrefix: '当周',
+      subText: `${displayCreativeWeekLabel(weekKey)} 周视角：素材日期标签落在当周为当周新素材，早于当周为老素材。`,
+      emptyText: `${displayCreativeWeekLabel(weekKey)} 周暂无可展示的新老素材样本。`,
+    };
+  }
+  if (timeMode?.value === 'month') {
+    const monthKey = String(monthSelect?.value || '').trim();
+    if (!monthKey) return null;
+    const start = parseDate(`${monthKey}-01`);
+    const end = parseDate(`${monthKey}-${new Date(start.getFullYear(), start.getMonth() + 1, 0).getDate()}`);
+    return {
+      mode: 'month',
+      start,
+      end,
+      labelPrefix: '当月',
+      subText: `${monthKey} 月视角：素材日期标签属于当月为当月新素材，早于当月为老素材。`,
+      emptyText: `当前月份 ${monthKey} 暂无可展示的新老素材样本。`,
+    };
+  }
+  return null;
+}
+
+function getContentFreshnessBucket(item, scope) {
   const d = contentCreativeDate(item);
-  if (!d) return '未识别';
-  const monthStart = parseDate(`${monthKey}-01`);
-  const mk = getMonthKey(d);
-  if (mk === monthKey) return '新素材';
-  if (d < monthStart) return '老素材';
-  return '未识别';
+  if (!d) return '老素材';
+  if (!(scope?.start && scope?.end)) return '老素材';
+  if (d >= scope.start && d <= scope.end) return '新素材';
+  if (d < scope.start) return '老素材';
+  return '老素材';
 }
 
 function destroyContentFreshnessCharts() {
@@ -5968,8 +6009,8 @@ function renderContentFreshnessPanel(creativeItems) {
   const gmvCanvas = document.getElementById('contentFreshnessGmvChart');
   const categoryCanvas = document.getElementById('contentFreshnessCategoryChart');
   if (!wrap || !panel || !shareCanvas || !gmvCanvas || !categoryCanvas) return;
-  const monthMode = timeMode?.value === 'month';
-  if (!monthMode) {
+  const scope = getContentFreshnessScope();
+  if (!scope) {
     contentFreshnessFilter = 'all';
     contentFreshnessCategoryFilter = 'all';
     if (contentFreshnessFilterSelect) contentFreshnessFilterSelect.value = 'all';
@@ -5978,15 +6019,7 @@ function renderContentFreshnessPanel(creativeItems) {
     destroyContentFreshnessCharts();
     return;
   }
-  const monthKey = String(monthSelect?.value || '').trim();
-  if (!monthKey) {
-    wrap.classList.add('hidden');
-    panel.classList.add('hidden');
-    destroyContentFreshnessCharts();
-    return;
-  }
-  const monthStart = parseDate(`${monthKey}-01`);
-  const bucketOf = (item) => getContentFreshnessBucket(item, monthKey);
+  const bucketOf = (item) => getContentFreshnessBucket(item, scope);
   const stats = {
     '新素材': { count: 0, conv: 0, spend: 0 },
     '老素材': { count: 0, conv: 0, spend: 0 },
@@ -6007,59 +6040,59 @@ function renderContentFreshnessPanel(creativeItems) {
     wrap.classList.remove('hidden');
     panel.classList.remove('hidden');
     destroyContentFreshnessCharts();
-    panel.querySelector('.content-freshness-grid').innerHTML = `<div class="content-freshness-empty">当前月份暂无可识别素材样本。</div>`;
-    if (sub) sub.textContent = `当前月份 ${monthKey} 暂无可展示的新老素材样本。`;
+    panel.querySelector('.content-freshness-grid').innerHTML = `<div class="content-freshness-empty">当前周期暂无可识别素材样本。</div>`;
+    if (sub) sub.textContent = scope.emptyText;
     return;
   }
   const originalGrid = `
             <div class="content-freshness-card">
-              <div class="title">当月新老素材占比</div>
+              <div class="title">${scope.labelPrefix}新老素材占比</div>
               <div class="content-freshness-top-legend" id="contentFreshnessShareLegend"></div>
               <div class="content-freshness-chart"><canvas id="contentFreshnessShareChart"></canvas></div>
-              <div class="content-freshness-note">按素材数统计，当月新素材 = 素材日期标签属于当前月份。</div>
+              <div class="content-freshness-note">按素材数统计，${scope.labelPrefix}新素材 = 素材日期标签落在当前周期。</div>
             </div>
             <div class="content-freshness-card">
-              <div class="title">当月新老素材 GMV</div>
+              <div class="title">${scope.labelPrefix}新老素材 GMV</div>
               <div class="content-freshness-top-legend" id="contentFreshnessGmvLegend"></div>
               <div class="content-freshness-chart"><canvas id="contentFreshnessGmvChart"></canvas></div>
               <div class="content-freshness-note">按当前筛选范围内素材聚合后的 GMV 统计。</div>
             </div>
             <div class="content-freshness-card">
-              <div class="title">分品类新老素材 GMV</div>
+              <div class="title">分品类${scope.labelPrefix}新老素材 GMV</div>
               <div class="content-freshness-top-legend" id="contentFreshnessCategoryLegend"></div>
               <div class="content-freshness-chart"><canvas id="contentFreshnessCategoryChart"></canvas></div>
               <div class="content-freshness-note">仅展示当前范围内有 GMV 的主要品类。</div>
             </div>`;
   const grid = panel.querySelector('.content-freshness-grid');
-  if (grid && !grid.querySelector('#contentFreshnessShareChart')) grid.innerHTML = originalGrid;
+  destroyContentFreshnessCharts();
+  if (grid) grid.innerHTML = originalGrid;
   const shareCtx = document.getElementById('contentFreshnessShareChart');
   const gmvCtx = document.getElementById('contentFreshnessGmvChart');
   const categoryCtx = document.getElementById('contentFreshnessCategoryChart');
   if (!(shareCtx && gmvCtx && categoryCtx)) return;
   wrap.classList.remove('hidden');
   panel.classList.remove('hidden');
-  if (sub) sub.textContent = `${monthKey} 月视角：素材日期标签属于当月为当月新素材，早于当月为老素材。`;
+  if (sub) sub.textContent = scope.subText;
   if (shareLegend) {
     shareLegend.innerHTML = `
-      <span class="item"><span class="dot" style="background:#2f6fec"></span>当月新素材</span>
+      <span class="item"><span class="dot" style="background:#2f6fec"></span>${scope.labelPrefix}新素材</span>
       <span class="item"><span class="dot" style="background:#22b8b0"></span>老素材</span>
     `;
   }
   if (gmvLegend) {
     gmvLegend.innerHTML = `
-      <span class="item"><span class="dot" style="background:#2f6fec"></span>当月新素材</span>
+      <span class="item"><span class="dot" style="background:#2f6fec"></span>${scope.labelPrefix}新素材</span>
       <span class="item"><span class="dot" style="background:#22b8b0"></span>老素材</span>
     `;
   }
   if (categoryLegend) {
     categoryLegend.innerHTML = `
-      <span class="item"><span class="dot" style="background:#2f6fec"></span>当月新素材</span>
+      <span class="item"><span class="dot" style="background:#2f6fec"></span>${scope.labelPrefix}新素材</span>
       <span class="item"><span class="dot" style="background:#22b8b0"></span>老素材</span>
     `;
   }
-  destroyContentFreshnessCharts();
   const shareKeys = ['新素材', '老素材'];
-  const shareLabels = ['当月新素材', '老素材'];
+  const shareLabels = [`${scope.labelPrefix}新素材`, '老素材'];
   const shareValues = shareKeys.map(k => stats[k].count);
   const shareColors = ['#2f6fec', '#22b8b0'];
   contentFreshnessShareChart = new Chart(shareCtx, {
@@ -6090,7 +6123,7 @@ function renderContentFreshnessPanel(creativeItems) {
   contentFreshnessGmvChart = new Chart(gmvCtx, {
     type: 'bar',
     data: {
-      labels: ['当月新素材', '老素材'],
+      labels: [`${scope.labelPrefix}新素材`, '老素材'],
       datasets: [{
         label: 'GMV',
         data: [stats['新素材'].conv, stats['老素材'].conv],
@@ -6118,7 +6151,7 @@ function renderContentFreshnessPanel(creativeItems) {
     data: {
       labels: categoryRows.map(r => r.category),
       datasets: [
-        { label: '当月新素材', data: categoryRows.map(r => r.newConv), backgroundColor: '#2f6fec', borderRadius: 6, maxBarThickness: 18 },
+        { label: `${scope.labelPrefix}新素材`, data: categoryRows.map(r => r.newConv), backgroundColor: '#2f6fec', borderRadius: 6, maxBarThickness: 18 },
         { label: '老素材', data: categoryRows.map(r => r.oldConv), backgroundColor: '#22b8b0', borderRadius: 6, maxBarThickness: 18 }
       ]
     },
@@ -6137,16 +6170,29 @@ function contentRowKey(row) {
   return String(row?.creative_key || row?.video_id || row?.ad_id || row?.ad || '').trim();
 }
 
+function contentRowMaterialType(row) {
+  const text = `${String(row?.ad || '')} ${String(row?.creative_key || '')}`.toLowerCase();
+  if (/(^|[^a-z0-9])vid($|[^a-z0-9])|[-_]vid\b/.test(text)) return 'video';
+  if (/(^|[^a-z0-9])img($|[^a-z0-9])|[-_]img\b/.test(text)) return 'image';
+  return null;
+}
+
+function contentMaterialTypeFromText(text) {
+  const lower = String(text || '').toLowerCase();
+  if (/(^|[^a-z0-9])vid($|[^a-z0-9])|[-_]vid\b/.test(lower)) return '视频';
+  if (/(^|[^a-z0-9])img($|[^a-z0-9])|[-_]img\b/.test(lower)) return '图片';
+  return null;
+}
+
 function contentRowIsVideo(row) {
-  const adText = `${String(row?.ad || '')} ${String(row?.creative_key || '')}`.toLowerCase();
-  if (adText.includes('img')) return false;
-  return (Number(row?.video_3s) || 0) > 0 || !!String(row?.video_id || '').trim();
+  return contentRowMaterialType(row) === 'video';
 }
 
 function isRecognizedContentRow(row) {
   const key = contentRowKey(row);
   const lower = key.toLowerCase();
   if (!key || lower.startsWith('feed') || lower.startsWith('ai')) return false;
+  if (!contentRowMaterialType(row)) return false;
   return true;
 }
 
@@ -6215,6 +6261,11 @@ function groupCreativeRows(rowsList) {
       purchases: metric.purchases,
     })).sort((a, b) => (b.conv - a.conv) || (b.spend - a.spend) || String(a.skc || '').localeCompare(String(b.skc || '')));
     const asset = adAssetFor(hero);
+    const explicitType =
+      contentMaterialTypeFromText(normalizeCreativeTitle(key)) ||
+      contentMaterialTypeFromText(key) ||
+      contentMaterialTypeFromText(hero?.ad) ||
+      contentMaterialTypeFromText(hero?.creative_key);
     return {
       key,
       displayKey: normalizeCreativeTitle(key) || key,
@@ -6226,7 +6277,7 @@ function groupCreativeRows(rowsList) {
       asset,
       owner: contentRowOwner(hero),
       week: contentRowWeek(hero),
-      type: contentRowIsVideo(hero) ? '视频' : '图片',
+      type: explicitType || (contentRowIsVideo(hero) ? '视频' : '图片'),
       category: hero?.category || 'Others',
       categorySub: hero?.categorySub || '其他',
       adType: hero?.adType || 'OTHER',
@@ -6397,10 +6448,16 @@ function syncContentFilters(rowsFiltered) {
     contentWeekSelect.innerHTML = weekOptions.map(v => `<option value="${v}">${v === 'all' ? '全部' : displayCreativeWeekLabel(v)}</option>`).join('');
     contentWeekSelect.value = contentWeekMode;
   }
-  const showFreshnessFilter = timeMode?.value === 'month';
+  const showFreshnessFilter = timeMode?.value === 'month' || timeMode?.value === 'week';
   if (!showFreshnessFilter) {
     contentFreshnessFilter = 'all';
     if (contentFreshnessFilterSelect) contentFreshnessFilterSelect.value = 'all';
+  }
+  if (contentFreshnessFilterSelect) {
+    const freshOption = contentFreshnessFilterSelect.querySelector('option[value="新素材"]');
+    if (freshOption) {
+      freshOption.textContent = timeMode?.value === 'week' ? '当周新素材' : '当月新素材';
+    }
   }
   if (contentFreshnessFilterBadge) contentFreshnessFilterBadge.classList.toggle('hidden', !showFreshnessFilter);
   if (contentFreshnessFilterSelect) contentFreshnessFilterSelect.classList.toggle('hidden', !showFreshnessFilter);
@@ -7149,11 +7206,11 @@ function renderContentView(rowsFiltered) {
           return creativeItems.filter(item => item.category === cat && item.categorySub === sub);
         })()
       : creativeItems.filter(item => item.category === contentLineBoardSelection);
-  const monthKey = String(monthSelect?.value || '').trim();
+  const freshnessScope = getContentFreshnessScope();
   const freshnessFilterFn = (item) => {
-    if (timeMode?.value !== 'month') return true;
+    if (!freshnessScope) return true;
     if (contentFreshnessFilter !== 'all') {
-      if (getContentFreshnessBucket(item, monthKey) !== contentFreshnessFilter) return false;
+      if (getContentFreshnessBucket(item, freshnessScope) !== contentFreshnessFilter) return false;
     }
     if (contentFreshnessCategoryFilter !== 'all') {
       if (String(item.category || 'Others') !== contentFreshnessCategoryFilter) return false;
@@ -7162,9 +7219,9 @@ function renderContentView(rowsFiltered) {
   };
   const creativeItemsFiltered = creativeItems.filter(freshnessFilterFn);
   const prevCreativeItemsFiltered = prevCreativeItems.filter(item => {
-    if (timeMode?.value !== 'month') return true;
+    if (!freshnessScope) return true;
     if (contentFreshnessFilter !== 'all') {
-      if (getContentFreshnessBucket(item, monthKey) !== contentFreshnessFilter) return false;
+      if (getContentFreshnessBucket(item, freshnessScope) !== contentFreshnessFilter) return false;
     }
     if (contentFreshnessCategoryFilter !== 'all') {
       if (String(item.category || 'Others') !== contentFreshnessCategoryFilter) return false;
@@ -7551,9 +7608,9 @@ function getCampaignStructureColumns() {
 
 function getCampaignMiniMetricDefs() {
   return [
-    { key:'spend', label:'花费', format:v => money(v), color:'#c97a2b', axis:'money', group:'money' },
-    { key:'conv', label:'转化金额', format:v => money(v), color:'#22b8b0', axis:'money', group:'money' },
-    { key:'roas', label:'ROAS', format:v => fmt(v,2), color:'#2f6fec', axis:'ratio', group:'efficiency' },
+    { key:'spend', label:'花费', format:v => money(v), color:'#c88a43', axis:'money', group:'money' },
+    { key:'conv', label:'转化金额', format:v => money(v), color:'#6eb8b1', axis:'money', group:'money' },
+    { key:'roas', label:'ROAS', format:v => fmt(v,2), color:'#355e9b', axis:'ratio', group:'efficiency' },
     { key:'aov', label:'客单价', format:v => money(v), color:'#9b59b6', axis:'money', group:'efficiency' },
     { key:'cvr', label:'CVR', format:v => pct(v), color:'#ef8f16', axis:'ratio', group:'efficiency' },
   ];
@@ -7716,30 +7773,54 @@ const campaignHoverGuidePlugin = {
   }
 };
 
-function createCampaignTrendChart(canvas, labels, defs, seriesByKey) {
+function createCampaignTrendChart(canvas, labels, defs, seriesByKey, pendingStartIndex = -1) {
   if (!(canvas instanceof HTMLCanvasElement)) return null;
   const validDefs = (defs || []).filter(Boolean);
   if (!validDefs.length) return null;
   const hasRatio = validDefs.some(def => def.axis === 'ratio');
   const hasMoney = validDefs.some(def => def.axis !== 'ratio');
-  const datasets = validDefs.map(def => ({
-    label: def.label,
-    data: (seriesByKey?.[def.key] || []).map(v => Number(v) || 0),
-    borderColor: def.color,
-    backgroundColor: def.color,
-    borderWidth: 2.6,
-    tension: 0.34,
-    cubicInterpolationMode: 'monotone',
-    pointRadius: 0,
-    pointHoverRadius: 4,
-    pointHitRadius: 18,
-    pointBackgroundColor: def.color,
-    fill: false,
-    yAxisID: def.axis === 'ratio' ? 'yRatio' : 'yMoney',
-    metaKey: def.key,
-  }));
+  const comboMode = validDefs.some(def => def.key === 'roas') && validDefs.some(def => def.key === 'spend' || def.key === 'conv');
+  const datasets = validDefs.map(def => {
+    const base = {
+      label: def.label,
+      data: (seriesByKey?.[def.key] || []).map(v => (v == null ? null : (Number(v) || 0))),
+      borderColor: def.color,
+      backgroundColor: def.color,
+      yAxisID: def.axis === 'ratio' ? 'yRatio' : 'yMoney',
+      metaKey: def.key,
+    };
+    if (comboMode && def.axis !== 'ratio') {
+      return {
+        ...base,
+        type: 'bar',
+        borderWidth: 0,
+        borderRadius: 7,
+        borderSkipped: false,
+        hoverBackgroundColor: `${def.color}E0`,
+        backgroundColor: `${def.color}8A`,
+        categoryPercentage: 0.72,
+        barPercentage: 0.64,
+        order: 2,
+      };
+    }
+    return {
+      ...base,
+      type: 'line',
+      borderWidth: def.key === 'roas' ? 2.4 : 2.5,
+      tension: 0.36,
+      cubicInterpolationMode: 'monotone',
+      pointRadius: 0,
+      pointHoverRadius: def.key === 'roas' ? 4 : 3,
+      pointHitRadius: 16,
+      pointBackgroundColor: '#fffdfa',
+      pointBorderWidth: def.key === 'roas' ? 2 : 1.5,
+      pointBorderColor: def.color,
+      fill: false,
+      order: def.key === 'roas' ? 1 : 3,
+    };
+  });
   return new Chart(canvas.getContext('2d'), {
-    type: 'line',
+    type: comboMode ? 'bar' : 'line',
     data: {
       labels,
       datasets
@@ -7758,12 +7839,12 @@ function createCampaignTrendChart(canvas, labels, defs, seriesByKey) {
         legend: { display: false },
         tooltip: {
           enabled: true,
-          backgroundColor: 'rgba(59, 45, 31, 0.92)',
+          backgroundColor: 'rgba(59, 45, 31, 0.88)',
           titleColor: '#fff7ee',
           bodyColor: '#fff7ee',
           borderColor: 'rgba(233, 208, 178, 0.9)',
           borderWidth: 1,
-          padding: 10,
+          padding: 11,
           displayColors: true,
           usePointStyle: true,
           titleFont: { size: 12, weight: '700' },
@@ -7775,7 +7856,8 @@ function createCampaignTrendChart(canvas, labels, defs, seriesByKey) {
               return `${ctx.dataset.label}：${def ? def.format(val) : val}`;
             }
           }
-        }
+        },
+        futureRangePlugin: pendingStartIndex >= 0 ? { startIndex: pendingStartIndex } : {}
       },
       hover: {
         mode: 'index',
@@ -7788,9 +7870,11 @@ function createCampaignTrendChart(canvas, labels, defs, seriesByKey) {
           position: 'left',
           ticks: {
             maxTicksLimit: 6,
+            color: '#8d7762',
             callback: (v) => money(v)
           },
-          grid: { color: 'rgba(139, 110, 81, 0.11)' }
+          grid: { color: 'rgba(139, 110, 81, 0.10)' },
+          border: { display: false }
         },
         yRatio: {
           beginAtZero: true,
@@ -7799,24 +7883,28 @@ function createCampaignTrendChart(canvas, labels, defs, seriesByKey) {
           suggestedMax: validDefs.some(d => d.key === 'cvr') && !validDefs.some(d => d.key === 'roas') ? 0.08 : undefined,
           ticks: {
             maxTicksLimit: 6,
+            color: '#9a8b7b',
             callback: (v) => validDefs.some(d => d.key === 'cvr') && !validDefs.some(d => d.key === 'roas')
               ? pct(v)
               : fmt(v, 2)
           },
-          grid: { drawOnChartArea: !hasMoney }
+          grid: { drawOnChartArea: false },
+          border: { display: false }
         },
         x: {
           grid: { display: false, drawBorder: false },
+          border: { display: false },
           ticks: {
             autoSkip: true,
             maxTicksLimit: 9,
+            color: '#8d7762',
             maxRotation: 0,
             minRotation: 0
           }
         }
       }
     },
-    plugins: [campaignHoverGuidePlugin]
+    plugins: [futureRangePlugin, campaignHoverGuidePlugin]
   });
 }
 
@@ -7927,46 +8015,62 @@ function renderCampaignStructureBoard(rowsFiltered) {
       </div>
     `).join('');
   }
-  const activeKeys = campaignTrendMode === 'money'
-    ? Array.from(campaignMoneySelection.values())
-    : [campaignTrendMode];
+  const activeKeys = Array.from(campaignSelectedMetricKeys.values());
   let defs = metricDefs.filter(item => activeKeys.includes(item.key));
   if (!defs.length) {
-    campaignTrendMode = 'money';
-    campaignMoneySelection = new Set(['spend']);
+    campaignSelectedMetricKeys = new Set(['spend']);
     defs = metricDefs.filter(item => item.key === 'spend');
   }
   if (campaignMetricTabs) {
     campaignMetricTabs.querySelectorAll('[data-campaign-key]').forEach(btn => {
       const key = btn.getAttribute('data-campaign-key') || '';
-      const isMoneyKey = key === 'spend' || key === 'conv';
-      const active = isMoneyKey
-        ? (campaignTrendMode === 'money' && campaignMoneySelection.has(key))
-        : campaignTrendMode === key;
-      btn.classList.toggle('active', active);
+      btn.classList.toggle('active', campaignSelectedMetricKeys.has(key));
     });
   }
   if (campaignTrendPrimaryCard) campaignTrendPrimaryCard.classList.remove('hidden');
   if (campaignTrendGrid) campaignTrendGrid.classList.remove('split');
 
+  const selectedDateKeys = new Set((selectedRows || []).map(r => String(r.date || '').trim()).filter(Boolean));
+  let pendingStartIndex = -1;
+  const [, rangeEnd] = getDateRangeForCurrentFilter();
+  if (rangeEnd && rangeEnd > maxDate) {
+    const nextPending = new Date(maxDate);
+    nextPending.setDate(nextPending.getDate() + 1);
+    pendingStartIndex = labels.findIndex(label => label === formatDateLocal(nextPending));
+  }
+
   const seriesByKey = {};
   metricDefs.forEach(def => {
-    seriesByKey[def.key] = labels.map(day => {
+    const rawSeries = labels.map(day => {
       const a = aggregate(byDay.get(day) || []);
       return Number(a[def.key]) || 0;
     });
+    seriesByKey[def.key] = rawSeries.map((value, idx) => {
+      if (!selectedDateKeys.has(labels[idx])) return null;
+      if (pendingStartIndex >= 0 && idx >= pendingStartIndex) return null;
+      return value;
+    });
   });
 
+  const hasSpend = campaignSelectedMetricKeys.has('spend');
+  const hasConv = campaignSelectedMetricKeys.has('conv');
+  const hasRoas = campaignSelectedMetricKeys.has('roas');
+  const hasAov = campaignSelectedMetricKeys.has('aov');
+  const hasCvr = campaignSelectedMetricKeys.has('cvr');
   let trendTitle = '趋势图';
-  if (campaignTrendMode === 'money') {
-    const hasSpend = campaignMoneySelection.has('spend');
-    const hasConv = campaignMoneySelection.has('conv');
-    trendTitle = hasSpend && hasConv ? '花费 + 转化金额曲线' : (hasSpend ? '花费曲线' : '转化金额曲线');
-  } else if (campaignTrendMode === 'roas') trendTitle = 'ROAS曲线';
-  else if (campaignTrendMode === 'aov') trendTitle = '客单价曲线';
-  else if (campaignTrendMode === 'cvr') trendTitle = 'CVR曲线';
+  if (hasRoas && (hasSpend || hasConv) && !hasAov && !hasCvr) {
+    if (hasSpend && hasConv) trendTitle = '花费 + 转化金额 + ROAS组合图';
+    else if (hasSpend) trendTitle = '花费 + ROAS组合图';
+    else trendTitle = '转化金额 + ROAS组合图';
+  } else if (hasSpend && hasConv && !hasRoas && !hasAov && !hasCvr) {
+    trendTitle = '花费 + 转化金额曲线';
+  } else if (hasSpend && campaignSelectedMetricKeys.size === 1) trendTitle = '花费曲线';
+  else if (hasConv && campaignSelectedMetricKeys.size === 1) trendTitle = '转化金额曲线';
+  else if (hasRoas && campaignSelectedMetricKeys.size === 1) trendTitle = 'ROAS曲线';
+  else if (hasAov && campaignSelectedMetricKeys.size === 1) trendTitle = '客单价曲线';
+  else if (hasCvr && campaignSelectedMetricKeys.size === 1) trendTitle = 'CVR曲线';
   if (campaignTrendPrimaryTitle) campaignTrendPrimaryTitle.textContent = trendTitle;
-  campaignTrendCharts.primary = createCampaignTrendChart(campaignTrendCanvas, labels, defs, seriesByKey);
+  campaignTrendCharts.primary = createCampaignTrendChart(campaignTrendCanvas, labels, defs, seriesByKey, pendingStartIndex);
   campaignTrendEmpty.classList.add('hidden');
   section.classList.remove('hidden');
 }
@@ -8450,6 +8554,7 @@ function renderWeeklyNewAdsBoard() {
   const tableEl = document.getElementById('weeklyNewAdsTable');
   const statsEl = document.getElementById('weeklyNewAdsStats');
   const summaryBar = document.getElementById('weeklyNewAdsSummaryBar');
+  const titleEl = document.getElementById('weeklyNewAdsTitle');
   if (!section || !tableEl || !statsEl) return;
 
   const dayBtn = dayButtons?.querySelector('.pill-btn.active');
@@ -8460,8 +8565,7 @@ function renderWeeklyNewAdsBoard() {
     timeMode.value === 'week' &&
     !isCustomRange() &&
     !!weekSelect.value &&
-    weekSelect.value !== 'MONTH' &&
-    isWeekAll
+    weekSelect.value !== 'MONTH'
   );
   if (!isVisible) {
     section.classList.add('hidden');
@@ -8475,8 +8579,13 @@ function renderWeeklyNewAdsBoard() {
   const weekRowsBase = filterRowsByRange(ws, we); // ignore day buttons; only top filters
   const codeSet = new Set();
   const n = (v) => (isFinite(v) ? Number(v) : 0);
-  for (let d = new Date(ws); d <= we; d.setDate(d.getDate() + 1)) {
-    codeSet.add(formatWeekCodeYYMMDD(d));
+  if (isWeekAll) {
+    for (let d = new Date(ws); d <= we; d.setDate(d.getDate() + 1)) {
+      codeSet.add(formatWeekCodeYYMMDD(d));
+    }
+  } else {
+    const targetDay = parseDate(dayKey);
+    if (targetDay) codeSet.add(formatWeekCodeYYMMDD(targetDay));
   }
 
   const isNewCampaign = (name) => {
@@ -8485,6 +8594,10 @@ function renderWeeklyNewAdsBoard() {
   };
 
   const newRows = weekRowsBase.filter(r => isNewCampaign(r.campaign));
+  if (titleEl) titleEl.textContent = isWeekAll ? '当周新广告' : '当天新广告';
+  statsEl.innerHTML = isWeekAll
+    ? `统计范围：${formatDateLocal(ws)} 至 ${formatDateLocal(we)}`
+    : `统计日期：${dayKey}`;
   const byCampaign = groupBy(newRows, r => r.campaign);
   let campRows = Array.from(byCampaign.entries()).map(([camp, rs]) => {
     const a = aggregate(rs);
@@ -11077,18 +11190,34 @@ if (campaignMetricTabs) {
     if (!btn) return;
     const key = btn.getAttribute('data-campaign-key') || '';
     if (!key) return;
+    const next = new Set(campaignSelectedMetricKeys);
     if (key === 'spend' || key === 'conv') {
-      if (campaignTrendMode !== 'money') {
-        campaignTrendMode = 'money';
-        campaignMoneySelection = new Set([key]);
-      } else if (campaignMoneySelection.has(key)) {
-        if (campaignMoneySelection.size > 1) campaignMoneySelection.delete(key);
+      next.delete('aov');
+      next.delete('cvr');
+      if (next.has(key)) {
+        if (next.size > 1) next.delete(key);
       } else {
-        campaignMoneySelection.add(key);
+        next.add(key);
       }
-    } else {
-      campaignTrendMode = key;
+    } else if (key === 'roas') {
+      next.delete('aov');
+      next.delete('cvr');
+      if (next.has('roas')) {
+        if (next.size > 1) next.delete('roas');
+      } else {
+        next.add('roas');
+      }
+    } else if (key === 'aov' || key === 'cvr') {
+      if (next.size === 1 && next.has(key)) {
+        next.clear();
+        next.add('spend');
+      } else {
+        next.clear();
+        next.add(key);
+      }
     }
+    if (!next.size) next.add('spend');
+    campaignSelectedMetricKeys = next;
     updateAll(false);
   });
 }
