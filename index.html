@@ -344,10 +344,10 @@ select, .pill-btn, input[type="date"] { border:1px solid var(--line); background
   height:32px;
 }
 .content-hero-card {
-  border:1px solid #edd9c2;
-  border-radius:18px;
-  background:linear-gradient(180deg, #fffaf4 0%, #fff 100%);
-  padding:14px 16px;
+  border:none;
+  border-radius:0;
+  background:transparent;
+  padding:0;
   box-shadow:none;
 }
 .content-board-summary {
@@ -1984,7 +1984,9 @@ select, .pill-btn, input[type="date"] { border:1px solid var(--line); background
 }
 #contentAssetFilterGroup .badge { min-width:44px; text-align:center; }
 #contentWeekSelect { min-width:96px; }
-#contentCompare { min-width:108px; }
+#contentTypeFilter { min-width:108px; width:108px; }
+#contentFreshnessFilter { min-width:124px; width:124px; }
+#contentCompare { min-width:108px; width:108px; }
 #contentSearch { width:180px; max-width:100%; }
 #contentSearchClear { min-width:52px; height:30px; padding:0 10px; line-height:28px; }
 .grid-2 > .panel { min-width:0; }
@@ -2569,6 +2571,13 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
   background:#fffdfa;
   padding:8px 11px;
   box-shadow:0 6px 18px rgba(125,97,60,0.04);
+  transition: background .18s ease, border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+.campaign-structure-stat:hover {
+  background:#fff;
+  border-color:#d9b089;
+  box-shadow:0 10px 24px rgba(42,35,29,0.08);
+  transform:translateY(-2px);
 }
 .campaign-structure-stat .label {
   font-size:11px;
@@ -2582,11 +2591,11 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
   letter-spacing:-0.02em;
 }
 .campaign-structure-chart-panel {
-  border:1px solid var(--line);
+  border:1px solid #eadfce;
   border-radius:20px;
-  background:#fffdfa;
-  padding:14px 14px 10px;
-  box-shadow:0 10px 26px rgba(125,97,60,0.05);
+  background:#fff;
+  padding:14px;
+  box-shadow:none;
 }
 .campaign-structure-chart-head {
   display:flex;
@@ -2621,16 +2630,15 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
   margin-top:2px;
   line-height:1.35;
 }
-.campaign-structure-chart-grid {
-  display:grid;
-  grid-template-columns:1fr;
-  gap:8px;
-}
 .campaign-structure-chart-card {
-  border:1px solid #eedfcc;
-  border-radius:16px;
-  background:linear-gradient(180deg,#fffdf9 0%,#fff9f1 100%);
-  padding:8px 10px 6px;
+  border:none;
+  border-radius:18px;
+  background:#fff;
+  padding:10px 12px 8px;
+  position:sticky;
+  top:14px;
+  z-index:8;
+  box-shadow:0 10px 24px rgba(125,97,60,0.08);
 }
 .campaign-structure-chart-card.hidden { display:none; }
 .campaign-structure-chart-card-title {
@@ -2697,8 +2705,10 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
   content:none;
 }
 .campaign-structure-table-wrap {
-  overflow:auto;
+  overflow-x:auto;
+  overflow-y:visible;
   padding-bottom:8px;
+  position:relative;
 }
 .campaign-structure-table-wrap::-webkit-scrollbar { height:8px; }
 .campaign-structure-table-wrap::-webkit-scrollbar-thumb { background:#d8cab7; border-radius:999px; }
@@ -2715,6 +2725,10 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
 .campaign-structure-table .sort-col-active { background:inherit !important; }
 .campaign-structure-table td { white-space:nowrap; }
 .campaign-structure-table .name-cell { width:var(--campaign-structure-name-col); min-width:var(--campaign-structure-name-col); max-width:var(--campaign-structure-name-col); text-align:left !important; }
+.campaign-structure-table th.name-cell,
+.campaign-structure-table td.name-cell {
+  border-right:1px solid #eadfce;
+}
 .campaign-structure-table th:not(.name-cell), .campaign-structure-table td:not(.name-cell) { min-width:92px; }
 .campaign-structure-table .name-cell .cs-resizer {
   position:absolute;
@@ -2759,7 +2773,7 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
 .campaign-structure-table tr.node-selected td { background:#fff2e3; }
 .campaign-structure-table tr.node-level-1 .name-cell { padding-left:18px; }
 .campaign-structure-table tr.node-level-2 .name-cell { padding-left:36px; }
-.campaign-structure-table .level-pill { display:inline-flex; align-items:center; justify-content:center; min-width:46px; height:20px; padding:0 8px; border-radius:999px; border:1px solid #edd6bc; background:#fff8ef; color:#9a6a38; font-size:11px; font-weight:700; }
+.campaign-structure-table .level-pill { display:inline-flex; align-items:center; justify-content:center; width:74px; min-width:74px; height:22px; padding:0 8px; border-radius:999px; border:1px solid #edd6bc; background:#fff8ef; color:#9a6a38; font-size:11px; font-weight:700; text-align:center; }
 .campaign-structure-note {
   display:inline-flex;
   align-items:center;
@@ -2779,6 +2793,43 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
 .campaign-structure-empty { border:1px dashed #e4d4c1; border-radius:14px; background:#fffaf4; color:var(--muted); font-size:12px; padding:18px; text-align:center; }
 .campaign-structure-page { display:grid; gap:14px; }
 .campaign-structure-page .panel { overflow:visible; }
+.campaign-structure-page > .panel {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
+}
+.campaign-structure-page .campaign-structure-shell {
+  gap: 18px;
+}
+.campaign-structure-page .campaign-structure-table-panel {
+  border: 1px solid #eadfce;
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 12px 30px rgba(125,97,60,0.06);
+}
+.campaign-structure-page .campaign-structure-table-head {
+  margin-bottom: 14px;
+}
+.campaign-structure-page .campaign-structure-meta {
+  max-width: 760px;
+}
+.campaign-structure-page .campaign-structure-table-wrap {
+  border: 1px solid #eadfce;
+  border-radius: 14px;
+  background: #fff;
+  padding: 0;
+}
+.campaign-structure-page .campaign-structure-summary {
+  margin-bottom: 10px;
+}
+.campaign-structure-page .campaign-structure-chart-top {
+  margin-bottom: 10px;
+}
+.campaign-structure-page .campaign-structure-chart-title .sub {
+  max-width: 780px;
+}
 .campaign-structure-chart-legend {
   display:flex;
   gap:8px;
@@ -2821,11 +2872,8 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
   color:var(--muted);
   font-size:12px;
 }
-@media (min-width: 1280px) {
+@media (min-width: 768px) {
   .campaign-structure-chart-panel {
-    position: sticky;
-    top: 14px;
-    z-index: 8;
     box-shadow: 0 16px 34px rgba(125,97,60,0.10);
   }
   .campaign-structure-chart-wrap {
@@ -2949,7 +2997,7 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
       <div class="page-updated" id="pageUpdatedPreview">
         <span class="dot"></span>
         <span class="label">数据最后更新时间</span>
-        <span class="time">2026-04-15 10:02（北京时间）</span>
+        <span class="time">2026-04-15 10:38（北京时间）</span>
       </div>
     </div>
     <div class="filters">
@@ -3614,13 +3662,11 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
           </div>
 
           <div class="campaign-structure-summary" id="campaignSummaryStrip"></div>
+        </div>
 
-          <div class="campaign-structure-chart-grid" id="campaignTrendGrid">
-            <div class="campaign-structure-chart-card" id="campaignTrendPrimaryCard">
-              <h4 class="campaign-structure-chart-card-title" id="campaignTrendPrimaryTitle">趋势图</h4>
-              <div class="chart-wrap campaign-structure-chart-wrap"><canvas id="campaignTrendChart"></canvas></div>
-            </div>
-          </div>
+        <div class="campaign-structure-chart-card" id="campaignTrendPrimaryCard">
+          <h4 class="campaign-structure-chart-card-title" id="campaignTrendPrimaryTitle">趋势图</h4>
+          <div class="chart-wrap campaign-structure-chart-wrap"><canvas id="campaignTrendChart"></canvas></div>
         </div>
 
         <div class="campaign-structure-table-panel">
@@ -3930,11 +3976,11 @@ const campaignTrendTitle = document.getElementById('campaignTrendTitle');
 const campaignTrendSub = document.getElementById('campaignTrendSub');
 const campaignTrendEmpty = document.getElementById('campaignTrendEmpty');
 const campaignTrendCanvas = document.getElementById('campaignTrendChart');
-const campaignTrendGrid = document.getElementById('campaignTrendGrid');
 const campaignTrendPrimaryCard = document.getElementById('campaignTrendPrimaryCard');
 const campaignTrendPrimaryTitle = document.getElementById('campaignTrendPrimaryTitle');
 const campaignChartPanel = document.querySelector('.campaign-structure-chart-panel');
 const campaignTablePanel = document.querySelector('.campaign-structure-table-panel');
+const detailSection = document.getElementById('detailSection');
 const campaignStructurePager = document.getElementById('campaignStructurePager');
 const campaignStructurePageInfo = document.getElementById('campaignStructurePageInfo');
 const campaignStructurePrev = document.getElementById('campaignStructurePrev');
@@ -7489,7 +7535,7 @@ function renderInterestKeywordBoard(rowsFiltered) {
     { label:'CPM', key:'cpm', format:v => money(v) },
     { label:'转化率', key:'cvr', format:v => pct(v) },
   ];
-  const sortKey = tableSortState['interestKeywordTable']?.key || 'spend';
+  const sortKey = tableSortState['interestKeywordTable']?.key || null;
   const sortDir = tableSortState['interestKeywordTable']?.dir || 'desc';
   const sortInd = key => (sortKey === key ? (sortDir === 'asc' ? '▲' : '▼') : '');
   const header = `<tr>${columns.map(c => `<th class="sortable ${sortKey===c.key?'sort-active':''}" data-key="${c.key}">${c.label}<span class="sort-ind">${sortInd(c.key)}</span></th>`).join('')}</tr>`;
@@ -7555,6 +7601,11 @@ function renderInterestKeywordBoard(rowsFiltered) {
   `;
   section.classList.remove('hidden');
   interestKeywordEmpty.classList.add('hidden');
+}
+
+function syncDetailStickyLayout() {
+  if (!detailSection) return;
+  detailSection.style.setProperty('--detail-sticky-offset', '14px');
 }
 
 function destroyCampaignTrendChart() {
@@ -8028,7 +8079,6 @@ function renderCampaignStructureBoard(rowsFiltered) {
     });
   }
   if (campaignTrendPrimaryCard) campaignTrendPrimaryCard.classList.remove('hidden');
-  if (campaignTrendGrid) campaignTrendGrid.classList.remove('split');
 
   const selectedDateKeys = new Set((selectedRows || []).map(r => String(r.date || '').trim()).filter(Boolean));
   let pendingStartIndex = -1;
@@ -8073,6 +8123,7 @@ function renderCampaignStructureBoard(rowsFiltered) {
   campaignTrendCharts.primary = createCampaignTrendChart(campaignTrendCanvas, labels, defs, seriesByKey, pendingStartIndex);
   campaignTrendEmpty.classList.add('hidden');
   section.classList.remove('hidden');
+  syncDetailStickyLayout();
 }
 
 let chart = null;
@@ -11813,6 +11864,7 @@ function bootstrapDashboard() {
   if (viewDecisionBtn) viewDecisionBtn.addEventListener('click', () => { setDashboardView('decision'); updateAll(false); });
   if (viewDetailBtn) viewDetailBtn.addEventListener('click', () => { setDashboardView('detail'); updateAll(false); });
   if (resetDashboardBtn) resetDashboardBtn.addEventListener('click', resetDashboard);
+  window.addEventListener('resize', syncDetailStickyLayout);
   document.body.classList.remove('auth-pending');
   setDashboardView(initialView);
   updateAll();
