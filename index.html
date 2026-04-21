@@ -1985,7 +1985,7 @@ select, .pill-btn, input[type="date"] { border:1px solid var(--line); background
 #contentAssetFilterGroup .badge { min-width:44px; text-align:center; }
 #contentWeekSelect { min-width:96px; }
 #contentTypeFilter { min-width:108px; width:108px; }
-#contentFreshnessFilter { min-width:124px; width:124px; }
+#contentFreshnessFilter { min-width:132px; width:132px; }
 #contentCompare { min-width:108px; width:108px; }
 #contentSearch { width:180px; max-width:100%; }
 #contentSearchClear { min-width:52px; height:30px; padding:0 10px; line-height:28px; }
@@ -2997,7 +2997,7 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
       <div class="page-updated" id="pageUpdatedPreview">
         <span class="dot"></span>
         <span class="label">数据最后更新时间</span>
-        <span class="time">2026-04-20 01:58（北京时间）</span>
+        <span class="time">2026-04-21 22:37（北京时间）</span>
       </div>
     </div>
     <div class="filters">
@@ -3131,6 +3131,7 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
             <span class="badge">搜索</span>
             <input id="contentSearch" type="text" placeholder="素材编号 / Ad name / 商品ID" />
             <button id="contentSearchClear" class="pill-btn sm" type="button">清空</button>
+            <button id="contentAssetDownload" class="pill-btn sm" type="button">下载数据</button>
           </div>
         </div>
         <div id="contentLinePanel"></div>
@@ -4001,6 +4002,7 @@ const contentFreshnessFilterBadge = document.getElementById('contentFreshnessFil
 const contentCompareSelect = document.getElementById('contentCompare');
 const contentSearchInput = document.getElementById('contentSearch');
 const contentSearchClearBtn = document.getElementById('contentSearchClear');
+const contentAssetDownloadBtn = document.getElementById('contentAssetDownload');
 const contentAssetPageSizeSelect = document.getElementById('contentAssetPageSize');
 function getContentWeekSelect() {
   return document.getElementById('contentWeekSelect');
@@ -4066,6 +4068,7 @@ let contentAssetSortState = { key: 'spend', dir: 'desc' };
 let contentSearch = '';
 let contentAssetPage = 1;
 let contentAssetPageSize = 10;
+let contentAssetExportRows = [];
 let contentCurveSelection = '';
 let imageModalItems = [];
 let imageModalIndex = 0;
@@ -5827,6 +5830,24 @@ function escapeHtml(s) {
     .replace(/'/g, '&#39;');
 }
 
+function escapeCsvValue(value) {
+  const text = value == null ? '' : String(value);
+  return /[",\r\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+}
+
+function downloadCsvFile(filename, rows) {
+  const csv = rows.map(row => row.map(escapeCsvValue).join(',')).join('\r\n');
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
 function escapeRegExp(s) {
   return String(s ?? '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
@@ -5999,6 +6020,10 @@ function contentCreativeDate(item) {
 }
 
 function getContentFreshnessScope() {
+  const selectedCreativeWeek = String(contentWeekMode || '').trim();
+  const selectedCreativeWeekLabel = selectedCreativeWeek && selectedCreativeWeek !== 'all'
+    ? displayCreativeWeekLabel(selectedCreativeWeek)
+    : '';
   if (timeMode?.value === 'week') {
     const weekKey = String(weekSelect?.value || '').trim();
     if (!weekKey || weekKey === 'MONTH') return null;
@@ -6008,7 +6033,10 @@ function getContentFreshnessScope() {
       start,
       end,
       labelPrefix: '当周',
-      subText: `${displayCreativeWeekLabel(weekKey)} 周视角：素材日期标签落在当周为当周新素材，早于当周为老素材。`,
+      creativeWeek: selectedCreativeWeekLabel ? selectedCreativeWeek : '',
+      subText: selectedCreativeWeekLabel
+        ? `${displayCreativeWeekLabel(weekKey)} 周视角：当前选中素材周次 ${selectedCreativeWeekLabel}，该周次素材均视为当周新素材。`
+        : `${displayCreativeWeekLabel(weekKey)} 周视角：素材日期标签落在当周为当周新素材，早于当周为老素材。`,
       emptyText: `${displayCreativeWeekLabel(weekKey)} 周暂无可展示的新老素材样本。`,
     };
   }
@@ -6022,7 +6050,10 @@ function getContentFreshnessScope() {
       start,
       end,
       labelPrefix: '当月',
-      subText: `${monthKey} 月视角：素材日期标签属于当月为当月新素材，早于当月为老素材。`,
+      creativeWeek: selectedCreativeWeekLabel ? selectedCreativeWeek : '',
+      subText: selectedCreativeWeekLabel
+        ? `${monthKey} 月视角：当前选中素材周次 ${selectedCreativeWeekLabel}，该周次素材均视为当月新素材。`
+        : `${monthKey} 月视角：素材日期标签属于当月为当月新素材，早于当月为老素材。`,
       emptyText: `当前月份 ${monthKey} 暂无可展示的新老素材样本。`,
     };
   }
@@ -6030,12 +6061,91 @@ function getContentFreshnessScope() {
 }
 
 function getContentFreshnessBucket(item, scope) {
+  const scopedCreativeWeek = String(scope?.creativeWeek || '').trim();
+  if (scopedCreativeWeek) {
+    return String(item?.week || '').trim() === scopedCreativeWeek ? '新素材' : '老素材';
+  }
   const d = contentCreativeDate(item);
   if (!d) return '老素材';
   if (!(scope?.start && scope?.end)) return '老素材';
   if (d >= scope.start && d <= scope.end) return '新素材';
   if (d < scope.start) return '老素材';
   return '老素材';
+}
+
+function contentAssetExportFilename() {
+  const [start, end] = getDateRangeForCurrentFilter();
+  const range = `${formatDateLocal(start)}_${formatDateLocal(end)}`;
+  const week = contentWeekMode && contentWeekMode !== 'all' ? `_week-${displayCreativeWeekLabel(contentWeekMode)}` : '';
+  const fresh = contentFreshnessFilter && contentFreshnessFilter !== 'all' ? `_${contentFreshnessFilter}` : '';
+  return `content_assets_${range}${week}${fresh}.csv`;
+}
+
+function contentAssetCsvRows(items) {
+  const headers = [
+    '素材编号',
+    'Ad name',
+    '类型',
+    '品线',
+    '品类细分',
+    '素材周次',
+    '广告类型',
+    'Campaign',
+    '商品',
+    '花费',
+    '转化金额',
+    'ROAS',
+    '贡献率',
+    'Hook Rate',
+    'Hold Rate',
+    'CTR',
+    'CPA',
+    '订单',
+    '展示',
+    '点击',
+    '加购',
+    '结账'
+  ];
+  const rows = items.map(item => {
+    const productText = (item.products || [])
+      .map(p => p.skc || p.title || p.key || '')
+      .filter(Boolean)
+      .join(' | ');
+    const a = item.agg || {};
+    return [
+      item.displayKey || item.key || '',
+      item.mainAd || '',
+      item.type || '',
+      item.category || '',
+      item.categorySub || '',
+      displayCreativeWeekLabel(item.week || ''),
+      item.adType || '',
+      item.campaign || '',
+      productText,
+      Number(a.spend || 0).toFixed(2),
+      Number(a.conv || 0).toFixed(2),
+      Number(a.roas || 0).toFixed(4),
+      Number(item.contribution || 0).toFixed(4),
+      item.type === '图片' ? '' : Number(a.hook || 0).toFixed(4),
+      item.type === '图片' ? '' : Number(a.hold || 0).toFixed(4),
+      Number(a.ctr || 0).toFixed(4),
+      Number(a.cpa || 0).toFixed(2),
+      Number(a.purchases || 0).toFixed(0),
+      Number(a.impr || 0).toFixed(0),
+      Number(a.clicks || 0).toFixed(0),
+      Number(a.add || 0).toFixed(0),
+      Number(a.chk || 0).toFixed(0),
+    ];
+  });
+  return [headers, ...rows];
+}
+
+function downloadContentAssetCsv() {
+  if (!contentAssetExportRows.length) {
+    alert('当前筛选范围暂无可下载的素材明细。');
+    return;
+  }
+  downloadCsvFile(contentAssetExportFilename(), contentAssetCsvRows(contentAssetExportRows));
 }
 
 function destroyContentFreshnessCharts() {
@@ -7106,6 +7216,8 @@ function renderContentAssetTable(creativeItems, totalConv) {
   sorted.forEach(item => {
     item.contribution = totalConv ? item.agg.conv / totalConv : 0;
   });
+  contentAssetExportRows = sorted.slice();
+  if (contentAssetDownloadBtn) contentAssetDownloadBtn.disabled = !contentAssetExportRows.length;
   const totalPages = contentAssetPageSize === 'all' ? 1 : Math.max(1, Math.ceil(sorted.length / contentAssetPageSize));
   if (contentAssetPage > totalPages) contentAssetPage = totalPages;
   if (contentAssetPage < 1) contentAssetPage = 1;
@@ -11463,6 +11575,9 @@ if (contentSearchClearBtn) {
     contentAssetPage = 1;
     updateAll(false);
   });
+}
+if (contentAssetDownloadBtn) {
+  contentAssetDownloadBtn.addEventListener('click', downloadContentAssetCsv);
 }
 if (contentAssetPageSizeSelect) {
   contentAssetPageSizeSelect.addEventListener('change', () => {
