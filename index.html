@@ -2997,7 +2997,7 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
       <div class="page-updated" id="pageUpdatedPreview">
         <span class="dot"></span>
         <span class="label">数据最后更新时间</span>
-        <span class="time">2026-04-22 09:41（北京时间）</span>
+        <span class="time">2026-04-22 09:53（北京时间）</span>
       </div>
     </div>
     <div class="filters">
@@ -6081,6 +6081,12 @@ function contentAssetExportFilename() {
   return `content_assets_${range}${week}${fresh}.csv`;
 }
 
+function csvTextFormula(value) {
+  const text = String(value ?? '').trim();
+  if (!text) return '';
+  return `="${text.replace(/"/g, '""')}"`;
+}
+
 function contentAssetCsvRows(items) {
   const headers = [
     '素材编号',
@@ -6118,7 +6124,7 @@ function contentAssetCsvRows(items) {
       item.type || '',
       item.category || '',
       item.categorySub || '',
-      displayCreativeWeekLabel(item.week || ''),
+      csvTextFormula(displayCreativeWeekLabel(item.week || '')),
       item.adType || '',
       item.campaign || '',
       productText,
