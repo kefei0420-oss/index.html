@@ -2997,7 +2997,7 @@ select:hover, input[type="date"]:hover, input[type="text"]:hover { border-color:
       <div class="page-updated" id="pageUpdatedPreview">
         <span class="dot"></span>
         <span class="label">数据最后更新时间</span>
-        <span class="time">2026-05-05 02:40（北京时间）</span>
+        <span class="time">2026-05-05 17:38（北京时间）</span>
       </div>
     </div>
     <div class="filters">
@@ -7438,7 +7438,7 @@ function renderKPIs(rowsFiltered) {
   const days = Math.round((end - start)/86400000) + 1;
   const prevStart = new Date(start); prevStart.setDate(prevStart.getDate()-days);
   const prevEnd = new Date(start); prevEnd.setDate(prevEnd.getDate()-1);
-  const prevRows = rows.filter(r => r._date>=prevStart && r._date<=prevEnd);
+  const prevRows = filterRowsByRange(prevStart, prevEnd);
   const p = aggregate(prevRows);
   const delta = (curr, prev) => prev ? (curr-prev)/prev : 0;
 
